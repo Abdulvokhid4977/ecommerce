@@ -1,6 +1,6 @@
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/presentation/components/onboarding_widgets.dart';
-import 'package:e_commerce/presentation/pages/home_page.dart';
+import 'package:e_commerce/presentation/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -42,12 +42,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
           context,
           MaterialPageRoute(
             builder: (_) =>
-                const HomePage(),
+                const MainPage(),
           ),);
     }
     controller.animateToPage(
       _currentPage,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 600),
       curve: Curves.easeInOut,
     );
 

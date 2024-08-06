@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: rootNavigatorKey,
       onUnknownRoute: AppRoutes.onUnknownRoute,
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: Routes.initial,
+      initialRoute: Routes.main,
       debugShowCheckedModeBanner: false,
     );
   }

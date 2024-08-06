@@ -1,8 +1,7 @@
 import 'package:chuck_interceptor/chuck.dart';
 import 'package:e_commerce/presentation/bloc/home/home_bloc.dart';
-import 'package:e_commerce/presentation/bloc/onboarding/onboarding_bloc.dart';
 import 'package:e_commerce/presentation/pages/error_page.dart';
-import 'package:e_commerce/presentation/pages/home_page.dart';
+import 'package:e_commerce/presentation/pages/main_page.dart';
 import 'package:e_commerce/presentation/pages/onboarding_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +34,7 @@ sealed class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (_) => HomeBloc(),
-            child: const HomePage(),
+            child: const MainPage(),
           ),
 
         );
