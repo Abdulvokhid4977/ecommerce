@@ -4,6 +4,8 @@ import 'package:e_commerce/presentation/pages/cart_page.dart';
 import 'package:e_commerce/presentation/pages/home_page.dart';
 import 'package:e_commerce/presentation/pages/profile_page.dart';
 import 'package:e_commerce/presentation/pages/search_page.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -22,6 +24,21 @@ class _MainPageState extends State<MainPage> {
     const CartPage(),
     const ProfilePage(),
   ];
+//   void setupPushNotifications() async{
+//     final fcm= FirebaseMessaging.instance;
+//     await fcm.requestPermission();
+//     final token= await fcm.getToken();
+//     if (kDebugMode) {
+//       print('this is device token: $token');
+//     }
+// }
+  @override
+  void initState() {
+    super.initState();
+
+    // setupPushNotifications();
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

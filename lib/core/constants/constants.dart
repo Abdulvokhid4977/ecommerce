@@ -10,7 +10,8 @@ sealed class Colours {
 
   static Color blueCustom = const Color.fromRGBO(0, 116, 235, 1);
   static Color greyCustom = const Color.fromRGBO(151, 156, 158, 1);
-
+  static Color backgroundGrey= const Color.fromRGBO(246, 246, 246, 1);
+  static Color greyIcon = const Color.fromRGBO(156, 156, 156, 1);
 
   static Color priorityBlue = const Color.fromRGBO(0, 159, 238, 1);
   static Color priorityRed = const Color.fromRGBO(238, 43, 0, 1);

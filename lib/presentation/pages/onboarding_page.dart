@@ -2,6 +2,7 @@ import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/presentation/components/onboarding_widgets.dart';
 import 'package:e_commerce/presentation/pages/main_page.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -14,7 +15,6 @@ class OnboardingPage extends StatefulWidget {
 class _OnboardingPageState extends State<OnboardingPage> {
   final controller = PageController();
   int _currentPage = 0;
-  final int _numPages = 3;
   final pages= [
     const OnboardingWidgets(
       1,
@@ -99,7 +99,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   backgroundColor: Colours.blueCustom,
                   elevation: 0,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-              child: const Text('Продолжить'),
+              child: Text('Продолжить', style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w400, fontSize: 20),),
             ),
           ),
         ],
