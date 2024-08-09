@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: rootNavigatorKey,
       onUnknownRoute: AppRoutes.onUnknownRoute,
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: Routes.main,
+      initialRoute: Routes.search,
       debugShowCheckedModeBanner: false,
     );
   }

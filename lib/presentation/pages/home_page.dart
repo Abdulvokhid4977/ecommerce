@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:e_commerce/config/routes/app_routes.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/presentation/components/gridtiles.dart';
@@ -19,8 +20,8 @@ class _HomePageState extends State<HomePage> {
   int _currentPage = 0;
   Timer? _timer;
   FocusNode focus1 = FocusNode();
-  final _controller = PageController(viewportFraction: 0.8);
   final textEditingController = TextEditingController();
+  final _controller = PageController(viewportFraction: 0.8);
   final List<Map> _ads = [
     {'asset': 'assets/images/ads.png', 'chosen': false},
     {'asset': 'assets/images/ads.png', 'chosen': false},
@@ -110,7 +111,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(Routes.favorites);
+                  },
                   icon: Icon(
                     Icons.favorite_border,
                     color: Colours.greyIcon,
@@ -158,7 +161,8 @@ class _HomePageState extends State<HomePage> {
                           AppUtils.kHeight10,
                           Container(
                             alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(left: 16, bottom: 12),
+                            padding:
+                                const EdgeInsets.only(left: 16, bottom: 12),
                             child: Text(
                               'Категории',
                               style: GoogleFonts.inter(
@@ -168,9 +172,11 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             height: height * 0.15,
                             child: ListView.separated(
-                              padding: const EdgeInsets.symmetric(
-                                    horizontal: 16),
-                              separatorBuilder: (ctx,i){return AppUtils.kWidth12;},
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              separatorBuilder: (ctx, i) {
+                                return AppUtils.kWidth12;
+                              },
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (_, i) {
                                 return GestureDetector(
@@ -227,11 +233,11 @@ class _HomePageState extends State<HomePage> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: 10,
                           gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 4,
                             mainAxisSpacing: 4,
-                                mainAxisExtent: height * 0.46,
+                            mainAxisExtent: height * 0.46,
                           ),
                           itemBuilder: (ctx, i) {
                             return const GridTileHome();

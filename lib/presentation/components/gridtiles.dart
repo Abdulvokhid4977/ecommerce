@@ -100,8 +100,9 @@ class _GridTileHomeState extends State<GridTileHome> {
                   onTap: (){},
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
-                    radius: 20,
+                    radius: 25,
                     child: Container(
+                      margin: const EdgeInsets.only(right: 12),
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                           border: Border.all(color: Colours.greyIcon, width: 1),
@@ -148,7 +149,7 @@ class _GridTileHomeState extends State<GridTileHome> {
                   fontSize: 15,
                   color: Colors.white,
                 ),
-              )),
+              ),),
         ),
       ],
     );
