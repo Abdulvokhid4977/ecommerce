@@ -4,6 +4,9 @@ sealed class AppUtils {
   static const kWidth12 = SizedBox(
     width: 12,
   );
+  static const kWidth8 = SizedBox(
+    width: 8,
+  );
   static const kWidth16 = SizedBox(
     width: 16,
   );

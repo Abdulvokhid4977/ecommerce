@@ -7,6 +7,7 @@ import 'package:e_commerce/presentation/pages/search_page.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MainPage extends StatefulWidget {
@@ -40,7 +41,13 @@ class _MainPageState extends State<MainPage> {
 
   }
   @override
+  void didChangeDependencies() {
+    SizeConfig().init(context);
+    super.didChangeDependencies();
+  }
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: tabs[currentIndex],
       bottomNavigationBar: BottomNavigationBar(

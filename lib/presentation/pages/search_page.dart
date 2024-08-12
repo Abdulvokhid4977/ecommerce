@@ -68,6 +68,7 @@ class _SearchPageState extends State<SearchPage> {
                 vertical: 8,
               ),
               child: ListView.separated(
+                physics: const BouncingScrollPhysics(),
                 itemBuilder: (ctx, i) {
                   return ListTile(
                     leading: Container(

@@ -89,13 +89,13 @@ class _HomePageState extends State<HomePage> {
       );
     });
     return Scaffold(
-      backgroundColor: Colors.white,
+
       body: Column(
         children: [
           Container(
             width: width,
             padding: EdgeInsets.only(
-                left: 16, top: statusBar + 20, right: 16, bottom: 16),
+                left: 16, top: statusBar + 20, right: 16, bottom: 16,),
             color: Colors.white,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(Routes.favorites);
+                    Navigator.of(context, rootNavigator: true).pushNamed(Routes.favorites);
                   },
                   icon: Icon(
                     Icons.favorite_border,

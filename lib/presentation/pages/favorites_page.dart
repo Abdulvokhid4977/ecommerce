@@ -1,5 +1,7 @@
+import 'package:e_commerce/config/routes/app_routes.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
+import 'package:e_commerce/presentation/components/empty_widget.dart';
 import 'package:e_commerce/presentation/components/gridtiles.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,30 +33,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
         ),
       ),
       body: _isFavoritesEmpty
-          ? Column(
-              children: [
-                SizedBox(height: height * 0.25,),
-                Image.asset('assets/images/emoji.png'),
-                AppUtils.kHeight32,
-                Text(
-                  'Ваш список пуст',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 24,
-                  ),
-                ),
-                AppUtils.kHeight10,
-                Text(
-                  'В вашем списке желаний нет элементов перейдите на главную и выберите',
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 18,
-                    color: Colours.greyIcon,
-                  ),
-                ),
-              ],
+          ? const EmptyWidget(
+              'assets/images/emoji.png',
+              'Ваш список пуст',
+              'В вашем списке желаний нет элементов перейдите на главную и выберите',
             )
           : SingleChildScrollView(
               child: Container(
