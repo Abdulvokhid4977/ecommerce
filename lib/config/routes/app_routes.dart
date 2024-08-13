@@ -6,6 +6,7 @@ import 'package:e_commerce/presentation/pages/favorites_page.dart';
 import 'package:e_commerce/presentation/pages/main_page.dart';
 import 'package:e_commerce/presentation/pages/onboarding_page.dart';
 import 'package:e_commerce/presentation/pages/product_details_page.dart';
+import 'package:e_commerce/presentation/pages/profile_page.dart';
 import 'package:e_commerce/presentation/pages/search_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -59,8 +60,8 @@ sealed class AppRoutes {
       //   return MaterialPageRoute(builder: (_) => const ShoppingCartPage());
       // case Routes.orders:
       //   return MaterialPageRoute(builder: (_) => const OrdersPage());
-      // case Routes.profile:
-      //   return MaterialPageRoute(builder: (_) => const ProfilePage());
+      case Routes.profile:
+        return MaterialPageRoute(builder: (_) => const ProfilePage());
       case Routes.details:
         return MaterialPageRoute(builder: (_) => const ProductDetailsPage());
     //   case Routes.internetConnection:

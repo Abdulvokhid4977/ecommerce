@@ -18,10 +18,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.white, // Set the status bar color
-      statusBarIconBrightness: Brightness.dark, // For light text/icons on the status bar
-    ));
+    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    //   statusBarColor: Colors.transparent,
+    // ));
     return MaterialApp(
       title: 'E-commerce',
       theme: ThemeData(
@@ -32,7 +31,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: rootNavigatorKey,
       onUnknownRoute: AppRoutes.onUnknownRoute,
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: Routes.details,
+      initialRoute: Routes.profile,
       debugShowCheckedModeBanner: false,
     );
   }
