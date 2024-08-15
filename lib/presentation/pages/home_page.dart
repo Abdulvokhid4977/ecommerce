@@ -23,11 +23,11 @@ class _HomePageState extends State<HomePage> {
   final textEditingController = TextEditingController();
   final _controller = PageController(viewportFraction: 0.8);
   final List<Map> _ads = [
-    {'asset': 'assets/images/ads.png', 'chosen': false},
-    {'asset': 'assets/images/ads.png', 'chosen': false},
-    {'asset': 'assets/images/ads.png', 'chosen': true},
-    {'asset': 'assets/images/ads.png', 'chosen': false},
-    {'asset': 'assets/images/ads.png', 'chosen': false},
+    {'asset': 'assets/images/ads.png', },
+    {'asset': 'assets/images/ads.png', },
+    {'asset': 'assets/images/ads.png', },
+    {'asset': 'assets/images/ads.png', },
+    {'asset': 'assets/images/ads.png', },
   ];
   final List<Map> _category = [
     {'asset': 'assets/images/kategoriya1.png', 'label': 'Распродажа'},

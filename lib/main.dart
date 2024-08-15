@@ -1,6 +1,3 @@
-import 'package:e_commerce/core/constants/constants.dart';
-import 'package:e_commerce/firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,9 +15,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    //   statusBarColor: Colors.transparent,
-    // ));
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.white,
+      statusBarIconBrightness: Brightness.dark,
+    ));
     return MaterialApp(
       title: 'E-commerce',
       theme: ThemeData(
@@ -31,7 +29,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: rootNavigatorKey,
       onUnknownRoute: AppRoutes.onUnknownRoute,
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: Routes.profile,
+      initialRoute: Routes.cart,
       debugShowCheckedModeBanner: false,
     );
   }

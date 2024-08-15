@@ -1,5 +1,6 @@
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
+import 'package:e_commerce/presentation/components/custom_container.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -14,11 +15,7 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   final _controller = PageController();
 
-  @override
-  void didChangeDependencies() {
-    SizeConfig().init(context);
-    super.didChangeDependencies();
-  }
+
 
   final List<Map> _itemColor = [
     {'asset': 'assets/images/s22.jpg', 'color': 'Черный'},
@@ -292,7 +289,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             AppUtils.kHeight10,
                             Row(
                               children: [
-                                customBox(
+                                CustomContainer().customBox(
                                   '-45%',
                                   Colours.redCustom,
                                   Colors.white,
@@ -315,7 +312,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   ],
                                 ),
                                 AppUtils.kWidth8,
-                                customBox(
+                                CustomContainer().customBox(
                                   'Временная скидка',
                                   Colours.redCustom,
                                   Colors.white,
@@ -323,7 +320,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                               ],
                             ),
                             AppUtils.kHeight10,
-                            customBox(
+                            CustomContainer().customBox(
                               '109 378 сум/мес',
                               Colours.yellowCustom2,
                               Colors.black,
@@ -345,7 +342,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 16.0,
                                         ),
-                                        child: customBox(
+                                        child: CustomContainer().customBox(
                                             'От 16 378 сум/мес',
                                             Colours.yellowCustom2,
                                             Colors.black),
@@ -496,24 +493,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     );
   }
 
-  Widget customBox(String text, Color color1, Color color2) {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: color1,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        text,
-        style: GoogleFonts.inter(
-          fontWeight: FontWeight.w500,
-          fontSize: 16,
-          color: color2,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
+
 }
 //                   AppUtils.kHeight10,
 

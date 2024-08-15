@@ -1,10 +1,12 @@
 import 'package:chuck_interceptor/chuck.dart';
 import 'package:e_commerce/presentation/bloc/home/home_bloc.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
+import 'package:e_commerce/presentation/pages/cart_page.dart';
 import 'package:e_commerce/presentation/pages/error_page.dart';
 import 'package:e_commerce/presentation/pages/favorites_page.dart';
 import 'package:e_commerce/presentation/pages/main_page.dart';
 import 'package:e_commerce/presentation/pages/onboarding_page.dart';
+import 'package:e_commerce/presentation/pages/order_page.dart';
 import 'package:e_commerce/presentation/pages/product_details_page.dart';
 import 'package:e_commerce/presentation/pages/profile_page.dart';
 import 'package:e_commerce/presentation/pages/search_page.dart';
@@ -58,8 +60,10 @@ sealed class AppRoutes {
       //   return MaterialPageRoute(builder: (_) => const SelectLang());
       // case Routes.shopping:
       //   return MaterialPageRoute(builder: (_) => const ShoppingCartPage());
-      // case Routes.orders:
-      //   return MaterialPageRoute(builder: (_) => const OrdersPage());
+      case Routes.order:
+        return MaterialPageRoute(builder: (_) => const OrderPage());
+      case Routes.cart:
+        return MaterialPageRoute(builder: (_) => const CartPage());
       case Routes.profile:
         return MaterialPageRoute(builder: (_) => const ProfilePage());
       case Routes.details:

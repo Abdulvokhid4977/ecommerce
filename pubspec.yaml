@@ -43,6 +43,7 @@ dependencies:
   flutter_svg:
   firebase_core: ^3.3.0
   firebase_messaging: ^15.0.4
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:

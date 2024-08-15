@@ -14,7 +14,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final List<Map> profileSettings = [
-    {'asset': 'assets/icons/cart.svg', 'label': 'Мои заказы'},
+    {'asset': 'assets/icons/shopping_bag.svg', 'label': 'Мои заказы'},
     {'asset': 'assets/icons/feedback_emoji.svg', 'label': 'Мои отзывы'},
     {'asset': 'assets/icons/card.svg', 'label': 'Рассрочка Ummerce Nasiya'},
   ];
@@ -25,6 +25,10 @@ class _ProfilePageState extends State<ProfilePage> {
     {'asset': 'assets/icons/bell.svg', 'label': 'Уведомления'},
     {'asset': 'assets/icons/user.svg', 'label': 'Мой профиль'},
     {'asset': 'assets/icons/settings.svg', 'label': 'Настройки'},
+  ];
+  final List<Map> profileSettings4 = [
+    {'asset': 'assets/icons/faq.svg', 'label': 'Справка'},
+    {'asset': 'assets/icons/mail.svg', 'label': 'Связаться с нами'},
   ];
 
   @override
@@ -43,6 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Colours.backgroundGrey,
       body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
             backgroundColor: Colours.blueCustom,
@@ -126,7 +131,41 @@ class _ProfilePageState extends State<ProfilePage> {
                       _customContainer(profileSettings),
                       AppUtils.kHeight10,
                       _customContainer(profileSettings2),
-                      Container(),
+                      AppUtils.kHeight10,
+                      _customContainer(
+                        [
+                          {'asset': 'assets/icons/ru.svg', 'label': 'Язык'},
+                        ],
+                        hasSomething: true,
+                        something: 'Русский',
+                      ),
+                      AppUtils.kHeight10,
+                      _customContainer([
+                        {
+                          'asset': 'assets/icons/location_icon.svg',
+                          'label': 'Город'
+                        },
+                      ], hasSomething: true, something: 'Ташкент'),
+                      AppUtils.kHeight10,
+                      _customContainer(
+                        [
+                          {
+                            'asset': 'assets/icons/map.svg',
+                            'label': 'Пункт выдачи на карте'
+                          },
+                        ],
+                      ),
+                      AppUtils.kHeight10,
+                      _customContainer(profileSettings4),
+                      AppUtils.kHeight10,
+                      Text(
+                        'Версия приложения: 1.28.0 (8290)',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: Colours.greyIcon,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -137,7 +176,9 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-  Widget _customContainer(List<Map> list){
+
+  Widget _customContainer(List<Map> list,
+      {bool hasSomething = false, String? something}) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -154,13 +195,25 @@ class _ProfilePageState extends State<ProfilePage> {
           return ListTile(
             leading: SvgPicture.asset(
               list[i]['asset'],
-              colorFilter: ColorFilter.mode(
-                Colours.blueCustom,
-                BlendMode.srcIn,
-              ),
             ),
             title: Text(list[i]['label']),
-            trailing: const Icon(Icons.keyboard_arrow_right),
+            trailing: hasSomething
+                ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  something!,
+                  style: GoogleFonts.inter(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    color: Colours.greyIcon,
+                  ),
+                ),
+                AppUtils.kWidth8,
+                const Icon(Icons.keyboard_arrow_right)
+              ],
+            )
+                : const Icon(Icons.keyboard_arrow_right),
           );
         },
       ),

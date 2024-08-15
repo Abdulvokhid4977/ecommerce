@@ -30,8 +30,10 @@ sealed class Colours {
   static Color redCustom = const Color.fromRGBO(235, 42, 0, 1);
   static Color greenCustom = const Color.fromRGBO(192, 232, 178, 1);
   static Color yellowCustom3= const Color.fromRGBO(246, 230, 199, 1);
+  static Color greenIndicator = const Color.fromRGBO(48, 158, 58, 1);
 
   static Color weekDayColor = const Color.fromRGBO(150, 150, 150, 1);
+
   static Color textFieldColor= const Color.fromRGBO(243, 244, 246, 1);
 
 }

@@ -5,13 +5,13 @@ sealed class Routes {
   static const String main = '/main';
   static const String favorites='/favorites';
   static const String search = '/search';
-
+  static const String order='/orders';
   static const String details='/details';
-  static const String orders='/orders';
   static const String profile='/profile';
+  static const String cart = '/cart';
+
   static const String shopping = '/shopping';
   static const String settings = '/settings';
-  static const String auth = '/auth';
-  static const String confirmCode = '/confirm_code';
+
   static const String register = '/register';
 }

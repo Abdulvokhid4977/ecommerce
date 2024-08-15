@@ -12,44 +12,55 @@ class EmptyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height=MediaQuery.of(context).size.height;
-    return Column(
-      children: [
-        SizedBox(
-          height: height * 0.25,
-        ),
-        Image.asset(assetPath),
-        AppUtils.kHeight32,
-        Text(
-          text1,
-          style: GoogleFonts.inter(
-            fontWeight: FontWeight.w600,
-            fontSize: 24,
-          ),
-        ),
-        AppUtils.kHeight10,
-        Text(
-          text2,
-          softWrap: true,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            fontWeight: FontWeight.w400,
-            fontSize: 18,
-            color: Colours.greyIcon,
-          ),
-        ),
-        AppUtils.kHeight16,
-        ElevatedButton(
-          onPressed: () { Navigator.of(context).pushNamed(Routes.main);},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colours.blueCustom,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+
+        children: [
+
+          Image.asset(assetPath),
+          AppUtils.kHeight32,
+          Text(
+            text1,
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              fontSize: 24,
             ),
           ),
-          child: const Text('Go to Home Page'),
-        ),
-      ],
+          AppUtils.kHeight10,
+          Text(
+            text2,
+            softWrap: true,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w400,
+              fontSize: 18,
+              color: Colours.greyIcon,
+            ),
+          ),
+          AppUtils.kHeight16,
+          GestureDetector(
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 18),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Colours.blueCustom,
+              ),
+              child: Text('Go to Home Page', style: GoogleFonts.inter(
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+                color: Colors.white,
+              ),),
+            ),
+            onTap: () { Navigator.of(context).pushNamed(Routes.main);},
+          ),
+
+
+        ],
+      ),
     );
   }
 }
