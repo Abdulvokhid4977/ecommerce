@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 sealed class Constants {
   Constants._();
   static GlobalKey<FormState> bottomNavigatorKey = GlobalKey<FormState>();
+  static const baseUrl='https://ulab-project.onrender.com/e_commerce/api/v1';
 }
-
 class SizeConfig {
   static double? screenHeight;
   static double? screenWidth;

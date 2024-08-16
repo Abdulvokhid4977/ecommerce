@@ -1,5 +1,5 @@
 import 'package:chuck_interceptor/chuck.dart';
-import 'package:e_commerce/presentation/bloc/home/home_bloc.dart';
+import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:e_commerce/presentation/pages/cart_page.dart';
 import 'package:e_commerce/presentation/pages/error_page.dart';
@@ -35,31 +35,33 @@ sealed class AppRoutes {
     switch (settings.name) {
       case Routes.initial:
         return MaterialPageRoute(
-          builder: (_) =>const OnboardingPage(),
+          builder: (_) => const OnboardingPage(),
         );
       case Routes.main:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (_) => HomeBloc(),
-            child: const MainPage(),
-          ),
+          builder: (_) =>
+              BlocProvider(
+                create: (_) => MainBloc(),
+                child: const MainPage(),
+              ),
 
         );
       case Routes.favorites:
         return MaterialPageRoute(
           builder: (_) => const FavoritesPage(),
-          );
+        );
       case Routes.search:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (_) => SearchBloc(),
-            child: const SearchPage(),
-          ),
+          builder: (_) =>
+              BlocProvider(
+                create: (_) => SearchBloc(),
+                child: const SearchPage(),
+              ),
         );
-      // case Routes.selectLang:
-      //   return MaterialPageRoute(builder: (_) => const SelectLang());
-      // case Routes.shopping:
-      //   return MaterialPageRoute(builder: (_) => const ShoppingCartPage());
+    // case Routes.selectLang:
+    //   return MaterialPageRoute(builder: (_) => const SelectLang());
+    // case Routes.shopping:
+    //   return MaterialPageRoute(builder: (_) => const ShoppingCartPage());
       case Routes.order:
         return MaterialPageRoute(builder: (_) => const OrderPage());
       case Routes.cart:
@@ -107,9 +109,10 @@ sealed class AppRoutes {
       print('Navigate to: $settings');
     }
     return MaterialPageRoute(
-      builder: (_) => ErrorPage(
-        settings: settings,
-      ),
+      builder: (_) =>
+          ErrorPage(
+            settings: settings,
+          ),
     );
   }
 }

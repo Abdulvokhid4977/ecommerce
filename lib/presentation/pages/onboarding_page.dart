@@ -1,3 +1,4 @@
+import 'package:e_commerce/config/routes/app_routes.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/presentation/components/onboarding_widgets.dart';
 import 'package:e_commerce/presentation/pages/main_page.dart';
@@ -38,12 +39,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       _currentPage = _currentPage + 1;
     });
     if(_currentPage>2){
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) =>
-                const MainPage(),
-          ),);
+      Navigator.pushReplacementNamed(context, Routes.main );
     }
     controller.animateToPage(
       _currentPage,

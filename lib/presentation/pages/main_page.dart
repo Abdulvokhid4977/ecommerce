@@ -1,5 +1,7 @@
 
+import 'package:e_commerce/config/routes/app_routes.dart';
 import 'package:e_commerce/core/constants/constants.dart';
+import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/pages/cart_page.dart';
 import 'package:e_commerce/presentation/pages/home_page.dart';
 import 'package:e_commerce/presentation/pages/profile_page.dart';
@@ -8,6 +10,7 @@ import 'package:e_commerce/presentation/pages/search_page.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MainPage extends StatefulWidget {
@@ -36,8 +39,8 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-
     // setupPushNotifications();
+    context.read<MainBloc>().add(FetchDataEvent());
 
   }
   @override
@@ -47,7 +50,6 @@ class _MainPageState extends State<MainPage> {
   }
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: tabs[currentIndex],
       bottomNavigationBar: BottomNavigationBar(

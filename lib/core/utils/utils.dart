@@ -7,6 +7,9 @@ sealed class AppUtils {
   static const kWidth8 = SizedBox(
     width: 8,
   );
+  static const kHeight8 = SizedBox(
+    height: 8,
+  );
   static const kWidth16 = SizedBox(
     width: 16,
   );

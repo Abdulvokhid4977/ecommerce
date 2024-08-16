@@ -32,6 +32,27 @@ class _ProfilePageState extends State<ProfilePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ));
+    });
+
+  }
+
+  @override
+  // void dispose() {
+  //   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+  //     statusBarColor: Colors.transparent,
+  //     statusBarIconBrightness: Brightness.dark,
+  //   ));
+  //   super.dispose();
+  // }
+
+  @override
   void didChangeDependencies() {
     SizeConfig().init(context);
     super.didChangeDependencies();
@@ -39,11 +60,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // Set the status bar color
-      statusBarIconBrightness:
-          Brightness.dark, // For light text/icons on the status bar
-    ));
     return Scaffold(
       backgroundColor: Colours.backgroundGrey,
       body: CustomScrollView(
@@ -199,20 +215,20 @@ class _ProfilePageState extends State<ProfilePage> {
             title: Text(list[i]['label']),
             trailing: hasSomething
                 ? Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  something!,
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: Colours.greyIcon,
-                  ),
-                ),
-                AppUtils.kWidth8,
-                const Icon(Icons.keyboard_arrow_right)
-              ],
-            )
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        something!,
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: Colours.greyIcon,
+                        ),
+                      ),
+                      AppUtils.kWidth8,
+                      const Icon(Icons.keyboard_arrow_right)
+                    ],
+                  )
                 : const Icon(Icons.keyboard_arrow_right),
           );
         },
