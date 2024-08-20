@@ -11,7 +11,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  FocusNode focus1 = FocusNode();
+  final focus1 = FocusNode();
   final textEditingController = TextEditingController();
 
   List<Map> searchCat = [
@@ -45,14 +45,12 @@ class _SearchPageState extends State<SearchPage> {
 
         children: [
           Container(
-            width: width,
             padding: EdgeInsets.only(
               left: 16,
               top: statusBar + 20,
               right: 16,
               bottom: 16,
             ),
-            color: Colors.white,
             child: textField(
               () {},
               focus1,

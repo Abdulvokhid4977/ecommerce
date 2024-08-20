@@ -53,7 +53,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                       mainAxisExtent: height * 0.46,
                     ),
                     itemBuilder: (ctx, i) {
-                      return const GridTileHome();
+                      return GridTileHome(i);
                     }),
               ),
             ),

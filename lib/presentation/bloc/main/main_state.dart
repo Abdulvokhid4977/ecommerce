@@ -31,9 +31,10 @@ class MainLoading extends MainState {
 }
 
 class MainLoaded extends MainState {
-  final BannerData banners; // Replace with your data type
+  final BannerData banners;
+  final Product products;
 
-   MainLoaded(this.banners);
+   MainLoaded(this.banners, this.products);
 
   @override
   List<Object> get props => [banners];

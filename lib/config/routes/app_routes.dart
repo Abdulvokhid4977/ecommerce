@@ -4,6 +4,7 @@ import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:e_commerce/presentation/pages/cart_page.dart';
 import 'package:e_commerce/presentation/pages/error_page.dart';
 import 'package:e_commerce/presentation/pages/favorites_page.dart';
+import 'package:e_commerce/presentation/pages/giving_order.dart';
 import 'package:e_commerce/presentation/pages/main_page.dart';
 import 'package:e_commerce/presentation/pages/onboarding_page.dart';
 import 'package:e_commerce/presentation/pages/order_page.dart';
@@ -44,7 +45,6 @@ sealed class AppRoutes {
                 create: (_) => MainBloc(),
                 child: const MainPage(),
               ),
-
         );
       case Routes.favorites:
         return MaterialPageRoute(
@@ -58,6 +58,10 @@ sealed class AppRoutes {
                 child: const SearchPage(),
               ),
         );
+      case Routes.givingOrder:
+        return MaterialPageRoute(
+          builder: (_) => const GivingOrder(),
+        );
     // case Routes.selectLang:
     //   return MaterialPageRoute(builder: (_) => const SelectLang());
     // case Routes.shopping:
@@ -68,8 +72,6 @@ sealed class AppRoutes {
         return MaterialPageRoute(builder: (_) => const CartPage());
       case Routes.profile:
         return MaterialPageRoute(builder: (_) => const ProfilePage());
-      case Routes.details:
-        return MaterialPageRoute(builder: (_) => const ProductDetailsPage());
     //   case Routes.internetConnection:
     //     return MaterialPageRoute(
     //       builder: (_) => const InternetConnectionPage(),

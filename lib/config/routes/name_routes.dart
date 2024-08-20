@@ -9,8 +9,9 @@ sealed class Routes {
   static const String details='/details';
   static const String profile='/profile';
   static const String cart = '/cart';
+  static const String givingOrder = '/givingorder';
 
-  static const String shopping = '/shopping';
+
   static const String settings = '/settings';
 
   static const String register = '/register';

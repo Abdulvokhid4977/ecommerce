@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       IconButton(
                         onPressed: () {
-                          Navigator.of(context, rootNavigator: true)
+                          Navigator.of(context)
                               .pushNamed(Routes.favorites);
                         },
                         icon: Icon(
@@ -124,6 +124,7 @@ class _HomePageState extends State<HomePage> {
                   child: RefreshIndicator(
                     onRefresh: _refresh,
                     child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
                       child: Column(
                         children: [
                           Container(
@@ -246,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                             child: GridView.builder(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
-                                itemCount: 10,
+                                itemCount: state.products.data.product.length,
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
@@ -256,7 +257,7 @@ class _HomePageState extends State<HomePage> {
                                       SizeConfig.screenHeight! * 0.46,
                                 ),
                                 itemBuilder: (ctx, i) {
-                                  return const GridTileHome();
+                                  return  GridTileHome(i);
                                 }),
                           ),
                           AppUtils.kHeight16,
