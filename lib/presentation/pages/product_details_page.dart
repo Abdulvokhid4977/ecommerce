@@ -6,10 +6,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final int index;
+
   const ProductDetailsPage({super.key, required this.index});
 
   @override
@@ -18,6 +20,10 @@ class ProductDetailsPage extends StatefulWidget {
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   final _controller = PageController();
+
+  int roundDownToNearestTen(int number) {
+    return (number ~/ 10) * 10;
+  }
 
   final List<Map> _itemColor = [
     {'asset': 'assets/images/s22.jpg', 'color': 'Черный'},
@@ -39,6 +45,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           );
         } else if (state is MainLoaded) {
           final baseState = state.products.data.product[widget.index];
+          final monthly = (baseState.priceWithDiscount / 6).round();
+          final discount = ((baseState.price - baseState.priceWithDiscount) /
+                  baseState.price) *
+              100;
+          final isFavorite = baseState.isFavourite ?? false;
           return Scaffold(
             backgroundColor: Colours.backgroundGrey,
             body: Stack(
@@ -66,10 +77,15 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         ),
                         actions: [
                           IconButton(
-                            icon: Icon(
-                              Icons.favorite_border_outlined,
-                              color: Colours.blueCustom,
-                            ),
+                            icon: isFavorite
+                                ? const Icon(
+                                    Icons.favorite,
+                              color: Colors.red,
+                                  )
+                                : Icon(
+                                    Icons.favorite_border_outlined,
+                                    color: Colours.blueCustom,
+                                  ),
                             onPressed: () {},
                           ),
                           IconButton(
@@ -132,7 +148,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Samsung S22 Ultra 12/256gb Black',
+                                    baseState.name,
                                     style: GoogleFonts.inter(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 18,
@@ -157,7 +173,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                             Row(
                                               children: [
                                                 Text(
-                                                  '5.0',
+                                                  baseState.rating.toString(),
                                                   style: GoogleFonts.inter(
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 18,
@@ -170,7 +186,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                               ],
                                             ),
                                             Text(
-                                              '80 отзывов',
+                                              '20 отзывов',
                                               style: GoogleFonts.inter(
                                                 fontSize: 16,
                                               ),
@@ -192,7 +208,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                         child: Column(
                                           children: [
                                             Text(
-                                              '+1000',
+                                              '+${roundDownToNearestTen(baseState.orderCount)}',
                                               style: GoogleFonts.inter(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 18,
@@ -292,14 +308,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '899 000 сум',
+                                    '${NumberFormat('#,###', 'en_US').format(baseState.priceWithDiscount).replaceAll(',', ' ')} сум',
                                     style: GoogleFonts.inter(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 18,
                                     ),
                                   ),
                                   Text(
-                                    '1 400 000 сум',
+                                    '${NumberFormat('#,###', 'en_US').format(baseState.price).replaceAll(',', ' ')} сум',
                                     style: GoogleFonts.inter(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 14,
@@ -310,7 +326,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   Row(
                                     children: [
                                       CustomContainer().customBox(
-                                        '-45%',
+                                        '-${NumberFormat('#,###', 'en_US').format(discount).replaceAll(',', ' ')}%',
                                         Colours.redCustom,
                                         Colors.white,
                                       ),
@@ -341,7 +357,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   ),
                                   AppUtils.kHeight10,
                                   CustomContainer().customBox(
-                                    '109 378 сум/мес',
+                                    '${NumberFormat('#,###', 'en_US').format(monthly).replaceAll(',', ' ')} сум/мес',
                                     Colours.yellowCustom2,
                                     Colors.black,
                                   ),
@@ -393,7 +409,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   customRow(
                                     Icons.shopping_bag_outlined,
                                     Colours.yellowCustom3,
-                                    '48 человек купили на этой неделе',
+                                    '${baseState.orderCount} человек купили на этой неделе',
                                   ),
                                 ],
                               ),
@@ -447,16 +463,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         Column(
                           children: [
                             Text(
-                              '1 400 000 сум',
+                              '${NumberFormat('#,###', 'en_US').format(baseState.price).replaceAll(',', ' ')} сум',
                               style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16,
                                 color: Colours.greyIcon,
+                                decorationColor: Colours.greyIcon,
                                 decoration: TextDecoration.lineThrough,
                               ),
                             ),
                             Text(
-                              '899 000 сум',
+                              '${NumberFormat('#,###', 'en_US').format(baseState.priceWithDiscount).replaceAll(',', ' ')} сум',
                               style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 18,

@@ -108,8 +108,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       IconButton(
                         onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(Routes.favorites);
+                          Navigator.of(context).pushNamed(Routes.favorites);
                         },
                         icon: Icon(
                           Icons.favorite_border,
@@ -122,7 +121,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Expanded(
                   child: RefreshIndicator(
-                    onRefresh: _refresh,
+                    onRefresh: () async {
+                      context.read<MainBloc>().add(FetchDataEvent());
+                    },
                     child: SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
                       child: Column(
@@ -148,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                                     children: List.generate(
                                         state.banners.banner.length, (i) {
                                       return Container(
-                                        alignment: Alignment.topLeft,
+
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 16,
                                           vertical: 8,
@@ -199,12 +200,17 @@ class _HomePageState extends State<HomePage> {
                                         onTap: () {},
                                         child: Column(
                                           children: [
-                                            Image.asset(_category[i]['asset']),
+                                            SizedBox(
+                                              height: 80,
+                                              width: 80,
+                                              child: Image.network(
+                                                  state.category.category[i].url, fit: BoxFit.fill,),
+                                            ),
                                             AppUtils.kHeight10,
                                             SizedBox(
                                               width: 90,
                                               child: Text(
-                                                _category[i]['label'],
+                                                state.category.category[i].name,
                                                 style: GoogleFonts.inter(
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 14,
@@ -217,7 +223,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       );
                                     },
-                                    itemCount: _category.length,
+                                    itemCount: state.category.category.length,
                                   ),
                                 ),
                               ],
@@ -257,7 +263,7 @@ class _HomePageState extends State<HomePage> {
                                       SizeConfig.screenHeight! * 0.46,
                                 ),
                                 itemBuilder: (ctx, i) {
-                                  return  GridTileHome(i);
+                                  return GridTileHome(i);
                                 }),
                           ),
                           AppUtils.kHeight16,
@@ -270,13 +276,19 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         } else if (state is MainError) {
-          return Center(child: Text(state.message));
+          return RefreshIndicator(
+              onRefresh: () async {
+                context.read<MainBloc>().add(FetchDataEvent());
+              },
+              child: Center(child: Text(state.message)));
         } else {
-          return const Center(child: Text('Could not fetch'));
+          return RefreshIndicator(
+              onRefresh: () async {
+                context.read<MainBloc>().add(FetchDataEvent());
+              },
+              child: const Center(child: Text('Could not fetch')));
         }
       },
     );
   }
-
-  Future<void> _refresh() async {}
 }

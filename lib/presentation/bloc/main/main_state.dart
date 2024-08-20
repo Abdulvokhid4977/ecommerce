@@ -5,20 +5,6 @@ class MainState extends Equatable {
   @override
   // TODO: implement props
   List<Object?> get props => throw UnimplementedError();
-//   final bool isLoading;
-//  final BannerData banners;
-//
-// const HomeState({required this.banners, required this.isLoading});
-// HomeState copyWith({BannerData? banners, bool? isLoading}){
-//   return HomeState(
-//     banners: banners ?? this.banners,
-//     isLoading: isLoading ?? this.isLoading,
-//
-//   );
-// }
-//   @override
-//   // TODO: implement props
-//   List<Object?> get props => [banners];
 }
 class MainInitial extends MainState {
   @override
@@ -33,8 +19,9 @@ class MainLoading extends MainState {
 class MainLoaded extends MainState {
   final BannerData banners;
   final Product products;
+  final ctg.Category category;
 
-   MainLoaded(this.banners, this.products);
+   MainLoaded(this.banners, this.products, this.category);
 
   @override
   List<Object> get props => [banners];

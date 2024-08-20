@@ -2,6 +2,7 @@ import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/pages/product_details_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -32,6 +33,7 @@ class _GridTileHomeState extends State<GridTileHome> {
         } else if (state is MainLoaded) {
           final baseState = state.products.data.product[widget.index];
           final monthly = (baseState.priceWithDiscount / 6).round();
+          final isFavorite= baseState.isFavourite?? false;
           return GestureDetector(
             onTap: () {
               Navigator.push(
@@ -49,8 +51,12 @@ class _GridTileHomeState extends State<GridTileHome> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        baseState.image,
+                      child: SizedBox(
+                        height: 180,
+                        width: 180,
+                        child: Image.network(
+                          baseState.image,
+                        ),
                       ),
                     ),
                     AppUtils.kHeight10,
@@ -82,8 +88,7 @@ class _GridTileHomeState extends State<GridTileHome> {
                     ),
                     AppUtils.kHeight10,
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 2),
+                      padding: const EdgeInsets.all(4),
                       width: SizeConfig.screenWidth! * 0.37,
                       decoration: BoxDecoration(
                         color: Colours.yellowCustom2,
@@ -91,6 +96,7 @@ class _GridTileHomeState extends State<GridTileHome> {
                       ),
                       child: Text(
                         '${NumberFormat('#,###', 'en_US').format(monthly).replaceAll(',', ' ')} сум/мес',
+
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
@@ -150,13 +156,15 @@ class _GridTileHomeState extends State<GridTileHome> {
                   child: IconButton(
                     splashColor: Colors.transparent,
                     onPressed: () {
-                      setState(() {
-                        _isFavorite = !_isFavorite;
-                      });
+                     context.read<MainBloc>().add(UpdateFavoriteEvent(!isFavorite, baseState));
+
+                     if (kDebugMode) {
+                       print(isFavorite);
+                     }
                     },
                     icon: Icon(
                       Icons.favorite,
-                      color: _isFavorite ? Colors.red : Colours.greyIcon,
+                      color: isFavorite ? Colors.red : Colours.greyIcon,
                     ),
                   ),
                 ),
