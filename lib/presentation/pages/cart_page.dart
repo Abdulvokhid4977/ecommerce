@@ -36,8 +36,8 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
-        backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
           'Корзина',
@@ -66,7 +66,7 @@ class _CartPageState extends State<CartPage> {
                         padding: const EdgeInsets.only(left: 16),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: Colours.backgroundGrey,
+                          color: Colours.textFieldGrey,
                         ),
                         width: SizeConfig.screenWidth,
                         height: SizeConfig.screenHeight! * 0.18,
@@ -361,7 +361,7 @@ class _CartPageState extends State<CartPage> {
                   child: Container(
                     height: SizeConfig.screenHeight! * 0.1,
                     width: SizeConfig.screenWidth,
-                    color: Colors.white,
+                    color: Colours.backgroundGrey,
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -16,7 +16,7 @@ Widget textField(
       hintStyle: TextStyle(color: Colours.greyIcon),
       border: InputBorder.none,
       filled: true,
-      fillColor: Colours.backgroundGrey,
+      fillColor: Colours.textFieldGrey,
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide: const BorderSide(

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:e_commerce/config/routes/app_routes.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
@@ -25,17 +24,7 @@ class _HomePageState extends State<HomePage> {
   Timer? _timer;
   FocusNode focus1 = FocusNode();
   final textEditingController = TextEditingController();
-  final _controller = PageController(viewportFraction: 0.8);
-  final List<Map> _category = [
-    {'asset': 'assets/images/kategoriya1.png', 'label': 'Распродажа'},
-    {'asset': 'assets/images/kategoriya2.png', 'label': 'Автотовары'},
-    {'asset': 'assets/images/kategoriya3.png', 'label': 'Бытовая техника'},
-    {'asset': 'assets/images/kategoriya1.png', 'label': 'Распродажа'},
-    {'asset': 'assets/images/kategoriya1.png', 'label': 'Распродажа'},
-    {'asset': 'assets/images/kategoriya1.png', 'label': 'Распродажа'},
-    {'asset': 'assets/images/kategoriya1.png', 'label': 'Распродажа'},
-    {'asset': 'assets/images/kategoriya1.png', 'label': 'Распродажа'},
-  ];
+  final _controller = PageController(viewportFraction: 0.9);
 
   void _startTimer(int bannerLength) {
     _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
@@ -87,17 +76,16 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   width: SizeConfig.screenWidth,
                   padding: EdgeInsets.only(
-                    left: 16,
+                    left: 8,
                     top: SizeConfig.statusBar! + 20,
-                    right: 16,
+                    right: 8,
                     bottom: 16,
                   ),
-                  color: Colors.white,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(
-                        width: SizeConfig.screenWidth! * 0.8,
+                      Container(
+                        width: SizeConfig.screenWidth! * 0.84,
                         child: textField(
                               () {},
                           focus1,
@@ -139,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               children: [
                                 SizedBox(
-                                  height: SizeConfig.screenHeight! * 0.23,
+                                  height: SizeConfig.screenHeight! * 0.25,
                                   child: PageView(
                                     controller: _controller,
                                     onPageChanged: (index) {
@@ -151,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                                         state.banners.banner.length, (i) {
                                       return Container(
                                         padding: const EdgeInsets.symmetric(
-                                          horizontal: 16,
+                                          horizontal: 5,
                                           vertical: 8,
                                         ),
                                         child: ClipRRect(
@@ -178,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                                 Container(
                                   alignment: Alignment.centerLeft,
                                   padding: const EdgeInsets.only(
-                                      left: 16, bottom: 12),
+                                      left: 8, bottom: 12),
                                   child: Text(
                                     'Категории',
                                     style: GoogleFonts.inter(
@@ -191,9 +179,9 @@ class _HomePageState extends State<HomePage> {
                                   child: ListView.separated(
                                     physics: const ClampingScrollPhysics(),
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8),
+                                        horizontal: 6),
                                     separatorBuilder: (ctx, i) {
-                                      return AppUtils.kWidth12;
+                                      return AppUtils.kWidth2;
                                     },
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder: (_, i) {
@@ -233,10 +221,10 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
-                          Container(
-                            color: Colours.backgroundGrey,
-                            height: 12,
-                          ),
+                          // Container(
+                          //   color: Colours.backgroundGrey,
+                          //   height: 12,
+                          // ),
                           Container(
                             decoration: const BoxDecoration(
                               borderRadius: BorderRadius.only(
@@ -245,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(left: 16, top: 12),
+                            padding: const EdgeInsets.only(left: 8, top: 12),
                             child: Text(
                               'Рекоммендуемое',
                               style: GoogleFonts.inter(
@@ -253,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: GridView.builder(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -261,8 +249,8 @@ class _HomePageState extends State<HomePage> {
                                 gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
-                                  crossAxisSpacing: 4,
-                                  mainAxisSpacing: 4,
+
+                                  mainAxisSpacing: 2,
                                   mainAxisExtent:
                                   SizeConfig.screenHeight! * 0.46,
                                 ),

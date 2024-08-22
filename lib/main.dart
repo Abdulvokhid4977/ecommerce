@@ -48,15 +48,19 @@ class _MyAppState extends State<MyApp> {
   }
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle( SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colours.backgroundGrey,
+      systemNavigationBarIconBrightness: Brightness.dark,
+
     ));
     return MaterialApp(
       title: 'E-commerce',
 
       theme: ThemeData(
         scaffoldBackgroundColor: Colours.backgroundGrey,
+        appBarTheme: AppBarTheme(color: Colours.backgroundGrey),
         textTheme: GoogleFonts.interTextTheme(),
         useMaterial3: false,
       ),

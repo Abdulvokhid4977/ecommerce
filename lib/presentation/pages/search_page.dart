@@ -29,7 +29,6 @@ class _SearchPageState extends State<SearchPage> {
       builder: (context, state) {
         if(state is MainLoaded) {
           return Scaffold(
-            backgroundColor: Colors.white,
             body: Column(
               children: [
                 Container(
@@ -97,7 +96,7 @@ class _SearchPageState extends State<SearchPage> {
           );
         }
         else if(state is MainError){
-          return Center(child: Text(state.message),);
+          return Center(child: Text('This is coming from search screen ${state.message}'),);
         }else {
           return const Center(child: CircularProgressIndicator());
         }

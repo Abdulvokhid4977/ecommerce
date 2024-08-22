@@ -166,8 +166,7 @@ class _GridTileHomeState extends State<GridTileHome> {
             ],
           ),
           Positioned(
-            top: 1,
-            right: 1,
+            right: 9,
             child: BlocConsumer<MainBloc, MainState>(
               listener: (context, state) {
                 if (state is FavoriteToggledState &&

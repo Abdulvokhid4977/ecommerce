@@ -48,7 +48,6 @@ class _GivingOrderState extends State<GivingOrder> {
             Navigator.of(context).pop();
           },
         ),
-        backgroundColor: Colors.white,
       ),
       body: Stack(
         children: [
@@ -63,7 +62,7 @@ class _GivingOrderState extends State<GivingOrder> {
                 Container(
                   width: SizeConfig.screenWidth,
                   decoration: BoxDecoration(
-                    color: Colours.backgroundGrey,
+                    color: Colours.textFieldGrey,
                     borderRadius: const BorderRadius.all(
                       Radius.circular(8),
                     ),
@@ -108,7 +107,7 @@ class _GivingOrderState extends State<GivingOrder> {
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colours.backgroundGrey,
+                      color: Colours.textFieldGrey,
                       borderRadius: const BorderRadius.all(
                         Radius.circular(8),
                       ),
@@ -176,7 +175,7 @@ class _GivingOrderState extends State<GivingOrder> {
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colours.backgroundGrey,
+                      color: Colours.textFieldGrey,
                       borderRadius: const BorderRadius.all(
                         Radius.circular(8),
                       ),
@@ -226,7 +225,7 @@ class _GivingOrderState extends State<GivingOrder> {
                 customRow('10:00-20:00, без выходных', hasIcon: false),
                 AppUtils.kHeight16,
                 elevatedButton(
-                    'Изменить', Colours.backgroundGrey, Colors.black),
+                    'Изменить', Colours.textFieldGrey, Colors.black, false),
                 AppUtils.kHeight32,
                 customText('Получатель заказа'),
                 AppUtils.kHeight16,
@@ -258,7 +257,7 @@ class _GivingOrderState extends State<GivingOrder> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colours.backgroundGrey,
+                    color: Colours.textFieldGrey,
                     borderRadius: const BorderRadius.all(
                       Radius.circular(8),
                     ),
@@ -303,7 +302,7 @@ class _GivingOrderState extends State<GivingOrder> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colours.backgroundGrey,
+                    color: Colours.textFieldGrey,
                     borderRadius: const BorderRadius.all(
                       Radius.circular(8),
                     ),
@@ -356,7 +355,7 @@ class _GivingOrderState extends State<GivingOrder> {
                   ],
                 ),
                 AppUtils.kHeight10,
-                Container(
+                Align(
                   alignment: Alignment.centerRight,
                   child: Text(
                     'экономия: 1 078 000 сум',
@@ -372,7 +371,7 @@ class _GivingOrderState extends State<GivingOrder> {
                     borderRadius: const BorderRadius.all(
                       Radius.circular(8),
                     ),
-                    color: Colours.backgroundGrey,
+                    color: Colours.textFieldGrey,
                   ),
                   child: TextField(
                     cursorColor: Colours.greyIcon,
@@ -402,7 +401,7 @@ class _GivingOrderState extends State<GivingOrder> {
           Positioned(
               bottom: 0,
               child: Container(
-                color: Colors.white,
+                color: Colours.backgroundGrey,
                 padding: const EdgeInsets.all(16),
                 // height: SizeConfig.screenHeight! * 0.15,
                 width: SizeConfig.screenWidth,
@@ -419,7 +418,7 @@ class _GivingOrderState extends State<GivingOrder> {
                     ),
                     AppUtils.kHeight16,
                     elevatedButton(
-                        'Оформить заказ', Colours.blueCustom, Colors.white),
+                        'Оформить заказ', Colours.blueCustom, Colors.white, true),
                   ],
                 ),
               )),
@@ -428,15 +427,19 @@ class _GivingOrderState extends State<GivingOrder> {
     );
   }
 
-  Widget elevatedButton(String text, Color color1, Color color2) {
+  Widget elevatedButton(String text, Color color1, Color color2, bool isDone) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => const EmptyWidget('assets/images/success.png',
-                'Успешно', 'Ваш заказ успешно был сделан. Спасибо за выбор'),
-          ),
-        );
+        if(isDone) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) =>
+              const EmptyWidget('assets/images/success.png',
+                  'Успешно', 'Ваш заказ успешно был сделан. Спасибо за выбор'),
+            ),
+          );
+        }
+        return;
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: color1,
@@ -467,7 +470,7 @@ class _GivingOrderState extends State<GivingOrder> {
         borderRadius: const BorderRadius.all(
           Radius.circular(8),
         ),
-        color: Colours.backgroundGrey,
+        color: Colours.textFieldGrey,
       ),
       child: TextFormField(
         cursorColor: Colours.greyIcon,
