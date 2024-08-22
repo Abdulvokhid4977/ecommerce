@@ -6,6 +6,7 @@ import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/components/gridtiles.dart';
 import 'package:e_commerce/presentation/components/textfield.dart';
+import 'package:e_commerce/presentation/pages/favorites_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,6 +57,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    context.read<MainBloc>().add(FetchDataEvent(false));
   }
 
   @override
@@ -64,9 +66,7 @@ class _HomePageState extends State<HomePage> {
     _controller.dispose();
     super.dispose();
   }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget homeContent(){
     return BlocBuilder<MainBloc, MainState>(
       bloc: context.read<MainBloc>(),
       builder: (context, state) {
@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(
                         width: SizeConfig.screenWidth! * 0.8,
                         child: textField(
-                          () {},
+                              () {},
                           focus1,
                           textEditingController,
                           "Поиск товаров и категорий",
@@ -108,6 +108,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       IconButton(
                         onPressed: () {
+                          context.read<MainBloc>().add(FetchDataEvent(true));
                           Navigator.of(context).pushNamed(Routes.favorites);
                         },
                         icon: Icon(
@@ -122,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                 Expanded(
                   child: RefreshIndicator(
                     onRefresh: () async {
-                      context.read<MainBloc>().add(FetchDataEvent());
+                      context.read<MainBloc>().add(FetchDataEvent(false));
                     },
                     child: SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
@@ -149,14 +150,13 @@ class _HomePageState extends State<HomePage> {
                                     children: List.generate(
                                         state.banners.banner.length, (i) {
                                       return Container(
-
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 16,
                                           vertical: 8,
                                         ),
                                         child: ClipRRect(
                                           borderRadius:
-                                              BorderRadius.circular(8),
+                                          BorderRadius.circular(8),
                                           child: Image.network(
                                             state.banners.banner[i].bannerImage,
                                             fit: BoxFit.fill,
@@ -189,8 +189,9 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   height: SizeConfig.screenHeight! * 0.15,
                                   child: ListView.separated(
+                                    physics: const ClampingScrollPhysics(),
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 16),
+                                        horizontal: 8),
                                     separatorBuilder: (ctx, i) {
                                       return AppUtils.kWidth12;
                                     },
@@ -203,8 +204,11 @@ class _HomePageState extends State<HomePage> {
                                             SizedBox(
                                               height: 80,
                                               width: 80,
-                                              child: Image.network(
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(8),
+                                                child: Image.network(
                                                   state.category.category[i].url, fit: BoxFit.fill,),
+                                              ),
                                             ),
                                             AppUtils.kHeight10,
                                             SizedBox(
@@ -255,12 +259,12 @@ class _HomePageState extends State<HomePage> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: state.products.data.product.length,
                                 gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 4,
                                   mainAxisSpacing: 4,
                                   mainAxisExtent:
-                                      SizeConfig.screenHeight! * 0.46,
+                                  SizeConfig.screenHeight! * 0.46,
                                 ),
                                 itemBuilder: (ctx, i) {
                                   return GridTileHome(i);
@@ -276,18 +280,23 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         } else if (state is MainError) {
-          return RefreshIndicator(
-              onRefresh: () async {
-                context.read<MainBloc>().add(FetchDataEvent());
-              },
-              child: Center(child: Text(state.message)));
+          return Center(child: Text(state.message));
         } else {
-          return RefreshIndicator(
-              onRefresh: () async {
-                context.read<MainBloc>().add(FetchDataEvent());
-              },
-              child: const Center(child: Text('Could not fetch')));
+          return const Center(child: Text('Could not fetch HomePage'));
         }
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      onGenerateRoute: (settings) {
+        Widget page = homeContent(); // Your default HomePage content
+        if (settings.name == Routes.favorites) {
+          page = const FavoritesPage();  // Navigate to Wishlist
+        }
+        return MaterialPageRoute(builder: (_) => page);
       },
     );
   }

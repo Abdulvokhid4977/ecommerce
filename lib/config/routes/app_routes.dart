@@ -38,10 +38,10 @@ sealed class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => const MainPage(),
         );
-      case Routes.favorites:
-        return MaterialPageRoute(
-          builder: (_) => const FavoritesPage(),
-        );
+      // case Routes.favorites:
+      //   return MaterialPageRoute(
+      //     builder: (_) => const FavoritesPage(),
+      //   );
       case Routes.search:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(

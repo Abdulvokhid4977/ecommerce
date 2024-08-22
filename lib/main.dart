@@ -1,8 +1,13 @@
+import 'dart:io';
+
+import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:chuck_interceptor/chuck.dart';
+
 
 import 'config/routes/app_routes.dart';
 
@@ -21,26 +26,44 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late Chuck _chuck;
+
+  @override
+  void initState() {
+    super.initState();
+    _chuck = Chuck(
+      showNotification: true,
+      showInspectorOnShake: true,
+      darkTheme: false,
+      maxCallsCount: 1000,
+    );
+  }
+  @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.white,
+      statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
     ));
     return MaterialApp(
       title: 'E-commerce',
+
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
+        scaffoldBackgroundColor: Colours.backgroundGrey,
         textTheme: GoogleFonts.interTextTheme(),
         useMaterial3: false,
       ),
       navigatorKey: rootNavigatorKey,
       onUnknownRoute: AppRoutes.onUnknownRoute,
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: Routes.givingOrder,
+      initialRoute: Routes.main,
       debugShowCheckedModeBanner: false,
     );
   }

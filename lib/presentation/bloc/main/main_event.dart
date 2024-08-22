@@ -3,6 +3,8 @@ part of 'main_bloc.dart';
 abstract class MainEvent extends Equatable {
 }
 class FetchDataEvent extends MainEvent{
+  final bool isWishlist;
+  FetchDataEvent(this.isWishlist);
   @override
   // TODO: implement props
   List<Object?> get props => [];
@@ -14,7 +16,7 @@ class UpdateFavoriteEvent extends MainEvent{
   UpdateFavoriteEvent(this.isFavorite, this.productElement);
   @override
   // TODO: implement props
-  List<Object?> get props =>[isFavorite];
+  List<Object?> get props =>[isFavorite, productElement];
 
 
 }

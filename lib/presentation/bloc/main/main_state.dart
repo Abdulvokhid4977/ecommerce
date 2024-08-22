@@ -21,10 +21,40 @@ class MainLoaded extends MainState {
   final Product products;
   final ctg.Category category;
 
-   MainLoaded(this.banners, this.products, this.category);
+  MainLoaded(this.banners, this.products, this.category);
+  // Adding copyWith method for easier state updates
+  MainLoaded copyWith({
+    BannerData? banners,
+    Product? products,
+    ctg.Category? category,
+  }) {
+    return MainLoaded(
+      banners ?? this.banners,
+      products ?? this.products,
+      category ?? this.category,
+    );
+  }
 
   @override
-  List<Object> get props => [banners];
+  List<Object> get props => [banners, products, category];
+}
+
+class FetchWishlistState extends MainState{
+  final Product product;
+  FetchWishlistState(this.product);
+
+  @override
+  List<Object> get props=>[product];
+}
+
+class FavoriteToggledState extends MainState {
+  final bool isFavorite;
+  final ProductElement productElement;
+
+  FavoriteToggledState(this.isFavorite, this.productElement);
+
+  @override
+  List<Object> get props => [isFavorite, productElement];
 }
 
 class MainError extends MainState {
