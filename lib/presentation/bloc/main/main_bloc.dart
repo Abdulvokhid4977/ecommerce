@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/data/models/banners_model.dart';
 import 'package:e_commerce/data/models/category_model.dart' as ctg;
-import 'package:e_commerce/data/models/product_moodel.dart';
+import 'package:e_commerce/data/models/product_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,11 +25,14 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         final response = await http.get(Uri.parse(
             '${Constants.baseUrl}/product?offset=0&limit=1000&favorite=${event.isWishlist}'));
         if (response.statusCode >= 200 && response.statusCode < 300) {
-          final result = Product.fromJson(jsonDecode(response.body));
-          if (kDebugMode) {
-            print('${result.data.product[0].name},${response.statusCode}');
+          if (jsonDecode(response.body)[1] == []) {
+            final product = Product(count: 0, product: []);
+            emit(FetchWishlistState(product, false));
+            return;
           }
-          emit(FetchWishlistState(result));
+          final result = Product.fromJson(jsonDecode(response.body));
+
+          emit(FetchWishlistState(result, true));
         } else if (response.statusCode > 299) {
           emit(
             MainError('This is coming from FetchWishlistState'),
@@ -48,11 +51,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           http.get(Uri.parse('${Constants.baseUrl}/category')),
         ]);
 
-        if (responses.every((response) => response.statusCode >= 200 && response.statusCode <= 299)) {
+        if (responses.every((response) =>
+            response.statusCode >= 200 && response.statusCode <= 299)) {
           final result1 = BannerData.fromJson(jsonDecode(responses[0].body));
           final result2 = Product.fromJson(jsonDecode(responses[1].body));
           final result3 = ctg.Category.fromJson(jsonDecode(responses[2].body));
-
           emit(MainLoaded(
             result1,
             result2,
@@ -80,7 +83,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           "name": event.productElement.name,
           "order_count": event.productElement.orderCount,
           "price": event.productElement.price,
-          "price_with_discount": event.productElement.priceWithDiscount,
+          "with_discount": event.productElement.priceWithDiscount,
           "product_category": event.productElement.productCategory,
           "rating": event.productElement.rating,
         }),
@@ -91,24 +94,35 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             'Adding favorite status code: ${response.statusCode}, ${event.isFavorite}');
       }
 
-      if (response.statusCode > 200 && response.statusCode<=299) {
+      if (response.statusCode > 200 && response.statusCode <= 299) {
         if (state is MainLoaded) {
           final currentState = state as MainLoaded;
 
           // Update the specific product with the new favorite status
-          final updatedProducts =
-              currentState.products.data.product.map((product) {
+          final updatedProducts = currentState.products.product.map((product) {
             return product.id == event.productElement.id
-                ? product.copyWith(isFavourite: event.isFavorite)
+                ? product.copyWith(favorite: event.isFavorite)
                 : product;
           }).toList();
 
           // Emit a new MainLoaded state with the updated products list
           emit(currentState.copyWith(
             products: currentState.products.copyWith(
-              data: currentState.products.data.copyWith(
-                product: updatedProducts,
-              ),
+              product: updatedProducts,
+            ),
+          ));
+        } else if (state is FetchWishlistState) {
+          final currentState = state as FetchWishlistState;
+          final updatedProducts = currentState.product.product.map((product) {
+            return product.id == event.productElement.id
+                ? product.copyWith(favorite: event.isFavorite)
+                : product;
+          }).toList();
+
+          // Emit a new MainLoaded state with the updated products list
+          emit(currentState.copyWith(
+            product: currentState.product.copyWith(
+              product: updatedProducts,
             ),
           ));
         }

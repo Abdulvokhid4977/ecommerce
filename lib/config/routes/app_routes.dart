@@ -1,5 +1,7 @@
 import 'package:chuck_interceptor/chuck.dart';
+import 'package:e_commerce/presentation/bloc/auth/auth_bloc.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
+import 'package:e_commerce/presentation/pages/auth_page.dart';
 import 'package:e_commerce/presentation/pages/cart_page.dart';
 import 'package:e_commerce/presentation/pages/error_page.dart';
 import 'package:e_commerce/presentation/pages/favorites_page.dart';
@@ -38,6 +40,13 @@ sealed class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => const MainPage(),
         );
+      case Routes.auth:
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (_) => AuthBloc(),
+              child: const AuthPage(),
+            ),
+          );
       // case Routes.favorites:
       //   return MaterialPageRoute(
       //     builder: (_) => const FavoritesPage(),

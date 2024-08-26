@@ -1,6 +1,6 @@
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
-import 'package:e_commerce/data/models/product_moodel.dart';
+import 'package:e_commerce/data/models/product_model.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/pages/product_details_page.dart';
 import 'package:flutter/foundation.dart';
@@ -30,13 +30,13 @@ class _GridTileHomeState extends State<GridTileHome> {
             child: CircularProgressIndicator(),
           );
         } else if (state is MainLoaded) {
-          final baseState = state.products.data.product[widget.index];
-          var isFavorite = baseState.isFavourite ?? false;
+          final baseState = state.products.product[widget.index];
+          var isFavorite = baseState.favorite;
           return gridtile(baseState, isFavorite);
         } else if (state is FetchWishlistState) {
-          final baseState = state.product.data.product[widget.index];
+          final baseState = state.product.product[widget.index];
           var isFavorite =
-              state.product.data.product[widget.index].isFavourite ?? false;
+              state.product.product[widget.index].favorite;
           return gridtile(baseState, isFavorite);
         } else if (state is MainError) {
           return Center(child: Text(state.message));
@@ -48,7 +48,7 @@ class _GridTileHomeState extends State<GridTileHome> {
   }
 
   Widget gridtile(ProductElement baseState, bool isFavorite) {
-    final monthly = (baseState.priceWithDiscount / 6).round();
+    final monthly = (baseState.priceWithDiscount! / 6).round();
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -184,9 +184,7 @@ class _GridTileHomeState extends State<GridTileHome> {
                   splashColor: Colors.transparent,
                   onPressed: () {
                     final newFavoriteStatus = !isFavorite;
-                    context
-                        .read<MainBloc>()
-                        .add(UpdateFavoriteEvent(newFavoriteStatus, baseState));
+                    context.read<MainBloc>().add(UpdateFavoriteEvent(newFavoriteStatus, baseState));
                     if (kDebugMode) {
                       print(
                           '$newFavoriteStatus - this is the status of the product when icon is clicked');

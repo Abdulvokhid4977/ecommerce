@@ -15,75 +15,76 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
-  final bool _isFavoritesEmpty = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              context.read<MainBloc>().add(FetchDataEvent(false));
-            },
-            icon: const Icon(Icons.arrow_back_ios_outlined)),
-        backgroundColor: Colours.backgroundGrey,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarBrightness: Brightness.dark,
-            statusBarColor: Colors.transparent,),
-        elevation: 0,
-        title: Text(
-          'Мои желания',
-          style: GoogleFonts.inter(
-              fontWeight: FontWeight.w400, fontSize: 24, color: Colors.black),
-        ),
-      ),
-      body: _isFavoritesEmpty
-          ? const EmptyWidget(
+    return BlocBuilder<MainBloc, MainState>(
+      bloc: context.read<MainBloc>(),
+      builder: (context, state) {
+        if (state is MainLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is FetchWishlistState) {
+          return Scaffold(
+            appBar: AppBar(
+              iconTheme: const IconThemeData(
+                color: Colors.black,
+              ),
+              automaticallyImplyLeading: false,
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    context.read<MainBloc>().add(FetchDataEvent(false));
+                  },
+                  icon: const Icon(Icons.arrow_back_ios_outlined)),
+              backgroundColor: Colours.backgroundGrey,
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarBrightness: Brightness.dark,
+                statusBarColor: Colors.transparent,),
+              elevation: 0,
+              title: Text(
+                'Мои желания',
+                style: GoogleFonts.inter(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 24,
+                    color: Colors.black),
+              ),
+            ),
+            body: state.product.product.isEmpty
+                ? const EmptyWidget(
               'assets/images/emoji.png',
               'Ваш список пуст',
               'В вашем списке желаний нет элементов перейдите на главную и выберите',
+
             )
-          : BlocBuilder<MainBloc, MainState>(
-              bloc: context.read<MainBloc>(),
-              builder: (context, state) {
-                if (state is MainLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state is FetchWishlistState) {
-                  return SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: state.product.data.product.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 4,
-                            mainAxisSpacing: 4,
-                            mainAxisExtent: SizeConfig.screenHeight! * 0.46,
-                          ),
-                          itemBuilder: (ctx, i) {
-                            return GridTileHome(i);
-                          }),
+                : SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 16),
+                child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: state.product.product.length,
+                    gridDelegate:
+                    SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 4,
+                      mainAxisSpacing: 4,
+                      mainAxisExtent: SizeConfig.screenHeight! * 0.46,
                     ),
-                  );
-                } else if (state is MainError) {
-                  return Center(child: Text(state.message));
-                } else {
-                  return const Center(child: Text('Could not fetch Favorites Page'));
-                }
-              },
-            ),
+                    itemBuilder: (ctx, i) {
+                      return GridTileHome(i);
+                    }),
+              ),),
+          );
+        } else if (state is MainError) {
+          return Center(child: Text(state.message));
+        } else {
+          return const Center(child: Text('Could not fetch Favorites Page'));
+        }
+      },
     );
   }
 }

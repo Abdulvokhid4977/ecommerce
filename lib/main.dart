@@ -57,7 +57,6 @@ class _MyAppState extends State<MyApp> {
     ));
     return MaterialApp(
       title: 'E-commerce',
-
       theme: ThemeData(
         scaffoldBackgroundColor: Colours.backgroundGrey,
         appBarTheme: AppBarTheme(color: Colours.backgroundGrey),
@@ -67,7 +66,7 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: rootNavigatorKey,
       onUnknownRoute: AppRoutes.onUnknownRoute,
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: Routes.main,
+      initialRoute: Routes.auth,
       debugShowCheckedModeBanner: false,
     );
   }

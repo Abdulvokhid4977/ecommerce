@@ -1,6 +1,6 @@
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
-import 'package:e_commerce/data/models/product_moodel.dart';
+import 'package:e_commerce/data/models/product_model.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/components/custom_container.dart';
 import 'package:flutter/foundation.dart';
@@ -45,15 +45,15 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             child: CircularProgressIndicator(),
           );
         } else if (state is MainLoaded) {
-          final baseState = state.products.data.product[widget.index];
+          final baseState = state.products.product[widget.index];
 
 
-          final isFavorite = baseState.isFavourite ?? false;
+          final isFavorite = baseState.favorite;
           return productDetails(baseState, isFavorite);
 
         }else if(state is FetchWishlistState){
-          final baseState = state.product.data.product[widget.index];
-          final isFavorite = baseState.isFavourite ?? false;
+          final baseState = state.product.product[widget.index];
+          final isFavorite = baseState.favorite;
           return productDetails(baseState, isFavorite);
         } else if (state is MainError) {
           return Center(child: Text(state.message));
@@ -65,10 +65,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   }
 
   Widget productDetails(ProductElement baseState, bool isFavorite){
-    final discount = ((baseState.price - baseState.priceWithDiscount) /
+    final discount = ((baseState.price - baseState.priceWithDiscount!) /
         baseState.price) *
         100;
-    final monthly = (baseState.priceWithDiscount / 6).round();
+    final monthly = (baseState.priceWithDiscount! / 6).round();
     return Scaffold(
       backgroundColor: Colours.backgroundGrey,
       body: Stack(

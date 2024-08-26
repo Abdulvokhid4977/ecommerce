@@ -41,7 +41,18 @@ class MainLoaded extends MainState {
 
 class FetchWishlistState extends MainState{
   final Product product;
-  FetchWishlistState(this.product);
+  final bool hasData;
+  FetchWishlistState(this.product, this.hasData);
+
+  FetchWishlistState copyWith({
+    bool? hasData,
+    Product? product,
+  }) {
+    return FetchWishlistState(
+      product ?? this.product,
+      hasData ?? this.hasData,
+    );
+  }
 
   @override
   List<Object> get props=>[product];

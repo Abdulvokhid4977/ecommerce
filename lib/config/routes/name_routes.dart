@@ -3,6 +3,7 @@ sealed class Routes {
   Routes._();
   static const String initial = '/';
   static const String main = '/main';
+  static const String auth = '/auth';
   static const String favorites='/favorites';
   static const String search = '/search';
   static const String order='/orders';
@@ -12,7 +13,6 @@ sealed class Routes {
   static const String givingOrder = '/givingorder';
 
 
-  static const String settings = '/settings';
 
   static const String register = '/register';
 }

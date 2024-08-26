@@ -418,7 +418,8 @@ class _GivingOrderState extends State<GivingOrder> {
                     ),
                     AppUtils.kHeight16,
                     elevatedButton(
-                        'Оформить заказ', Colours.blueCustom, Colors.white, true),
+                        'Оформить заказ', Colours.blueCustom, Colors.white,
+                        true),
                   ],
                 ),
               )),
@@ -430,12 +431,12 @@ class _GivingOrderState extends State<GivingOrder> {
   Widget elevatedButton(String text, Color color1, Color color2, bool isDone) {
     return ElevatedButton(
       onPressed: () {
-        if(isDone) {
+        if (isDone) {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) =>
-              const EmptyWidget('assets/images/success.png',
-                  'Успешно', 'Ваш заказ успешно был сделан. Спасибо за выбор'),
+              const EmptyWidget('assets/images/success.png', 'Успешно',
+                'Ваш заказ успешно был сделан. Спасибо за выбор',),
             ),
           );
         }
@@ -448,7 +449,7 @@ class _GivingOrderState extends State<GivingOrder> {
           borderRadius: BorderRadius.circular(8),
         ),
         fixedSize:
-            Size(SizeConfig.screenWidth!, SizeConfig.screenHeight! * 0.06),
+        Size(SizeConfig.screenWidth!, SizeConfig.screenHeight! * 0.06),
       ),
       child: Text(
         text,
@@ -484,14 +485,14 @@ class _GivingOrderState extends State<GivingOrder> {
 
   Widget customRow(String text,
       {Icon icon = const Icon(Icons.location_on_outlined),
-      bool hasIcon = true}) {
+        bool hasIcon = true}) {
     return Row(
       children: [
         hasIcon
             ? icon
             : const SizedBox(
-                width: 24,
-              ),
+          width: 24,
+        ),
         AppUtils.kWidth16,
         SizedBox(
           width: SizeConfig.screenWidth! * 0.7,
@@ -525,9 +526,9 @@ class _GivingOrderState extends State<GivingOrder> {
               height: 13,
               decoration: isChecked
                   ? BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colours.blueCustom,
-                    )
+                shape: BoxShape.circle,
+                color: Colours.blueCustom,
+              )
                   : null,
             ),
           ),

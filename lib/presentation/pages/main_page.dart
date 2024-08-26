@@ -39,7 +39,6 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     // setupPushNotifications();
-    context.read<MainBloc>().add(FetchDataEvent(false));
 
   }
   @override
