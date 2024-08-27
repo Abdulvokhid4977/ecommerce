@@ -37,8 +37,8 @@ class CartListview {
                         borderRadius: const BorderRadius.all(
                           Radius.circular(8),
                         ),
-                        child: Image.network(
-                          'https://s3-alpha-sig.figma.com/img/059d/b176/6c39073af309d2f891aa3851367892aa?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=MhCRgHD5aIOEP6ZqF67IBl4ZrLjZZxPtzGxsx4VBxFdg6b5a3DNpm5QUec5C2evzkUsqDfdyTUqVciIOLyqChnc2OZpEVsiih42IWjspqybRObEzzz8~p4PUdsKJ0jwgcUYZKefzKrOybWeSSFW2DDHFmbPUAoA2aMUFkVEicEh3RYhCYH2p8dr5l2rg6tGHtZuvZazfeWZXdNWV4QQHJqLu1OcoZGB4NOAkvZJAvTbC75wEUznCVS0fJMiBHkHBF~o-Smxf1T4f6u-mmp10CiuGpfTq2l7lQ94RoGR7eHP86VOHwtGmJbxrBCh9uXtpov300q1DWWayxotWf8w03g__',
+                        child: Image.asset(
+                          'assets/images/s21.jpeg',
                         ),
                       ),
                       AppUtils.kHeight10,

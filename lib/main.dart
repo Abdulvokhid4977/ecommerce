@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
+import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,7 @@ Future<void> main() async {
         BlocProvider<MainBloc>(
           create: (_) => MainBloc(),
         ),
+        BlocProvider<SearchBloc>(create: (_)=>SearchBloc())
       ],
       child: const MyApp(),
     ),
@@ -46,6 +48,13 @@ class _MyAppState extends State<MyApp> {
       maxCallsCount: 1000,
     );
   }
+
+  @override
+  void didChangeDependencies() {
+    SizeConfig().init(context);
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle( SystemUiOverlayStyle(
@@ -66,7 +75,7 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: rootNavigatorKey,
       onUnknownRoute: AppRoutes.onUnknownRoute,
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: Routes.auth,
+      initialRoute: Routes.main,
       debugShowCheckedModeBanner: false,
     );
   }

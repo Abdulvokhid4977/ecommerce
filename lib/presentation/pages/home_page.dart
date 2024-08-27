@@ -1,7 +1,9 @@
 import 'dart:async';
+
 import 'package:e_commerce/config/routes/app_routes.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
+import 'package:e_commerce/data/models/category_model.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/components/gridtiles.dart';
 import 'package:e_commerce/presentation/components/textfield.dart';
@@ -55,7 +57,8 @@ class _HomePageState extends State<HomePage> {
     _controller.dispose();
     super.dispose();
   }
-  Widget homeContent(){
+
+  Widget homeContent() {
     return BlocBuilder<MainBloc, MainState>(
       bloc: context.read<MainBloc>(),
       builder: (context, state) {
@@ -70,6 +73,10 @@ class _HomePageState extends State<HomePage> {
           if (_timer == null) {
             _startTimer(state.banners.banner.length);
           }
+
+          List<CategoryElement> filtered = state.category.category
+              .where((val) => val.parentId == '')
+              .toList();
           return Scaffold(
             body: Column(
               children: [
@@ -87,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                       Container(
                         width: SizeConfig.screenWidth! * 0.84,
                         child: textField(
-                              () {},
+                          () {},
                           focus1,
                           textEditingController,
                           "Поиск товаров и категорий",
@@ -144,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         child: ClipRRect(
                                           borderRadius:
-                                          BorderRadius.circular(8),
+                                              BorderRadius.circular(8),
                                           child: Image.network(
                                             state.banners.banner[i].bannerImage,
                                             fit: BoxFit.fill,
@@ -186,23 +193,30 @@ class _HomePageState extends State<HomePage> {
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder: (_, i) {
                                       return GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+
+                                        },
                                         child: Column(
                                           children: [
                                             SizedBox(
                                               height: 80,
                                               width: 80,
                                               child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(8),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
                                                 child: Image.network(
-                                                  state.category.category[i].url, fit: BoxFit.fill,),
+                                                  filtered[i].url,
+                                                  // state.category.category[i].url,
+                                                  fit: BoxFit.fill,
+                                                ),
                                               ),
                                             ),
                                             AppUtils.kHeight10,
                                             SizedBox(
                                               width: 90,
                                               child: Text(
-                                                state.category.category[i].name,
+                                                filtered[i].name,
+                                                // state.category.category[i].name,
                                                 style: GoogleFonts.inter(
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 14,
@@ -215,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       );
                                     },
-                                    itemCount: state.category.category.length,
+                                    itemCount: filtered.length,
                                   ),
                                 ),
                               ],
@@ -247,12 +261,11 @@ class _HomePageState extends State<HomePage> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: state.products.product.length,
                                 gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
-
                                   mainAxisSpacing: 2,
                                   mainAxisExtent:
-                                  SizeConfig.screenHeight! * 0.46,
+                                      SizeConfig.screenHeight! * 0.46,
                                 ),
                                 itemBuilder: (ctx, i) {
                                   return GridTileHome(i);
@@ -282,7 +295,7 @@ class _HomePageState extends State<HomePage> {
       onGenerateRoute: (settings) {
         Widget page = homeContent(); // Your default HomePage content
         if (settings.name == Routes.favorites) {
-          page = const FavoritesPage();  // Navigate to Wishlist
+          page = const FavoritesPage(); // Navigate to Wishlist
         }
         return MaterialPageRoute(builder: (_) => page);
       },

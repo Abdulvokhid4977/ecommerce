@@ -4,6 +4,7 @@ sealed class Routes {
   static const String initial = '/';
   static const String main = '/main';
   static const String auth = '/auth';
+  static const String confirmCode = '/confirmCode';
   static const String favorites='/favorites';
   static const String search = '/search';
   static const String order='/orders';

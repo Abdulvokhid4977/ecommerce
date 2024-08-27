@@ -3,6 +3,7 @@ import 'package:e_commerce/presentation/bloc/auth/auth_bloc.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:e_commerce/presentation/pages/auth_page.dart';
 import 'package:e_commerce/presentation/pages/cart_page.dart';
+import 'package:e_commerce/presentation/pages/confirm_code.dart';
 import 'package:e_commerce/presentation/pages/error_page.dart';
 import 'package:e_commerce/presentation/pages/favorites_page.dart';
 import 'package:e_commerce/presentation/pages/giving_order.dart';
@@ -62,6 +63,10 @@ sealed class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => const GivingOrder(),
         );
+      // case Routes.confirmCode:
+      //   return MaterialPageRoute(
+      //     builder: (_) => const ConfirmCode(),
+      //   );
       // case Routes.selectLang:
       //   return MaterialPageRoute(builder: (_) => const SelectLang());
       // case Routes.shopping:
