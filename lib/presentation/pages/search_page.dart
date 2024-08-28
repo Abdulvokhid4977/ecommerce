@@ -24,10 +24,8 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<SearchBloc>();
-    // context.read<MainBloc>().add(FetchDataEvent(false));
-  }
 
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +54,7 @@ class _SearchPageState extends State<SearchPage> {
                       child: CircularProgressIndicator(),
                     ),
                   );
-                } else if (state is SearchLoaded) {
+                } else if (state is CategoryLoaded) {
                   List<CategoryElement> filtered = state.category.category
                       .where((val) => val.parentId == '')
                       .toList();
@@ -139,7 +137,11 @@ class _SearchPageState extends State<SearchPage> {
                         'This is coming from search screen ${state.message}'),
                   );
                 } else {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
                 }
               }),
         ],

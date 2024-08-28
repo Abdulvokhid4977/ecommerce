@@ -73,14 +73,14 @@ class FavoriteToggledState extends MainState {
   List<Object> get props => [isFavorite, productElement];
 }
 
-// class TabChangedState extends MainState {
-//   final int currentIndex;
-//
-//   TabChangedState(this.currentIndex);
-//
-//   @override
-//   List<Object> get props => [currentIndex];
-// }
+class TabChangedState extends MainState {
+  final int currentIndex;
+
+  TabChangedState(this.currentIndex);
+
+  @override
+  List<Object> get props => [currentIndex];
+}
 
 class MainError extends MainState {
   final String message;

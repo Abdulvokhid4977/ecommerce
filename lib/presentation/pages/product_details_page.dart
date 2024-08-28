@@ -50,7 +50,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
               print(product.name);
               return productDetails(product, isFavorite);
-            } else if (mainState is MainLoading) {
+            } else
+              if (mainState is MainLoading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );

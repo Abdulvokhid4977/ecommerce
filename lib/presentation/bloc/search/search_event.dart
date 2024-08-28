@@ -3,13 +3,19 @@ part of 'search_bloc.dart';
 @immutable
 abstract class SearchEvent extends Equatable {}
 
-class FetchCategoryProductEvent extends SearchEvent {
+class FetchSearchDataEvent extends SearchEvent {
   final String categoryId;
+  final bool fromNavBar;
 
-  FetchCategoryProductEvent(this.categoryId);
+  FetchSearchDataEvent(this.categoryId, this.fromNavBar);
 
   @override
   // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [categoryId, fromNavBar];
 }
+// class FetchCategoryListEvent extends SearchEvent{
+//   @override
+//   // TODO: implement props
+//   List<Object?> get props => [];
+// }
 

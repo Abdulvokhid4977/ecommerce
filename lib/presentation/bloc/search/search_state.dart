@@ -12,6 +12,22 @@ class SearchInitial extends SearchState {
   List<Object> get props => [];
 }
 
+class CategoryLoaded extends SearchState{
+  final ctg.Category category;
+  CategoryLoaded(this.category);
+
+  // Adding copyWith method for easier state updates
+  CategoryLoaded copyWith({
+    ctg.Category? category,
+  }) {
+    return CategoryLoaded(
+      category ?? this.category,
+    );
+  }
+  @override
+  List<Object> get props => [];
+}
+
 class SearchLoaded extends SearchState {
   final ctg.Category category;
 

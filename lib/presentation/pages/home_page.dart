@@ -197,8 +197,10 @@ class _HomePageState extends State<HomePage> {
                                     itemBuilder: (_, i) {
                                       return GestureDetector(
                                         onTap: () {
+                                          context.read<MainBloc>().add(ChangeTabEvent(1));
                                           context.read<SearchBloc>().add(
-                                              FetchCategoryProductEvent(filtered[i].id));
+                                              FetchSearchDataEvent(
+                                                  filtered[i].id, false));
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(

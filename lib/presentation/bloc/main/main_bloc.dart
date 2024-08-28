@@ -16,9 +16,9 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   MainBloc() : super(MainInitial()) {
     on<FetchDataEvent>(_fetchData);
     on<UpdateFavoriteEvent>(_updateFavorite);
-    // on<ChangeTabEvent>((event, emit) {
-    //   emit(TabChangedState(event.tabIndex));
-    // });
+    on<ChangeTabEvent>((event, emit) {
+      emit(TabChangedState(event.tabIndex));
+    });
   }
 
 

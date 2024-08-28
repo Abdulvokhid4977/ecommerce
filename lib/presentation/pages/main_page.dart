@@ -1,14 +1,12 @@
-
-import 'package:e_commerce/config/routes/app_routes.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
+import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:e_commerce/presentation/pages/cart_page.dart';
 import 'package:e_commerce/presentation/pages/home_page.dart';
 import 'package:e_commerce/presentation/pages/profile_page.dart';
 import 'package:e_commerce/presentation/pages/search_page.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -27,6 +25,7 @@ class _MainPageState extends State<MainPage> {
     const CartPage(),
     const ProfilePage(),
   ];
+
 //   void setupPushNotifications() async{
 //     final fcm= FirebaseMessaging.instance;
 //     await fcm.requestPermission();
@@ -39,49 +38,58 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     // setupPushNotifications();
-
   }
+
   @override
   void didChangeDependencies() {
     SizeConfig().init(context);
     super.didChangeDependencies();
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: tabs[currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colours.backgroundGrey,
-        type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: true,
-        selectedItemColor: Colours.blueCustom,
-        unselectedItemColor: Colours.greyCustom,
-        key: Constants.bottomNavigatorKey,
-        onTap: (i) {
-          setState(() {
-            currentIndex = i;
-          });
-        },
-        currentIndex: currentIndex,
-        items: [
-          _navigationBarItem(
-            label: 'Главная',
-            icon: _buildSvgIcon('assets/icons/home.svg', 0),
+    return BlocBuilder<MainBloc, MainState>(
+      builder: (context, state) {
+        if (state is TabChangedState) {
+          currentIndex = state.currentIndex;
+        }
+        return Scaffold(
+          body: tabs[currentIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Colours.backgroundGrey,
+            type: BottomNavigationBarType.fixed,
+            showUnselectedLabels: true,
+            selectedItemColor: Colours.blueCustom,
+            unselectedItemColor: Colours.greyCustom,
+            key: Constants.bottomNavigatorKey,
+            onTap: (i) {
+              if (currentIndex == 1) {
+                context.read<SearchBloc>().add(FetchSearchDataEvent('', true));
+              }
+              context.read<MainBloc>().add(ChangeTabEvent(i));
+            },
+            currentIndex: currentIndex,
+            items: [
+              _navigationBarItem(
+                label: 'Главная',
+                icon: _buildSvgIcon('assets/icons/home.svg', 0),
+              ),
+              _navigationBarItem(
+                label: 'Поиск',
+                icon: _buildSvgIcon('assets/icons/search.svg', 1),
+              ),
+              _navigationBarItem(
+                label: 'Корзина',
+                icon: _buildSvgIcon('assets/icons/cart.svg', 2),
+              ),
+              _navigationBarItem(
+                label: 'Кабинет',
+                icon: _buildSvgIcon('assets/icons/profile.svg', 3),
+              ),
+            ],
           ),
-          _navigationBarItem(
-            label: 'Каталог',
-            icon: _buildSvgIcon('assets/icons/search.svg', 1),
-          ),
-          _navigationBarItem(
-            label: 'Корзина',
-            icon: _buildSvgIcon('assets/icons/cart.svg', 2),
-          ),
-          _navigationBarItem(
-            label: 'Кабинет',
-            icon: _buildSvgIcon('assets/icons/profile.svg', 3),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -98,8 +106,9 @@ class _MainPageState extends State<MainPage> {
   Widget _buildSvgIcon(String assetName, int index) {
     return SvgPicture.asset(
       assetName,
-      colorFilter: ColorFilter.mode(currentIndex == index ? Colours.blueCustom : Colours.greyCustom,BlendMode.srcIn),
+      colorFilter: ColorFilter.mode(
+          currentIndex == index ? Colours.blueCustom : Colours.greyCustom,
+          BlendMode.srcIn),
     );
   }
 }
-
