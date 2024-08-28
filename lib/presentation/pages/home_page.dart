@@ -5,9 +5,11 @@ import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/data/models/category_model.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
+import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:e_commerce/presentation/components/gridtiles.dart';
 import 'package:e_commerce/presentation/components/textfield.dart';
 import 'package:e_commerce/presentation/pages/favorites_page.dart';
+import 'package:e_commerce/presentation/pages/search_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,63 +61,64 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget homeContent() {
-    return BlocBuilder<MainBloc, MainState>(
-      bloc: context.read<MainBloc>(),
-      builder: (context, state) {
-        if (kDebugMode) {
-          print(state.runtimeType);
-        }
-        if (state is MainLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (state is MainLoaded) {
-          if (_timer == null) {
-            _startTimer(state.banners.banner.length);
-          }
-
-          List<CategoryElement> filtered = state.category.category
-              .where((val) => val.parentId == '')
-              .toList();
-          return Scaffold(
-            body: Column(
+    return Scaffold(
+      body: Column(
+        children: [
+          Container(
+            width: SizeConfig.screenWidth,
+            padding: EdgeInsets.only(
+              left: 8,
+              top: SizeConfig.statusBar! + 20,
+              right: 8,
+              bottom: 16,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: SizeConfig.screenWidth,
-                  padding: EdgeInsets.only(
-                    left: 8,
-                    top: SizeConfig.statusBar! + 20,
-                    right: 8,
-                    bottom: 16,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: SizeConfig.screenWidth! * 0.84,
-                        child: textField(
-                          () {},
-                          focus1,
-                          textEditingController,
-                          "Поиск товаров и категорий",
-                          isSearch: true,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          context.read<MainBloc>().add(FetchDataEvent(true));
-                          Navigator.of(context).pushNamed(Routes.favorites);
-                        },
-                        icon: Icon(
-                          Icons.favorite_border,
-                          color: Colours.greyIcon,
-                          size: 32,
-                        ),
-                      ),
-                    ],
+                SizedBox(
+                  width: SizeConfig.screenWidth! * 0.84,
+                  child: textField(
+                    () {},
+                    focus1,
+                    textEditingController,
+                    "Поиск товаров и категорий",
+                    isSearch: true,
                   ),
                 ),
-                Expanded(
+                IconButton(
+                  onPressed: () {
+                    context.read<MainBloc>().add(FetchDataEvent(true));
+                    Navigator.of(context).pushNamed(Routes.favorites);
+                  },
+                  icon: Icon(
+                    Icons.favorite_border,
+                    color: Colours.greyIcon,
+                    size: 32,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          BlocBuilder<MainBloc, MainState>(
+            bloc: context.read<MainBloc>(),
+            builder: (context, state) {
+              if (kDebugMode) {
+                print(state.runtimeType);
+              }
+              if (state is MainLoading) {
+                return const Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              } else if (state is MainLoaded) {
+                if (_timer == null) {
+                  _startTimer(state.banners.banner.length);
+                }
+                List<CategoryElement> filtered = state.category.category
+                    .where((val) => val.parentId == '')
+                    .toList();
+                return Expanded(
                   child: RefreshIndicator(
                     onRefresh: () async {
                       context.read<MainBloc>().add(FetchDataEvent(false));
@@ -194,7 +197,15 @@ class _HomePageState extends State<HomePage> {
                                     itemBuilder: (_, i) {
                                       return GestureDetector(
                                         onTap: () {
-
+                                          context.read<SearchBloc>().add(
+                                              FetchCategoryProductEvent(filtered[i].id));
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SearchPage(filtered[i].id),
+                                            ),
+                                          );
                                         },
                                         child: Column(
                                           children: [
@@ -276,16 +287,16 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        } else if (state is MainError) {
-          return Center(child: Text(state.message));
-        } else {
-          return const Center(child: Text('Could not fetch HomePage'));
-        }
-      },
+                );
+              } else if (state is MainError) {
+                return Center(child: Text(state.message));
+              } else {
+                return const Center(child: Text('Could not fetch HomePage'));
+              }
+            },
+          )
+        ],
+      ),
     );
   }
 

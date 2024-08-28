@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:e_commerce/config/routes/app_routes.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +19,44 @@ class ConfirmCode extends StatefulWidget {
 class _ConfirmCodeState extends State<ConfirmCode> {
   bool isCodeFilled = false;
   bool _onEditing = false;
+  bool isTimerExpired = false;
   bool _codeCorrect = true;
   final String _code = '1234';
+  late Timer _timer;
+  int _start = 5;
+
+  void startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_start == 0) {
+        setState(() {
+          isTimerExpired = true;
+          timer.cancel();
+        });
+      } else {
+        setState(() {
+          _start--;
+        });
+      }
+    });
+  }
+
+  String get formattedTime {
+    int minutes = _start ~/ 60;
+    int seconds = _start % 60;
+    return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +111,11 @@ class _ConfirmCodeState extends State<ConfirmCode> {
                       ),
                     ),
                   ),
-                  AppUtils.kHeight16,
+                  AppUtils.kHeight10,
+                  Center(
+                    child: Text(formattedTime),
+                  ),
+                  AppUtils.kHeight10,
                   Center(
                     child: VerificationCode(
                       textStyle: GoogleFonts.inter(
@@ -91,17 +134,6 @@ class _ConfirmCodeState extends State<ConfirmCode> {
                       digitsOnly: true,
                       margin: const EdgeInsets.all(10),
                       cursorColor: Colours.blueCustom,
-                      clearAll: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Clear all',
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: Colours.blueCustom,
-                          ),
-                        ),
-                      ),
                       onCompleted: (String value) {
                         if (value.compareTo(_code) == 0) {
                           setState(() {
@@ -123,12 +155,39 @@ class _ConfirmCodeState extends State<ConfirmCode> {
                       },
                     ),
                   ),
+                  AppUtils.kHeight10,
+                  _codeCorrect
+                      ? const SizedBox()
+                      : Center(
+                          child: Text(
+                            'Неверный код',
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Colours.redCustom,
+                            ),
+                          ),
+                        ),
+                  isTimerExpired
+                      ? Center(
+                          child: TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              'Отправить еще раз',
+                              style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                color: Colours.blueCustom,
+                              ),
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
                 ],
               ),
             ),
-            AppUtils.kHeight16,
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {Navigator.of(context).pushNamed(Routes.register);},
               style: ElevatedButton.styleFrom(
                   elevation: 0,
                   backgroundColor:

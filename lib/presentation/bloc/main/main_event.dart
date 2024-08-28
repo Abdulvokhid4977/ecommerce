@@ -1,22 +1,44 @@
 part of 'main_bloc.dart';
+
 @immutable
-abstract class MainEvent extends Equatable {
-}
-class FetchDataEvent extends MainEvent{
+abstract class MainEvent extends Equatable {}
+
+class FetchDataEvent extends MainEvent {
   final bool isWishlist;
+
   FetchDataEvent(this.isWishlist);
+
   @override
   // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [isWishlist];
 }
-class UpdateFavoriteEvent extends MainEvent{
+
+class UpdateFavoriteEvent extends MainEvent {
   final bool isFavorite;
   final ProductElement productElement;
 
   UpdateFavoriteEvent(this.isFavorite, this.productElement);
+
   @override
   // TODO: implement props
-  List<Object?> get props =>[isFavorite, productElement];
+  List<Object?> get props => [isFavorite, productElement];
+}
 
+// class FetchCategoryProductEvent extends MainEvent {
+//   final String categoryId;
+//
+//   FetchCategoryProductEvent(this.categoryId);
+//
+//   @override
+//   // TODO: implement props
+//   List<Object?> get props => [];
+// }
 
+class ChangeTabEvent extends MainEvent {
+  final int tabIndex;
+
+  ChangeTabEvent(this.tabIndex);
+
+  @override
+  List<Object?> get props => [tabIndex];
 }

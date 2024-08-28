@@ -16,11 +16,18 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   MainBloc() : super(MainInitial()) {
     on<FetchDataEvent>(_fetchData);
     on<UpdateFavoriteEvent>(_updateFavorite);
+    // on<ChangeTabEvent>((event, emit) {
+    //   emit(TabChangedState(event.tabIndex));
+    // });
   }
+
+
+
 
   Future<void> _fetchData(FetchDataEvent event, Emitter<MainState> emit) async {
     emit(MainLoading());
-    if (event.isWishlist == true) {
+
+     if (event.isWishlist == true) {
       try {
         final response = await http.get(Uri.parse(
             '${Constants.baseUrl}/product?offset=0&limit=1000&favorite=${event.isWishlist}'));
@@ -31,7 +38,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             return;
           }
           final result = Product.fromJson(jsonDecode(response.body));
-
           emit(FetchWishlistState(result, true));
         } else if (response.statusCode > 299) {
           emit(
@@ -56,13 +62,17 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           final result1 = BannerData.fromJson(jsonDecode(responses[0].body));
           final result2 = Product.fromJson(jsonDecode(responses[1].body));
           final result3 = ctg.Category.fromJson(jsonDecode(responses[2].body));
+          if (kDebugMode) {
+            print('It is emitting MainLoaded');
+          }
           emit(MainLoaded(
             result1,
             result2,
             result3,
           ));
         } else {
-          emit(MainError('Failed to fetch data.'));
+          // print(responses[1].body);
+          emit(MainError('Failed to fetch data. Do you know why?'));
         }
       } catch (e, s) {
         emit(MainError('Failed to fetch data: $e, $s'));
@@ -83,8 +93,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           "name": event.productElement.name,
           "order_count": event.productElement.orderCount,
           "price": event.productElement.price,
-          "with_discount": event.productElement.priceWithDiscount,
-          "product_category": event.productElement.productCategory,
+          "with_discount": event.productElement.withDiscount,
+          "category_id": event.productElement.categoryId,
           "rating": event.productElement.rating,
         }),
       );

@@ -23,7 +23,7 @@ class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
   List tabs = [
     const HomePage(),
-    const SearchPage(),
+    const SearchPage(''),
     const CartPage(),
     const ProfilePage(),
   ];

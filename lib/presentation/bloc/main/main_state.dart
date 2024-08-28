@@ -4,8 +4,9 @@ part of 'main_bloc.dart';
 class MainState extends Equatable {
   @override
   // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
+
 class MainInitial extends MainState {
   @override
   List<Object> get props => [];
@@ -22,6 +23,7 @@ class MainLoaded extends MainState {
   final ctg.Category category;
 
   MainLoaded(this.banners, this.products, this.category);
+
   // Adding copyWith method for easier state updates
   MainLoaded copyWith({
     BannerData? banners,
@@ -39,9 +41,10 @@ class MainLoaded extends MainState {
   List<Object> get props => [banners, products, category];
 }
 
-class FetchWishlistState extends MainState{
+class FetchWishlistState extends MainState {
   final Product product;
   final bool hasData;
+
   FetchWishlistState(this.product, this.hasData);
 
   FetchWishlistState copyWith({
@@ -55,8 +58,10 @@ class FetchWishlistState extends MainState{
   }
 
   @override
-  List<Object> get props=>[product];
+  List<Object> get props => [product, hasData];
 }
+
+
 
 class FavoriteToggledState extends MainState {
   final bool isFavorite;
@@ -68,10 +73,19 @@ class FavoriteToggledState extends MainState {
   List<Object> get props => [isFavorite, productElement];
 }
 
+// class TabChangedState extends MainState {
+//   final int currentIndex;
+//
+//   TabChangedState(this.currentIndex);
+//
+//   @override
+//   List<Object> get props => [currentIndex];
+// }
+
 class MainError extends MainState {
   final String message;
 
- MainError(this.message);
+  MainError(this.message);
 
   @override
   List<Object> get props => [message];

@@ -65,10 +65,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   }
 
   Widget productDetails(ProductElement baseState, bool isFavorite){
-    final discount = ((baseState.price - baseState.priceWithDiscount!) /
+    final discount = ((baseState.price - baseState.withDiscount!) /
         baseState.price) *
         100;
-    final monthly = (baseState.priceWithDiscount! / 6).round();
+    final monthly = (baseState.withDiscount! / 6).round();
     return Scaffold(
       backgroundColor: Colours.backgroundGrey,
       body: Stack(
@@ -327,7 +327,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${NumberFormat('#,###', 'en_US').format(baseState.priceWithDiscount).replaceAll(',', ' ')} сум',
+                              '${NumberFormat('#,###', 'en_US').format(baseState.withDiscount).replaceAll(',', ' ')} сум',
                               style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 18,
@@ -492,7 +492,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         ),
                       ),
                       Text(
-                        '${NumberFormat('#,###', 'en_US').format(baseState.priceWithDiscount).replaceAll(',', ' ')} сум',
+                        '${NumberFormat('#,###', 'en_US').format(baseState.withDiscount).replaceAll(',', ' ')} сум',
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
                           fontSize: 18,

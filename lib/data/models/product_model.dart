@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final product = productFromJson(jsonString);
-
 import 'dart:convert';
 
 Product productFromJson(String str) => Product.fromJson(json.decode(str));
@@ -27,27 +23,27 @@ class Product {
       );
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-    count: json["count"],
-    product: json["product"] != null
-        ? List<ProductElement>.from(json["product"].map((x) => ProductElement.fromJson(x)))
-        : [],
-  );
-
+        count: json["count"] ?? 0,
+        product: json["product"] != null
+            ? List<ProductElement>.from(
+                json["product"].map((x) => ProductElement.fromJson(x)))
+            : [],
+      );
 
   Map<String, dynamic> toJson() => {
-    "count": count,
-    "product": List<dynamic>.from(product.map((x) => x.toJson())),
-  };
+        "count": count,
+        "product": List<dynamic>.from(product.map((x) => x.toJson())),
+      };
 }
 
 class ProductElement {
   String id;
+  String categoryId;
   bool favorite;
   String image;
   String name;
-  String productCategory;
   int price;
-  int? priceWithDiscount;
+  int withDiscount;
   double rating;
   String description;
   int orderCount;
@@ -55,12 +51,12 @@ class ProductElement {
 
   ProductElement({
     required this.id,
+    required this.categoryId,
     required this.favorite,
     required this.image,
     required this.name,
-    required this.productCategory,
     required this.price,
-    this.priceWithDiscount,
+    required this.withDiscount,
     required this.rating,
     required this.description,
     required this.orderCount,
@@ -69,10 +65,10 @@ class ProductElement {
 
   ProductElement copyWith({
     String? id,
+    String? categoryId,
     bool? favorite,
     String? image,
     String? name,
-    String? productCategory,
     int? price,
     int? withDiscount,
     double? rating,
@@ -82,12 +78,12 @@ class ProductElement {
   }) =>
       ProductElement(
         id: id ?? this.id,
+        categoryId: categoryId ?? this.categoryId,
         favorite: favorite ?? this.favorite,
         image: image ?? this.image,
         name: name ?? this.name,
-        productCategory: productCategory ?? this.productCategory,
         price: price ?? this.price,
-        priceWithDiscount: withDiscount ?? this.priceWithDiscount,
+        withDiscount: withDiscount ?? this.withDiscount,
         rating: rating ?? this.rating,
         description: description ?? this.description,
         orderCount: orderCount ?? this.orderCount,
@@ -95,30 +91,30 @@ class ProductElement {
       );
 
   factory ProductElement.fromJson(Map<String, dynamic> json) => ProductElement(
-    id: json["id"],
-    favorite: json["favorite"],
-    image: json["image"],
-    name: json["name"],
-    productCategory: json["product_category"],
-    price: json["price"],
-    priceWithDiscount: json["with_discount"],
-    rating: json["rating"]?.toDouble(),
-    description: json["description"],
-    orderCount: json["order_count"],
-    createdAt: json["created_at"],
-  );
+        id: json["id"],
+        categoryId: json["category_id"],
+        favorite: json["favorite"],
+        image: json["image"],
+        name: json["name"],
+        price: json["price"],
+        withDiscount: json["with_discount"],
+        rating: json["rating"]?.toDouble(),
+        description: json["description"],
+        orderCount: json["order_count"],
+        createdAt: json["created_at"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "favorite": favorite,
-    "image": image,
-    "name": name,
-    "product_category": productCategory,
-    "price": price,
-    "with_discount": priceWithDiscount,
-    "rating": rating,
-    "description": description,
-    "order_count": orderCount,
-    "created_at": createdAt,
-  };
+        "id": id,
+        "category_id": categoryId,
+        "favorite": favorite,
+        "image": image,
+        "name": name,
+        "price": price,
+        "with_discount": withDiscount,
+        "rating": rating,
+        "description": description,
+        "order_count": orderCount,
+        "created_at": createdAt,
+      };
 }

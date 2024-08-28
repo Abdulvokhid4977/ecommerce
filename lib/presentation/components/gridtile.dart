@@ -2,7 +2,6 @@ import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/data/models/product_model.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
-import 'package:e_commerce/presentation/components/gridtile.dart';
 import 'package:e_commerce/presentation/pages/product_details_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,53 +10,21 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class GridTileHome extends StatefulWidget {
-  const GridTileHome(this.index, {super.key});
-
+class GridTileProduct extends StatefulWidget {
+  final ProductElement baseState;
+  final bool isFavorite;
   final int index;
+  const GridTileProduct(this.index,this.isFavorite, this.baseState,{super.key});
 
   @override
-  State<GridTileHome> createState() => _GridTileHomeState();
+  State<GridTileProduct> createState() => _GridTileProductState();
 }
 
-class _GridTileHomeState extends State<GridTileHome> {
+class _GridTileProductState extends State<GridTileProduct> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MainBloc, MainState>(
-      bloc: context.read<MainBloc>(),
-      builder: (context, state) {
-        if (state is MainLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (state is MainLoaded) {
-          final baseState = state.products.product[widget.index];
-          var isFavorite = baseState.favorite;
-          return GridTileProduct(widget.index, isFavorite, baseState);
-            // gridTile(baseState, isFavorite);
-        } else if (state is FetchWishlistState) {
-          final baseState = state.product.product[widget.index];
-          var isFavorite =
-              state.product.product[widget.index].favorite;
-          return GridTileProduct(widget.index, isFavorite, baseState);
-          // return gridTile(baseState, isFavorite);
-        }
-        // else if (state is FetchCategoryProductState) {
-        //   final baseState = state.product.product[widget.index];
-        //   var isFavorite = state.product.product[widget.index].favorite;
-        //   return gridTile(baseState, isFavorite);
-        // }
-        else if (state is MainError) {
-          return Center(child: Text(state.message));
-        } else {
-          return const Center(child: Text('Could not fetch'));
-        }
-      },
-    );
-  }
-
-  Widget gridTile(ProductElement baseState, bool isFavorite) {
-    final monthly = (baseState.withDiscount / 6).round();
+    final monthly = (widget.baseState.withDiscount / 6).round();
+    bool isFavorite=widget.isFavorite;
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -79,13 +46,13 @@ class _GridTileHomeState extends State<GridTileHome> {
                   height: 180,
                   width: 180,
                   child: Image.network(
-                    baseState.image,
+                    widget.baseState.image,
                   ),
                 ),
               ),
               AppUtils.kHeight10,
               Text(
-                baseState.name,
+                widget.baseState.name,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.w600,
@@ -101,7 +68,7 @@ class _GridTileHomeState extends State<GridTileHome> {
                     color: Colours.yellowCustom,
                   ),
                   Text(
-                    '${baseState.rating} (${baseState.orderCount} заказов)',
+                    '${widget.baseState.rating} (${widget.baseState.orderCount} заказов)',
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
@@ -134,7 +101,7 @@ class _GridTileHomeState extends State<GridTileHome> {
                   Column(
                     children: [
                       Text(
-                        '${NumberFormat('#,###', 'en_US').format(baseState.price).replaceAll(',', ' ')} сум',
+                        '${NumberFormat('#,###', 'en_US').format(widget.baseState.price).replaceAll(',', ' ')} сум',
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
@@ -143,7 +110,7 @@ class _GridTileHomeState extends State<GridTileHome> {
                         ),
                       ),
                       Text(
-                        '${NumberFormat('#,###', 'en_US').format(baseState.withDiscount).replaceAll(',', ' ')} сум',
+                        '${NumberFormat('#,###', 'en_US').format(widget.baseState.withDiscount).replaceAll(',', ' ')} сум',
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
@@ -179,9 +146,9 @@ class _GridTileHomeState extends State<GridTileHome> {
             child: BlocConsumer<MainBloc, MainState>(
               listener: (context, state) {
                 if (state is FavoriteToggledState &&
-                    state.productElement.id == baseState.id) {
+                    state.productElement.id == widget.baseState.id) {
                   print(state.productElement.id);
-                  print(baseState.id);
+                  print(widget.baseState.id);
                   setState(() {
                     isFavorite = state.isFavorite;
                     print(isFavorite);
@@ -193,7 +160,7 @@ class _GridTileHomeState extends State<GridTileHome> {
                   splashColor: Colors.transparent,
                   onPressed: () {
                     final newFavoriteStatus = !isFavorite;
-                    context.read<MainBloc>().add(UpdateFavoriteEvent(newFavoriteStatus, baseState));
+                    context.read<MainBloc>().add(UpdateFavoriteEvent(newFavoriteStatus, widget.baseState));
                     if (kDebugMode) {
                       print(
                           '$newFavoriteStatus - this is the status of the product when icon is clicked');
