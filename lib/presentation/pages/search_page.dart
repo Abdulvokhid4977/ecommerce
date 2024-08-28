@@ -1,9 +1,7 @@
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/data/models/category_model.dart';
-import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:e_commerce/presentation/components/gridtile.dart';
-import 'package:e_commerce/presentation/components/gridtiles.dart';
 import 'package:e_commerce/presentation/components/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,7 +38,6 @@ class _SearchPageState extends State<SearchPage> {
               left: 16,
               top: SizeConfig.statusBar! + 20,
               right: 16,
-
             ),
             child: textField(
               () {},
@@ -129,7 +126,10 @@ class _SearchPageState extends State<SearchPage> {
                             mainAxisExtent: SizeConfig.screenHeight! * 0.46,
                           ),
                           itemBuilder: (ctx, i) {
-                            return GridTileProduct(i, state.product.product[i].favorite, state.product.product[i]);
+                            return GridTileProduct(
+                                i,
+                                state.product.product[i].favorite,
+                                state.product.product[i]);
                           }),
                     ),
                   );

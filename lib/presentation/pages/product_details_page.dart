@@ -2,6 +2,7 @@ import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/data/models/product_model.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
+import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:e_commerce/presentation/components/custom_container.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -31,44 +32,53 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     {'asset': 'assets/images/s22.jpg', 'color': 'Синий'},
     {'asset': 'assets/images/s22.jpg', 'color': 'Коричневый'},
   ];
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MainBloc, MainState>(
       bloc: context.read<MainBloc>(),
-      builder: (context, state) {
-        if (kDebugMode) {
-          print(state.runtimeType);
-        }
-        if (state is MainLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (state is MainLoaded) {
-          final baseState = state.products.product[widget.index];
+      builder: (context, mainState) {
+        return BlocBuilder<SearchBloc, SearchState>(
+          bloc: context.read<SearchBloc>(),
+          builder: (context, searchState) {
+            if (kDebugMode) {
+              print(mainState.runtimeType);
+            }
 
+            if (searchState is FetchCategoryProductState) {
+              final product = searchState.product.product[widget.index];
+              final isFavorite = product.favorite;
 
-          final isFavorite = baseState.favorite;
-          return productDetails(baseState, isFavorite);
-
-        }else if(state is FetchWishlistState){
-          final baseState = state.product.product[widget.index];
-          final isFavorite = baseState.favorite;
-          return productDetails(baseState, isFavorite);
-        } else if (state is MainError) {
-          return Center(child: Text(state.message));
-        } else {
-          return const Center(child: Text('Could not fetch from Product Details Page'));
-        }
+              print(product.name);
+              return productDetails(product, isFavorite);
+            } else if (mainState is MainLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (mainState is MainLoaded) {
+              final product = mainState.products.product[widget.index];
+              final isFavorite = product.favorite;
+              return productDetails(product, isFavorite);
+            } else if (mainState is FetchWishlistState) {
+              final product = mainState.product.product[widget.index];
+              final isFavorite = product.favorite;
+              return productDetails(product, isFavorite);
+            } else if (mainState is MainError) {
+              return Center(child: Text(mainState.message));
+            } else {
+              return const Center(child: Text('Could not fetch from Product Details Page'));
+            }
+          },
+        );
       },
     );
   }
 
+
   Widget productDetails(ProductElement baseState, bool isFavorite){
-    final discount = ((baseState.price - baseState.withDiscount!) /
+    final discount = ((baseState.price - baseState.withDiscount) /
         baseState.price) *
         100;
-    final monthly = (baseState.withDiscount! / 6).round();
+    final monthly = (baseState.withDiscount / 6).round();
     return Scaffold(
       backgroundColor: Colours.backgroundGrey,
       body: Stack(
