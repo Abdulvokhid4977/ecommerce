@@ -6,6 +6,7 @@ import 'package:e_commerce/presentation/pages/home_page.dart';
 import 'package:e_commerce/presentation/pages/profile_page.dart';
 import 'package:e_commerce/presentation/pages/search_page.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -53,6 +54,7 @@ class _MainPageState extends State<MainPage> {
         if (state is TabChangedState) {
           currentIndex = state.currentIndex;
         }
+        // print(currentIndex);
         return Scaffold(
           body: tabs[currentIndex],
           bottomNavigationBar: BottomNavigationBar(
@@ -63,10 +65,16 @@ class _MainPageState extends State<MainPage> {
             unselectedItemColor: Colours.greyCustom,
             key: Constants.bottomNavigatorKey,
             onTap: (i) {
-              if (currentIndex == 1) {
+              context.read<MainBloc>().add(ChangeTabEvent(i));
+              if(i==1){
                 context.read<SearchBloc>().add(FetchSearchDataEvent('', true));
               }
-              context.read<MainBloc>().add(ChangeTabEvent(i));
+
+              // if (currentIndex == 1) {
+              //   print('This is the index of the tab: $currentIndex');
+              //
+              // }
+
             },
             currentIndex: currentIndex,
             items: [

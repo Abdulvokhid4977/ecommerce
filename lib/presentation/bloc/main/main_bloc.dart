@@ -4,6 +4,7 @@ import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/data/models/banners_model.dart';
 import 'package:e_commerce/data/models/category_model.dart' as ctg;
 import 'package:e_commerce/data/models/product_model.dart';
+import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -107,7 +108,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       if (response.statusCode > 200 && response.statusCode <= 299) {
         if (state is MainLoaded) {
           final currentState = state as MainLoaded;
-
           // Update the specific product with the new favorite status
           final updatedProducts = currentState.products.product.map((product) {
             return product.id == event.productElement.id
@@ -135,6 +135,12 @@ class MainBloc extends Bloc<MainEvent, MainState> {
               product: updatedProducts,
             ),
           ));
+        }
+        else {
+
+          if (kDebugMode) {
+            print('Beyond the MainState');
+          }
         }
       } else {
         emit(MainError('Failed to update favorite status. But why?'));

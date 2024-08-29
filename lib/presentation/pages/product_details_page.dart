@@ -106,17 +106,35 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     },
                   ),
                   actions: [
-                    IconButton(
-                      icon: isFavorite
-                          ? const Icon(
-                        Icons.favorite,
-                        color: Colors.red,
-                      )
-                          : Icon(
-                        Icons.favorite_border_outlined,
-                        color: Colours.blueCustom,
-                      ),
-                      onPressed: () {},
+                    BlocConsumer<MainBloc, MainState>(
+                      listener: (context, state) {
+                        if (state is FavoriteToggledState &&
+                            state.productElement.id == baseState.id) {
+                          print(state.productElement.id);
+                          print(baseState.id);
+                          setState(() {
+                            isFavorite = state.isFavorite;
+                            print(isFavorite);
+                          });
+                        }
+                      },
+                      builder: (context, state) {
+                        return IconButton(
+                          splashColor: Colors.transparent,
+                          onPressed: () {
+                            final newFavoriteStatus = !isFavorite;
+                            context.read<MainBloc>().add(UpdateFavoriteEvent(newFavoriteStatus, baseState));
+                            if (kDebugMode) {
+                              print(
+                                  '$newFavoriteStatus - this is the status of the product when icon is clicked');
+                            }
+                          },
+                          icon: Icon(
+                            isFavorite? Icons.favorite: Icons.favorite_border,
+                            color: isFavorite ? Colors.red : Colours.greyIcon,
+                          ),
+                        );
+                      },
                     ),
                     IconButton(
                       icon: Icon(

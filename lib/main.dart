@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: rootNavigatorKey,
       onUnknownRoute: AppRoutes.onUnknownRoute,
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: Routes.main,
+      initialRoute: Routes.register,
       debugShowCheckedModeBanner: false,
     );
   }

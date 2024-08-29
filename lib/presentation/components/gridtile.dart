@@ -99,6 +99,7 @@ class _GridTileProductState extends State<GridTileProduct> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         '${NumberFormat('#,###', 'en_US').format(widget.baseState.price).replaceAll(',', ' ')} сум',
@@ -151,7 +152,6 @@ class _GridTileProductState extends State<GridTileProduct> {
                   print(widget.baseState.id);
                   setState(() {
                     isFavorite = state.isFavorite;
-                    print(isFavorite);
                   });
                 }
               },
@@ -161,13 +161,9 @@ class _GridTileProductState extends State<GridTileProduct> {
                   onPressed: () {
                     final newFavoriteStatus = !isFavorite;
                     context.read<MainBloc>().add(UpdateFavoriteEvent(newFavoriteStatus, widget.baseState));
-                    if (kDebugMode) {
-                      print(
-                          '$newFavoriteStatus - this is the status of the product when icon is clicked');
-                    }
                   },
                   icon: Icon(
-                    Icons.favorite,
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
                     color: isFavorite ? Colors.red : Colours.greyIcon,
                   ),
                 );
