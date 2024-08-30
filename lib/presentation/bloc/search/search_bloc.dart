@@ -20,8 +20,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Future<void> _fetchSearchData(
       FetchSearchDataEvent event, Emitter<SearchState> emit) async {
-    emit(SearchLoading());
+
     if (event.fromNavBar) {
+      emit(SearchLoading());
       try {
         final response =
             await http.get(Uri.parse('${Constants.baseUrl}/category'));
@@ -40,7 +41,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         emit(SearchError('Failed to fetch data: $e, $s'));
       }
     } else {
-
+      emit(FetchCategoryProductLoading());
       try {
         final response = await http.get(Uri.parse(
             '${Constants.baseUrl}/product?category_id=${event.categoryId}'));

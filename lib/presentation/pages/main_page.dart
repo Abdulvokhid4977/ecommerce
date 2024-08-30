@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
@@ -5,9 +8,6 @@ import 'package:e_commerce/presentation/pages/cart_page.dart';
 import 'package:e_commerce/presentation/pages/home_page.dart';
 import 'package:e_commerce/presentation/pages/profile_page.dart';
 import 'package:e_commerce/presentation/pages/search_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -18,6 +18,8 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
+  DateTime? lastPressed;
+
   final List<Widget> tabs = [
     const HomePage(),
     const SearchPage(''),
@@ -44,70 +46,94 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    if (currentIndex != 0) {
+      setState(() {
+        currentIndex = 0;
+      });
+      context.read<MainBloc>().add(ChangeTabEvent(0));
+      return false;
+    }
+
+    final now = DateTime.now();
+    if (lastPressed == null || now.difference(lastPressed!) > const Duration(seconds: 2)) {
+      lastPressed = now;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Press back again to exit'),duration: Duration(seconds: 1),),
+      );
+      return false;
+    }
+
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MainBloc, MainState>(
-      builder: (context, state) {
-        if (state is TabChangedState) {
-          currentIndex = state.currentIndex;
-        }
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: BlocBuilder<MainBloc, MainState>(
+        builder: (context, state) {
+          if (state is TabChangedState) {
+            currentIndex = state.currentIndex;
+          }
 
-        return Scaffold(
-          body: tabs[currentIndex],
-          bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: Colours.backgroundGrey,
-            type: BottomNavigationBarType.fixed,
-            showUnselectedLabels: true,
-            selectedItemColor: Colours.blueCustom,
-            unselectedItemColor: Colours.greyCustom,
-            key: Constants.bottomNavigatorKey,
-            onTap: _onTabTapped,
-            currentIndex: currentIndex,
-            items: [
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/icons/home.svg',
-                  colorFilter: ColorFilter.mode(
-                      currentIndex == 0 ? Colours.blueCustom : Colours.greyCustom,
-                      BlendMode.srcIn),
+          return Scaffold(
+            body: tabs[currentIndex],
+            bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: Colours.backgroundGrey,
+              type: BottomNavigationBarType.fixed,
+              showUnselectedLabels: true,
+              selectedItemColor: Colours.blueCustom,
+              unselectedItemColor: Colours.greyCustom,
+              key: Constants.bottomNavigatorKey,
+              onTap: _onTabTapped,
+              currentIndex: currentIndex,
+              items: [
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    'assets/icons/home.svg',
+                    colorFilter: ColorFilter.mode(
+                        currentIndex == 0 ? Colours.blueCustom : Colours.greyCustom,
+                        BlendMode.srcIn),
+                  ),
+                  label: 'Главная',
+                  tooltip: 'Главная',
                 ),
-                label: 'Главная',
-                tooltip: 'Главная',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/icons/search.svg',
-                  colorFilter: ColorFilter.mode(
-                      currentIndex == 1 ? Colours.blueCustom : Colours.greyCustom,
-                      BlendMode.srcIn),
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    'assets/icons/search.svg',
+                    colorFilter: ColorFilter.mode(
+                        currentIndex == 1 ? Colours.blueCustom : Colours.greyCustom,
+                        BlendMode.srcIn),
+                  ),
+                  label: 'Поиск',
+                  tooltip: 'Поиск',
                 ),
-                label: 'Поиск',
-                tooltip: 'Поиск',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/icons/cart.svg',
-                  colorFilter: ColorFilter.mode(
-                      currentIndex == 2 ? Colours.blueCustom : Colours.greyCustom,
-                      BlendMode.srcIn),
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    'assets/icons/cart.svg',
+                    colorFilter: ColorFilter.mode(
+                        currentIndex == 2 ? Colours.blueCustom : Colours.greyCustom,
+                        BlendMode.srcIn),
+                  ),
+                  label: 'Корзина',
+                  tooltip: 'Корзина',
                 ),
-                label: 'Корзина',
-                tooltip: 'Корзина',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/icons/profile.svg',
-                  colorFilter: ColorFilter.mode(
-                      currentIndex == 3 ? Colours.blueCustom : Colours.greyCustom,
-                      BlendMode.srcIn),
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    'assets/icons/profile.svg',
+                    colorFilter: ColorFilter.mode(
+                        currentIndex == 3 ? Colours.blueCustom : Colours.greyCustom,
+                        BlendMode.srcIn),
+                  ),
+                  label: 'Кабинет',
+                  tooltip: 'Кабинет',
                 ),
-                label: 'Кабинет',
-                tooltip: 'Кабинет',
-              ),
-            ],
-          ),
-        );
-      },
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -35,19 +35,13 @@ class _GridTileHomeState extends State<GridTileHome> {
           var isFavorite = baseState.favorite;
           return GridTileProduct(
               widget.index, isFavorite, baseState, context.read<MainBloc>());
-          // gridTile(baseState, isFavorite);
+
         } else if (state is FetchWishlistState) {
           final baseState = state.product.product[widget.index];
           var isFavorite = state.product.product[widget.index].favorite;
           return GridTileProduct(
               widget.index, isFavorite, baseState, context.read<MainBloc>());
-          // return gridTile(baseState, isFavorite);
         }
-        // else if (state is FetchCategoryProductState) {
-        //   final baseState = state.product.product[widget.index];
-        //   var isFavorite = state.product.product[widget.index].favorite;
-        //   return gridTile(baseState, isFavorite);
-        // }
         else if (state is MainError) {
           return Center(child: Text(state.message));
         } else {

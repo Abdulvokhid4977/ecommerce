@@ -52,6 +52,11 @@ class SearchLoading extends SearchState {
 }
 
 
+class FetchCategoryProductLoading extends SearchState {
+  @override
+  List<Object> get props => [];
+}
+
 class FavoriteToggledState extends SearchState {
   final bool isFavorite;
   final ProductElement productElement;

@@ -1,4 +1,5 @@
 import 'package:e_commerce/core/constants/constants.dart';
+import 'package:e_commerce/core/shimmers/category_product_shimmer.dart';
 import 'package:e_commerce/core/shimmers/search_shimmer.dart';
 import 'package:e_commerce/data/models/category_model.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
@@ -108,6 +109,8 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ),
                   );
+                }else if(state is FetchCategoryProductLoading){
+                  return const Expanded(child: CategoryProductShimmer());
                 } else if (state is FetchCategoryProductState) {
                   return Expanded(
                     child: Padding(
