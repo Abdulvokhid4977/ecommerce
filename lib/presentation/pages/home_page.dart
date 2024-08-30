@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:e_commerce/config/routes/app_routes.dart';
 import 'package:e_commerce/core/constants/constants.dart';
+import 'package:e_commerce/core/shimmers/home_shimmer.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/data/models/category_model.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
@@ -106,11 +107,7 @@ class _HomePageState extends State<HomePage> {
                 print(state.runtimeType);
               }
               if (state is MainLoading) {
-                return const Expanded(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
+                return Expanded(child: HomeShimmer());
               } else if (state is MainLoaded) {
                 if (_timer == null) {
                   _startTimer(state.banners.banner.length);
@@ -197,7 +194,9 @@ class _HomePageState extends State<HomePage> {
                                     itemBuilder: (_, i) {
                                       return GestureDetector(
                                         onTap: () {
-                                          context.read<MainBloc>().add(ChangeTabEvent(1));
+                                          context
+                                              .read<MainBloc>()
+                                              .add(ChangeTabEvent(1));
                                           context.read<SearchBloc>().add(
                                               FetchSearchDataEvent(
                                                   filtered[i].id, false));
@@ -293,7 +292,9 @@ class _HomePageState extends State<HomePage> {
               } else if (state is MainError) {
                 return Center(child: Text(state.message));
               } else {
-                return const Center(child: Text('Could not fetch HomePage'));
+                return const Expanded(
+                    child:
+                        Center(child: Text('Could not fetch HomePage')));
               }
             },
           )

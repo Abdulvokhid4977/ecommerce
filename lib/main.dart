@@ -36,17 +36,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late Chuck _chuck;
+  // late Chuck _chuck;
 
   @override
   void initState() {
     super.initState();
-    _chuck = Chuck(
-      showNotification: true,
-      showInspectorOnShake: true,
-      darkTheme: false,
-      maxCallsCount: 1000,
-    );
+    // _chuck = Chuck(
+    //   showNotification: true,
+    //   showInspectorOnShake: true,
+    //   darkTheme: false,
+    //   maxCallsCount: 1000,
+    // );
   }
 
   @override
@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: rootNavigatorKey,
       onUnknownRoute: AppRoutes.onUnknownRoute,
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: Routes.register,
+      initialRoute: Routes.main,
       debugShowCheckedModeBanner: false,
     );
   }

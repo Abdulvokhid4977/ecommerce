@@ -1,7 +1,8 @@
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/data/models/product_model.dart';
-import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
+import 'package:e_commerce/presentation/bloc/main/main_bloc.dart' as main;
+import 'package:e_commerce/presentation/bloc/search/search_bloc.dart' as search;
 import 'package:e_commerce/presentation/pages/product_details_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,17 +11,18 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class GridTileProduct extends StatefulWidget {
+class GridTileProduct<T extends Bloc> extends StatefulWidget {
   final ProductElement baseState;
   final bool isFavorite;
   final int index;
-  const GridTileProduct(this.index,this.isFavorite, this.baseState,{super.key});
+  final T bloc;
+  const GridTileProduct(this.index,this.isFavorite, this.baseState,this.bloc,{super.key});
 
   @override
-  State<GridTileProduct> createState() => _GridTileProductState();
+  State<GridTileProduct<T>> createState() => _GridTileProductState<T>();
 }
 
-class _GridTileProductState extends State<GridTileProduct> {
+class _GridTileProductState<T extends Bloc> extends State<GridTileProduct<T>> {
   @override
   Widget build(BuildContext context) {
     final monthly = (widget.baseState.withDiscount / 6).round();
@@ -32,6 +34,7 @@ class _GridTileProductState extends State<GridTileProduct> {
             MaterialPageRoute(
               builder: (context) => ProductDetailsPage(
                 index: widget.index,
+                bloc: widget.bloc,
               ),
             ));
       },
@@ -144,15 +147,21 @@ class _GridTileProductState extends State<GridTileProduct> {
           ),
           Positioned(
             right: 9,
-            child: BlocConsumer<MainBloc, MainState>(
+            child: BlocConsumer<T, dynamic>(
+              bloc: widget.bloc,
               listener: (context, state) {
-                if (state is FavoriteToggledState &&
-                    state.productElement.id == widget.baseState.id) {
-                  print(state.productElement.id);
-                  print(widget.baseState.id);
-                  setState(() {
-                    isFavorite = state.isFavorite;
-                  });
+                if (state is main.FavoriteToggledState && widget.bloc is main.MainBloc) {
+                  if (state.productElement.id == widget.baseState.id) {
+                    setState(() {
+                      isFavorite = state.isFavorite;
+                    });
+                  }
+                } else if (state is search.FavoriteToggledState && widget.bloc is search.SearchBloc) {
+                  if (state.productElement.id == widget.baseState.id) {
+                    setState(() {
+                      isFavorite = state.isFavorite;
+                    });
+                  }
                 }
               },
               builder: (context, state) {
@@ -160,7 +169,15 @@ class _GridTileProductState extends State<GridTileProduct> {
                   splashColor: Colors.transparent,
                   onPressed: () {
                     final newFavoriteStatus = !isFavorite;
-                    context.read<MainBloc>().add(UpdateFavoriteEvent(newFavoriteStatus, widget.baseState));
+                    if (widget.bloc is main.MainBloc) {
+                      widget.bloc.add(
+                        main.UpdateFavoriteEvent(newFavoriteStatus, widget.baseState),
+                      );
+                    } else if (widget.bloc is search.SearchBloc) {
+                      widget.bloc.add(
+                        search.UpdateFavoriteEvent(newFavoriteStatus, widget.baseState),
+                      );
+                    }
                   },
                   icon: Icon(
                     isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -169,6 +186,7 @@ class _GridTileProductState extends State<GridTileProduct> {
                 );
               },
             ),
+
           ),
           Positioned(
             top: SizeConfig.screenHeight! * 0.187,

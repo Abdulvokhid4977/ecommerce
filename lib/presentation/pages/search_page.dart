@@ -1,4 +1,5 @@
 import 'package:e_commerce/core/constants/constants.dart';
+import 'package:e_commerce/core/shimmers/search_shimmer.dart';
 import 'package:e_commerce/data/models/category_model.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:e_commerce/presentation/components/gridtile.dart';
@@ -25,7 +26,6 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
   @override
   Widget build(BuildContext context) {
@@ -49,14 +49,12 @@ class _SearchPageState extends State<SearchPage> {
           BlocBuilder<SearchBloc, SearchState>(
               bloc: context.read<SearchBloc>(),
               builder: (context, state) {
-                if(kDebugMode){
+                if (kDebugMode) {
                   print(state.runtimeType);
                 }
                 if (state is SearchLoading) {
                   return const Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: SearchShimmer(),
                   );
                 } else if (state is CategoryLoaded) {
                   List<CategoryElement> filtered = state.category.category
@@ -131,7 +129,8 @@ class _SearchPageState extends State<SearchPage> {
                             return GridTileProduct(
                                 i,
                                 state.product.product[i].favorite,
-                                state.product.product[i]);
+                                state.product.product[i],
+                                context.read<SearchBloc>());
                           }),
                     ),
                   );

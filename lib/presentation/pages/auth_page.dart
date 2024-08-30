@@ -19,7 +19,7 @@ class _AuthPageState extends State<AuthPage> {
   final focusNode = FocusNode();
   final controller = TextEditingController();
   var maskFormatter = MaskTextInputFormatter(
-      mask: '## ### ## ##',
+      mask: '(##) ### ## ##',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
   bool isNumberFilled = false;

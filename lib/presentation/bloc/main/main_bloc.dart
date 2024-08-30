@@ -22,16 +22,13 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     });
   }
 
-
-
-
   Future<void> _fetchData(FetchDataEvent event, Emitter<MainState> emit) async {
     emit(MainLoading());
 
      if (event.isWishlist == true) {
       try {
         final response = await http.get(Uri.parse(
-            '${Constants.baseUrl}/product?offset=0&limit=1000&favorite=${event.isWishlist}'));
+            '${Constants.baseUrl}/product?offset=0&favorite=${event.isWishlist}'));
         if (response.statusCode >= 200 && response.statusCode < 300) {
           if (jsonDecode(response.body)[1] == []) {
             final product = Product(count: 0, product: []);
@@ -83,6 +80,25 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
   Future<void> _updateFavorite(
       UpdateFavoriteEvent event, Emitter<MainState> emit) async {
+
+    // 1. Emit Optimistic State
+    if (state is MainLoaded) {
+      final currentState = state as MainLoaded;
+      final updatedProducts = _updateProductsList(
+          currentState.products.product, event.productElement.id, event.isFavorite);
+      emit(currentState.copyWith(
+        products: currentState.products.copyWith(product: updatedProducts),
+      ));
+    } else if (state is FetchWishlistState) {
+      final currentState = state as FetchWishlistState;
+      final updatedProducts = _updateProductsList(
+          currentState.product.product, event.productElement.id, event.isFavorite);
+      emit(currentState.copyWith(
+        product: currentState.product.copyWith(product: updatedProducts),
+      ));
+    }
+
+    // 2. Make the HTTP Request
     try {
       final response = await http.put(
         Uri.parse('${Constants.baseUrl}/product/${event.productElement.id}'),
@@ -99,54 +115,45 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           "rating": event.productElement.rating,
         }),
       );
-      if (kDebugMode) {
-        print('${response.body}, ${response.headers}');
-        print(
-            'Adding favorite status code: ${response.statusCode}, ${event.isFavorite}');
-      }
 
-      if (response.statusCode > 200 && response.statusCode <= 299) {
-        if (state is MainLoaded) {
-          final currentState = state as MainLoaded;
-          // Update the specific product with the new favorite status
-          final updatedProducts = currentState.products.product.map((product) {
-            return product.id == event.productElement.id
-                ? product.copyWith(favorite: event.isFavorite)
-                : product;
-          }).toList();
-
-          // Emit a new MainLoaded state with the updated products list
-          emit(currentState.copyWith(
-            products: currentState.products.copyWith(
-              product: updatedProducts,
-            ),
-          ));
-        } else if (state is FetchWishlistState) {
-          final currentState = state as FetchWishlistState;
-          final updatedProducts = currentState.product.product.map((product) {
-            return product.id == event.productElement.id
-                ? product.copyWith(favorite: event.isFavorite)
-                : product;
-          }).toList();
-
-          // Emit a new MainLoaded state with the updated products list
-          emit(currentState.copyWith(
-            product: currentState.product.copyWith(
-              product: updatedProducts,
-            ),
-          ));
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        if (kDebugMode) {
+          print("${response.body}, ${response.statusCode}");
         }
-        else {
-
-          if (kDebugMode) {
-            print('Beyond the MainState');
-          }
-        }
-      } else {
-        emit(MainError('Failed to update favorite status. But why?'));
+        // 3. Roll Back the UI on Failure
+        _rollbackFavoriteState(event, emit);
+        emit(MainError('Failed to update favorite status.'));
       }
     } catch (e) {
+      // 3. Roll Back the UI on Error
+      _rollbackFavoriteState(event, emit);
       emit(MainError('Failed to update favorite status: $e'));
     }
+  }
+
+  void _rollbackFavoriteState(UpdateFavoriteEvent event, Emitter<MainState> emit) {
+    if (state is MainLoaded) {
+      final currentState = state as MainLoaded;
+      final updatedProducts = _updateProductsList(
+          currentState.products.product, event.productElement.id, !event.isFavorite);
+      emit(currentState.copyWith(
+        products: currentState.products.copyWith(product: updatedProducts),
+      ));
+    } else if (state is FetchWishlistState) {
+      final currentState = state as FetchWishlistState;
+      final updatedProducts = _updateProductsList(
+          currentState.product.product, event.productElement.id, !event.isFavorite);
+      emit(currentState.copyWith(
+        product: currentState.product.copyWith(product: updatedProducts),
+      ));
+    }
+  }
+  List<ProductElement> _updateProductsList(
+      List<ProductElement> products, String productId, bool isFavorite) {
+    return products.map((product) {
+      return product.id == productId
+          ? product.copyWith(favorite: isFavorite)
+          : product;
+    }).toList();
   }
 }

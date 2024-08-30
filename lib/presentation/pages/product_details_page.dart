@@ -1,8 +1,8 @@
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/data/models/product_model.dart';
-import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
-import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
+import 'package:e_commerce/presentation/bloc/main/main_bloc.dart' as main;
+import 'package:e_commerce/presentation/bloc/search/search_bloc.dart' as search;
 import 'package:e_commerce/presentation/components/custom_container.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,16 +11,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class ProductDetailsPage extends StatefulWidget {
+class ProductDetailsPage<T extends Bloc> extends StatefulWidget {
   final int index;
+  final T bloc;
 
-  const ProductDetailsPage({super.key, required this.index});
+  const ProductDetailsPage({super.key, required this.index, required this.bloc});
 
   @override
-  State<ProductDetailsPage> createState() => _ProductDetailsPageState();
+  State<ProductDetailsPage<T>> createState() => _ProductDetailsPageState<T>();
 }
 
-class _ProductDetailsPageState extends State<ProductDetailsPage> {
+class _ProductDetailsPageState<T extends Bloc> extends State<ProductDetailsPage<T>> {
   final _controller = PageController();
 
   int roundDownToNearestTen(int number) {
@@ -34,36 +35,36 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   ];
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MainBloc, MainState>(
-      bloc: context.read<MainBloc>(),
+    return BlocBuilder<main.MainBloc, main.MainState>(
+      bloc: context.read<main.MainBloc>(),
       builder: (context, mainState) {
-        return BlocBuilder<SearchBloc, SearchState>(
-          bloc: context.read<SearchBloc>(),
+        return BlocBuilder<search.SearchBloc, search.SearchState>(
+          bloc: context.read<search.SearchBloc>(),
           builder: (context, searchState) {
             if (kDebugMode) {
               print(mainState.runtimeType);
             }
 
-            if (searchState is FetchCategoryProductState) {
+            if (searchState is search.FetchCategoryProductState) {
               final product = searchState.product.product[widget.index];
               final isFavorite = product.favorite;
 
               print(product.name);
               return productDetails(product, isFavorite);
             } else
-              if (mainState is MainLoading) {
+              if (mainState is main.MainLoading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (mainState is MainLoaded) {
+            } else if (mainState is main.MainLoaded) {
               final product = mainState.products.product[widget.index];
               final isFavorite = product.favorite;
               return productDetails(product, isFavorite);
-            } else if (mainState is FetchWishlistState) {
+            } else if (mainState is main.FetchWishlistState) {
               final product = mainState.product.product[widget.index];
               final isFavorite = product.favorite;
               return productDetails(product, isFavorite);
-            } else if (mainState is MainError) {
+            } else if (mainState is main.MainError) {
               return Center(child: Text(mainState.message));
             } else {
               return const Center(child: Text('Could not fetch from Product Details Page'));
@@ -106,16 +107,21 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     },
                   ),
                   actions: [
-                    BlocConsumer<MainBloc, MainState>(
+                    BlocConsumer<T, dynamic>(
+                      bloc: widget.bloc,
                       listener: (context, state) {
-                        if (state is FavoriteToggledState &&
-                            state.productElement.id == baseState.id) {
-                          print(state.productElement.id);
-                          print(baseState.id);
-                          setState(() {
-                            isFavorite = state.isFavorite;
-                            print(isFavorite);
-                          });
+                        if (state is main.FavoriteToggledState && widget.bloc is main.MainBloc) {
+                          if (state.productElement.id == baseState.id) {
+                            setState(() {
+                              isFavorite = state.isFavorite;
+                            });
+                          }
+                        } else if (state is search.FavoriteToggledState && widget.bloc is search.SearchBloc) {
+                          if (state.productElement.id == baseState.id) {
+                            setState(() {
+                              isFavorite = state.isFavorite;
+                            });
+                          }
                         }
                       },
                       builder: (context, state) {
@@ -123,14 +129,18 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           splashColor: Colors.transparent,
                           onPressed: () {
                             final newFavoriteStatus = !isFavorite;
-                            context.read<MainBloc>().add(UpdateFavoriteEvent(newFavoriteStatus, baseState));
-                            if (kDebugMode) {
-                              print(
-                                  '$newFavoriteStatus - this is the status of the product when icon is clicked');
+                            if (widget.bloc is main.MainBloc) {
+                              widget.bloc.add(
+                                main.UpdateFavoriteEvent(newFavoriteStatus, baseState),
+                              );
+                            } else if (widget.bloc is search.SearchBloc) {
+                              widget.bloc.add(
+                                search.UpdateFavoriteEvent(newFavoriteStatus,baseState),
+                              );
                             }
                           },
                           icon: Icon(
-                            isFavorite? Icons.favorite: Icons.favorite_border,
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
                             color: isFavorite ? Colors.red : Colours.greyIcon,
                           ),
                         );

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -50,8 +51,29 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     color: Colors.black),
               ),
             ),
-            body: const Center(
-              child: CircularProgressIndicator(),
+            body: Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 8,
+                    mainAxisExtent: MediaQuery.of(context).size.height * 0.46,
+                  ),
+                  itemCount: 4, // Adjust based on your needs
+                  itemBuilder: (_, __) {
+                    return Container(
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8),color: Colors.white,),
+                      margin: EdgeInsets.all(8),
+
+                    );
+                  },
+                ),),
             ),
           );
         } else if (state is FetchWishlistState) {

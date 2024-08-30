@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class OnboardingWidgets extends StatelessWidget {
   final int index;
@@ -17,8 +18,8 @@ class OnboardingWidgets extends StatelessWidget {
         SizedBox(
           height: 432,
           child: Center(
-            child: Image.asset(
-              'assets/images/onboarding$index.png',
+            child: Lottie.asset(
+              'assets/lottie/animation$index.json',
             ),
           ),
         ),

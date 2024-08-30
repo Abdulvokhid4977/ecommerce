@@ -22,6 +22,8 @@ sealed class Colours {
   Colours._();
 
   static Color blueCustom = const Color.fromRGBO(0, 116, 235, 1);
+  static Color textFieldBlue = const Color.fromRGBO(0, 116, 235, 0.05);
+
   static Color greyCustom = const Color.fromRGBO(151, 156, 158, 1);
   static Color backgroundGrey= const Color.fromRGBO(246, 246, 246, 1);
   static Color textFieldGrey= const Color.fromRGBO(233, 233, 233, 1);

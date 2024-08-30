@@ -33,13 +33,14 @@ class _GridTileHomeState extends State<GridTileHome> {
         } else if (state is MainLoaded) {
           final baseState = state.products.product[widget.index];
           var isFavorite = baseState.favorite;
-          return GridTileProduct(widget.index, isFavorite, baseState);
-            // gridTile(baseState, isFavorite);
+          return GridTileProduct(
+              widget.index, isFavorite, baseState, context.read<MainBloc>());
+          // gridTile(baseState, isFavorite);
         } else if (state is FetchWishlistState) {
           final baseState = state.product.product[widget.index];
-          var isFavorite =
-              state.product.product[widget.index].favorite;
-          return GridTileProduct(widget.index, isFavorite, baseState);
+          var isFavorite = state.product.product[widget.index].favorite;
+          return GridTileProduct(
+              widget.index, isFavorite, baseState, context.read<MainBloc>());
           // return gridTile(baseState, isFavorite);
         }
         // else if (state is FetchCategoryProductState) {
@@ -65,6 +66,7 @@ class _GridTileHomeState extends State<GridTileHome> {
             MaterialPageRoute(
               builder: (context) => ProductDetailsPage(
                 index: widget.index,
+                bloc: context.read<MainBloc>(),
               ),
             ));
       },
@@ -193,7 +195,9 @@ class _GridTileHomeState extends State<GridTileHome> {
                   splashColor: Colors.transparent,
                   onPressed: () {
                     final newFavoriteStatus = !isFavorite;
-                    context.read<MainBloc>().add(UpdateFavoriteEvent(newFavoriteStatus, baseState));
+                    context
+                        .read<MainBloc>()
+                        .add(UpdateFavoriteEvent(newFavoriteStatus, baseState));
                     if (kDebugMode) {
                       print(
                           '$newFavoriteStatus - this is the status of the product when icon is clicked');
