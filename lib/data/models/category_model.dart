@@ -26,10 +26,13 @@ class Category {
         category: category ?? this.category,
       );
 
-  factory Category.fromJson(Map<String, dynamic> json) => Category(
-    count: json["count"],
-    category: List<CategoryElement>.from(json["category"].map((x) => CategoryElement.fromJson(x))),
-  );
+  factory Category.fromJson(Map<String, dynamic> json) {
+    return Category(
+      count: json["count"] ?? 0,
+      category: json["category"]!=null? List<CategoryElement>.from(
+          json["category"].map((x) => CategoryElement.fromJson(x))): []
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     "count": count,
@@ -43,8 +46,8 @@ class CategoryElement {
   String parentId;
   String url;
   String createdAt;
-  String updatedAt;
-  String deleteAt;
+  String? updatedAt;
+  String? deleteAt;
 
   CategoryElement({
     required this.id,

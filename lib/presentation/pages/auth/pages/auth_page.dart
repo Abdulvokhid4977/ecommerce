@@ -1,6 +1,6 @@
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
-import 'package:e_commerce/presentation/pages/confirm_code.dart';
+import 'package:e_commerce/presentation/pages/auth/pages/confirm_code.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

@@ -14,6 +14,14 @@ class FetchSearchDataEvent extends SearchEvent {
   List<Object?> get props => [categoryId, fromNavBar];
 }
 
+class SearchQueryChangedEvent extends SearchEvent {
+  final String? query;
+
+  SearchQueryChangedEvent(this.query);
+
+  @override
+  List<Object?> get props => [query];
+}
 
 class UpdateFavoriteEvent extends SearchEvent {
   final bool isFavorite;
@@ -26,9 +34,4 @@ class UpdateFavoriteEvent extends SearchEvent {
   List<Object?> get props => [isFavorite, productElement];
 }
 
-// class FetchCategoryListEvent extends SearchEvent{
-//   @override
-//   // TODO: implement props
-//   List<Object?> get props => [];
-// }
 

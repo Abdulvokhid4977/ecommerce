@@ -61,8 +61,6 @@ class FetchWishlistState extends MainState {
   List<Object> get props => [product, hasData];
 }
 
-
-
 class FavoriteToggledState extends MainState {
   final bool isFavorite;
   final ProductElement productElement;

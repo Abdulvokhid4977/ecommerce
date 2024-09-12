@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:e_commerce/core/constants/constants.dart';
+import 'package:e_commerce/presentation/bloc/favorite/favorite_bloc.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
+import 'package:e_commerce/presentation/pages/search/pages/search_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +23,9 @@ Future<void> main() async {
         BlocProvider<MainBloc>(
           create: (_) => MainBloc(),
         ),
-        BlocProvider<SearchBloc>(create: (_)=>SearchBloc())
+        BlocProvider<SearchBloc>(create: (_)=>SearchBloc()),
+        BlocProvider<FavoriteBloc>(create: (_)=>FavoriteBloc()),
+
       ],
       child: const MyApp(),
     ),
@@ -76,6 +80,7 @@ class _MyAppState extends State<MyApp> {
       onUnknownRoute: AppRoutes.onUnknownRoute,
       onGenerateRoute: AppRoutes.onGenerateRoute,
       initialRoute: Routes.main,
+      // home: SearchList(),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -1,18 +1,18 @@
 import 'package:chuck_interceptor/chuck.dart';
 import 'package:e_commerce/presentation/bloc/auth/auth_bloc.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
-import 'package:e_commerce/presentation/pages/auth_page.dart';
-import 'package:e_commerce/presentation/pages/cart_page.dart';
-import 'package:e_commerce/presentation/pages/confirm_code.dart';
+import 'package:e_commerce/presentation/pages/auth/pages/auth_page.dart';
+import 'package:e_commerce/presentation/pages/cart/cart_page.dart';
+import 'package:e_commerce/presentation/pages/auth/pages/confirm_code.dart';
 import 'package:e_commerce/presentation/pages/error_page.dart';
-import 'package:e_commerce/presentation/pages/favorites_page.dart';
-import 'package:e_commerce/presentation/pages/giving_order.dart';
+import 'package:e_commerce/presentation/pages/favorites/favorites_page.dart';
+import 'package:e_commerce/presentation/pages/order/pages/giving_order.dart';
 import 'package:e_commerce/presentation/pages/main_page.dart';
-import 'package:e_commerce/presentation/pages/onboarding_page.dart';
-import 'package:e_commerce/presentation/pages/order_page.dart';
-import 'package:e_commerce/presentation/pages/profile_page.dart';
-import 'package:e_commerce/presentation/pages/register_page.dart';
-import 'package:e_commerce/presentation/pages/search_page.dart';
+import 'package:e_commerce/presentation/pages/onboarding_page/onboarding_page.dart';
+import 'package:e_commerce/presentation/pages/order/pages/order_page.dart';
+import 'package:e_commerce/presentation/pages/profile/profile_page.dart';
+import 'package:e_commerce/presentation/pages/auth/pages/register_page.dart';
+import 'package:e_commerce/presentation/pages/search/pages/search_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,7 +56,7 @@ sealed class AppRoutes {
       );
     case Routes.search:
     return MaterialPageRoute(
-    builder: (_) => const SearchPage(''),
+    builder: (_) => const SearchPage(),
     );
     case Routes.givingOrder:
     return MaterialPageRoute(
@@ -70,8 +70,8 @@ sealed class AppRoutes {
     //   return MaterialPageRoute(builder: (_) => const SelectLang());
     // case Routes.shopping:
     //   return MaterialPageRoute(builder: (_) => const ShoppingCartPage());
-    case Routes.order:
-    return MaterialPageRoute(builder: (_) => const OrderPage());
+    // case Routes.order:
+    // return MaterialPageRoute(builder: (_) => const OrderPage());
     case Routes.cart:
     return MaterialPageRoute(builder: (_) => const CartPage());
     case Routes.profile:

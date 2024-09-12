@@ -1,6 +1,6 @@
 import 'package:e_commerce/core/constants/constants.dart';
-import 'package:e_commerce/presentation/components/textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ModalSheet extends StatefulWidget {
@@ -54,10 +54,48 @@ class _ModalSheetState extends State<ModalSheet> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Container(
-              child: textField(
-                  () {}, focusNode, textEditingController, 'Найти город',
-                  isSearch: true),
+            TextField(
+              onTap: (){
+              },
+              textCapitalization: TextCapitalization.words,
+              onChanged: (query) {
+                // context.read<SearchBloc>().add(SearchQueryChangedEvent(query));
+              },
+              decoration: InputDecoration(
+                hintText: 'Найти город',
+                hintStyle: TextStyle(color: Colours.greyIcon),
+                border: InputBorder.none,
+                filled: true,
+                fillColor: Colours.textFieldGrey,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    width: 0,
+                    color: Color.fromRGBO(243, 243, 243, 1),
+                  ),
+                ),
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  child: SvgPicture.asset(
+                    'assets/icons/search.svg',
+                    colorFilter: ColorFilter.mode(
+                      Colours.greyIcon,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+              ),
+              style: const TextStyle(
+                color: Colors.black,
+              ),
+              controller: textEditingController,
+              keyboardType: TextInputType.text,
+              onSubmitted: (s) {
+                focusNode.unfocus();
+              },
             ),
             Expanded(
               child: SingleChildScrollView(

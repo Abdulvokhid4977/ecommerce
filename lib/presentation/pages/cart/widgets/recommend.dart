@@ -1,12 +1,16 @@
-import 'package:e_commerce/config/routes/app_routes.dart';
-import 'package:e_commerce/core/constants/constants.dart';
-import 'package:e_commerce/core/utils/utils.dart';
-import 'package:e_commerce/presentation/components/custom_container.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CartListview {
-  Widget category(String category, BuildContext ctx) {
+import '../../../../config/routes/app_routes.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/utils/utils.dart';
+import '../../../components/custom_container.dart';
+
+class Recommend extends StatelessWidget {
+  const Recommend({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -21,7 +25,7 @@ class CartListview {
             itemBuilder: (_, i) {
               return InkWell(
                 onTap: () {
-                  Navigator.of(ctx).pushNamed(Routes.details);
+                  Navigator.of(context).pushNamed(Routes.details);
                 },
                 child: Container(
                   margin: const EdgeInsets.only(left: 16),

@@ -43,14 +43,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   }
 
-  @override
-  // void dispose() {
-  //   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-  //     statusBarColor: Colors.transparent,
-  //     statusBarIconBrightness: Brightness.dark,
-  //   ));
-  //   super.dispose();
-  // }
 
   @override
   void didChangeDependencies() {

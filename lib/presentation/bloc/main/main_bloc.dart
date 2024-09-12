@@ -4,7 +4,6 @@ import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/data/models/banners_model.dart';
 import 'package:e_commerce/data/models/category_model.dart' as ctg;
 import 'package:e_commerce/data/models/product_model.dart';
-import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,7 +80,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   Future<void> _updateFavorite(
       UpdateFavoriteEvent event, Emitter<MainState> emit) async {
 
-    // 1. Emit Optimistic State
     if (state is MainLoaded) {
       final currentState = state as MainLoaded;
       final updatedProducts = _updateProductsList(
@@ -106,7 +104,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           "description": event.productElement.description,
           "favorite": event.isFavorite,
           "id": event.productElement.id,
-          "image": event.productElement.image,
+
           "name": event.productElement.name,
           "order_count": event.productElement.orderCount,
           "price": event.productElement.price,
@@ -123,6 +121,9 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         // 3. Roll Back the UI on Failure
         _rollbackFavoriteState(event, emit);
         emit(MainError('Failed to update favorite status.'));
+      } else {
+        // Emit FavoriteToggledState on success
+        emit(FavoriteToggledState(event.isFavorite, event.productElement));
       }
     } catch (e) {
       // 3. Roll Back the UI on Error
@@ -130,6 +131,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       emit(MainError('Failed to update favorite status: $e'));
     }
   }
+
 
   void _rollbackFavoriteState(UpdateFavoriteEvent event, Emitter<MainState> emit) {
     if (state is MainLoaded) {

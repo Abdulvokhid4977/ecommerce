@@ -24,15 +24,7 @@ class UpdateFavoriteEvent extends MainEvent {
   List<Object?> get props => [isFavorite, productElement];
 }
 
-// class FetchCategoryProductEvent extends MainEvent {
-//   final String categoryId;
-//
-//   FetchCategoryProductEvent(this.categoryId);
-//
-//   @override
-//   // TODO: implement props
-//   List<Object?> get props => [];
-// }
+
 
 class ChangeTabEvent extends MainEvent {
   final int tabIndex;

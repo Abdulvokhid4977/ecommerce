@@ -31,6 +31,9 @@ sealed class AppUtils {
   static const kHeight16 = SizedBox(
     height: 16,
   );
+  static const kHeight12 = SizedBox(
+    height: 16,
+  );
   static const kPaddingBottom2 = EdgeInsets.fromLTRB(0, 0, 0, 2);
   static BorderRadius kBorderRadius12 = BorderRadius.circular(12);
   static const kPaddingAll4=EdgeInsets.all(4);

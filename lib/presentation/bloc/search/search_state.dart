@@ -12,8 +12,9 @@ class SearchInitial extends SearchState {
   List<Object> get props => [];
 }
 
-class CategoryLoaded extends SearchState{
+class CategoryLoaded extends SearchState {
   final ctg.Category category;
+
   CategoryLoaded(this.category);
 
   // Adding copyWith method for easier state updates
@@ -24,6 +25,7 @@ class CategoryLoaded extends SearchState{
       category ?? this.category,
     );
   }
+
   @override
   List<Object> get props => [];
 }
@@ -51,21 +53,21 @@ class SearchLoading extends SearchState {
   List<Object> get props => [];
 }
 
+class SearchSuccess extends SearchState {
+  final Product products;
+  final ctg.Category category;
+
+  SearchSuccess(this.products, this.category);
+
+  @override
+  List<Object?> get props => [products];
+}
 
 class FetchCategoryProductLoading extends SearchState {
   @override
   List<Object> get props => [];
 }
 
-class FavoriteToggledState extends SearchState {
-  final bool isFavorite;
-  final ProductElement productElement;
-
-  FavoriteToggledState(this.isFavorite, this.productElement);
-
-  @override
-  List<Object> get props => [isFavorite, productElement];
-}
 class FetchCategoryProductState extends SearchState {
   final Product product;
   final bool hasData;
@@ -85,6 +87,7 @@ class FetchCategoryProductState extends SearchState {
   @override
   List<Object> get props => [product, hasData];
 }
+
 class SearchError extends SearchState {
   final String message;
 

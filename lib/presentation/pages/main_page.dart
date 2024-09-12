@@ -4,10 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
-import 'package:e_commerce/presentation/pages/cart_page.dart';
-import 'package:e_commerce/presentation/pages/home_page.dart';
-import 'package:e_commerce/presentation/pages/profile_page.dart';
-import 'package:e_commerce/presentation/pages/search_page.dart';
+import 'package:e_commerce/presentation/pages/cart/cart_page.dart';
+import 'package:e_commerce/presentation/pages/home/home_page.dart';
+import 'package:e_commerce/presentation/pages/profile/profile_page.dart';
+import 'package:e_commerce/presentation/pages/search/pages/search_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -22,7 +22,7 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> tabs = [
     const HomePage(),
-    const SearchPage(''),
+    const SearchPage(),
     const CartPage(),
     const ProfilePage(),
   ];
