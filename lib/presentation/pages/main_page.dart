@@ -1,9 +1,5 @@
 import 'dart:async';
 
-import 'package:e_commerce/presentation/pages/error/pages/disconnected.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
@@ -11,8 +7,9 @@ import 'package:e_commerce/presentation/pages/cart/cart_page.dart';
 import 'package:e_commerce/presentation/pages/home/home_page.dart';
 import 'package:e_commerce/presentation/pages/profile/profile_page.dart';
 import 'package:e_commerce/presentation/pages/search/pages/search_page.dart';
-
-import '../../core/services/connectivity_service.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -22,9 +19,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  // late ConnectivityService connectivityService;
-  // late StreamSubscription<bool> connectionSubscription;
-  // bool isConnected = true;
+  final GlobalKey<FormState> bottomNavigatorKey = GlobalKey<FormState>();
+
   int currentIndex = 0;
   DateTime? lastPressed;
 
@@ -34,23 +30,14 @@ class _MainPageState extends State<MainPage> {
     const CartPage(),
     const ProfilePage(),
   ];
+
   @override
   void initState() {
-    // connectivityService = ConnectivityService();
-    // // Listen to the connection stream
-    // connectionSubscription =
-    //     connectivityService.connectionStream.listen((hasConnection) {
-    //       setState(() {
-    //         isConnected = hasConnection;
-    //       });
-    //     });
     super.initState();
   }
 
   @override
   void dispose() {
-    // connectionSubscription.cancel();
-    // connectivityService.dispose();
     super.dispose();
   }
 
@@ -61,8 +48,8 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _onTabTapped(int index) {
-    if(currentIndex==0 && index==0){
-     return;
+    if (currentIndex == 0 && index == 0) {
+      return;
     }
     setState(() {
       currentIndex = index;
@@ -86,10 +73,14 @@ class _MainPageState extends State<MainPage> {
     }
 
     final now = DateTime.now();
-    if (lastPressed == null || now.difference(lastPressed!) > const Duration(seconds: 2)) {
+    if (lastPressed == null ||
+        now.difference(lastPressed!) > const Duration(seconds: 2)) {
       lastPressed = now;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Press back again to exit'),duration: Duration(seconds: 1),),
+        const SnackBar(
+          content: Text('Press back again to exit'),
+          duration: Duration(seconds: 1),
+        ),
       );
       return false;
     }
@@ -115,7 +106,7 @@ class _MainPageState extends State<MainPage> {
               showUnselectedLabels: true,
               selectedItemColor: Colours.blueCustom,
               unselectedItemColor: Colours.greyCustom,
-              key: Constants.bottomNavigatorKey,
+              key: bottomNavigatorKey,
               onTap: _onTabTapped,
               currentIndex: currentIndex,
               items: [
@@ -123,7 +114,9 @@ class _MainPageState extends State<MainPage> {
                   icon: SvgPicture.asset(
                     'assets/icons/home.svg',
                     colorFilter: ColorFilter.mode(
-                        currentIndex == 0 ? Colours.blueCustom : Colours.greyCustom,
+                        currentIndex == 0
+                            ? Colours.blueCustom
+                            : Colours.greyCustom,
                         BlendMode.srcIn),
                   ),
                   label: 'Главная',
@@ -133,7 +126,9 @@ class _MainPageState extends State<MainPage> {
                   icon: SvgPicture.asset(
                     'assets/icons/search.svg',
                     colorFilter: ColorFilter.mode(
-                        currentIndex == 1 ? Colours.blueCustom : Colours.greyCustom,
+                        currentIndex == 1
+                            ? Colours.blueCustom
+                            : Colours.greyCustom,
                         BlendMode.srcIn),
                   ),
                   label: 'Поиск',
@@ -143,7 +138,9 @@ class _MainPageState extends State<MainPage> {
                   icon: SvgPicture.asset(
                     'assets/icons/cart.svg',
                     colorFilter: ColorFilter.mode(
-                        currentIndex == 2 ? Colours.blueCustom : Colours.greyCustom,
+                        currentIndex == 2
+                            ? Colours.blueCustom
+                            : Colours.greyCustom,
                         BlendMode.srcIn),
                   ),
                   label: 'Корзина',
@@ -153,7 +150,9 @@ class _MainPageState extends State<MainPage> {
                   icon: SvgPicture.asset(
                     'assets/icons/profile.svg',
                     colorFilter: ColorFilter.mode(
-                        currentIndex == 3 ? Colours.blueCustom : Colours.greyCustom,
+                        currentIndex == 3
+                            ? Colours.blueCustom
+                            : Colours.greyCustom,
                         BlendMode.srcIn),
                   ),
                   label: 'Кабинет',

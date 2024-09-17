@@ -1,8 +1,10 @@
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/shimmers/search_shimmer.dart';
+import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/data/models/category_model.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:e_commerce/presentation/components/gridtile.dart';
+import 'package:e_commerce/presentation/pages/search/grid_view.dart';
 import 'package:e_commerce/presentation/pages/search/pages/search_list.dart';
 import 'package:e_commerce/presentation/pages/search/widgets/animated_container.dart';
 import 'package:e_commerce/presentation/pages/search/widgets/searchbar.dart';
@@ -53,8 +55,7 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
           );
-        }
-        else if (state is CategoryLoaded) {
+        } else if (state is CategoryLoaded) {
           List<CategoryElement> filtered = state.category.category
               .where((val) => val.parentId == '')
               .toList();
@@ -148,26 +149,36 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
           );
-        }
-        else if (state is SearchSuccess) {
-          return Scaffold(
-            body: Column(
-              children: [
-                Searchbar(
-                  textEditingController,
-                  () {
-                    Navigator.of(context).pushNamed(Routes.main);
-                  },
-                ),
-                Expanded(
-                  child: SearchList(state.products.product,
-                      state.category.category, textEditingController),
-                ),
-              ],
-            ),
-          );
-        }
-        else if (state is FetchCategoryProductLoading) {
+        } else if (state is SearchSuccess) {
+          if (!state.isCompleted) {
+            return Scaffold(
+              body: Column(
+                children: [
+                  Searchbar(
+                    textEditingController,
+                    () {
+                      Navigator.of(context).pushNamed(Routes.main);
+                    },
+                  ),
+                  Expanded(
+                    child: SearchList(state.products.product,
+                        state.category!.category, textEditingController),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return Scaffold(
+              body: Column(
+                children: [
+                  Searchbar(textEditingController, () {}),
+                  AppUtils.kHeight32,
+                  Expanded(child: GridViewWidget(state.products)),
+                ],
+              ),
+            );
+          }
+        } else if (state is FetchCategoryProductLoading) {
           return Scaffold(
             body: Column(
               children: [
@@ -181,8 +192,7 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
           );
-        }
-        else if (state is FetchCategoryProductState) {
+        } else if (state is FetchCategoryProductState) {
           return Scaffold(
             body: Column(
               children: [

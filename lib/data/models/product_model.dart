@@ -1,8 +1,9 @@
-// To parse this JSON data, do
-//
-//     final product = productFromJson(jsonString);
 
 import 'dart:convert';
+
+import 'package:hive/hive.dart';
+
+part 'product_model.g.dart';
 
 Product productFromJson(String str) => Product.fromJson(json.decode(str));
 
@@ -47,18 +48,41 @@ class Product {
 
 }
 
-class ProductElement {
+@HiveType(typeId: 0)
+class ProductElement extends HiveObject {
+  @HiveField(0)
   String id;
+
+  @HiveField(1)
   String categoryId;
+
+  @HiveField(2)
   bool favorite;
+
+  @HiveField(3)
   String name;
+
+  @HiveField(4)
   int price;
+
+  @HiveField(5)
   int withDiscount;
+
+  @HiveField(6)
   int rating;
+
+  @HiveField(7)
   String description;
+
+  @HiveField(8)
   int orderCount;
+
+  @HiveField(9)
   List<ProductColor> color;
+
+  @HiveField(10)
   String createdAt;
+
 
   ProductElement({
     required this.id,
@@ -133,11 +157,18 @@ class ProductElement {
     return color.expand((element) => element.colorUrl).toList();
   }
 }
-
+@HiveType(typeId: 1)
 class ProductColor {
+  @HiveField(0)
   String id;
+
+  @HiveField(1)
   String productId;
+
+  @HiveField(2)
   String colorName;
+
+  @HiveField(3)
   List<String> colorUrl;
 
   ProductColor({

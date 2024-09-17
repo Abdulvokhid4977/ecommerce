@@ -7,6 +7,7 @@ class FetchSearchDataEvent extends SearchEvent {
   final String categoryId;
   final bool fromNavBar;
 
+
   FetchSearchDataEvent(this.categoryId, this.fromNavBar);
 
   @override
@@ -16,8 +17,9 @@ class FetchSearchDataEvent extends SearchEvent {
 
 class SearchQueryChangedEvent extends SearchEvent {
   final String? query;
+  final bool isSearchCompleted;
 
-  SearchQueryChangedEvent(this.query);
+  SearchQueryChangedEvent(this.query, {this.isSearchCompleted=false});
 
   @override
   List<Object?> get props => [query];

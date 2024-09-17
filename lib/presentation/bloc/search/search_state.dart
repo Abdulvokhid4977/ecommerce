@@ -55,12 +55,13 @@ class SearchLoading extends SearchState {
 
 class SearchSuccess extends SearchState {
   final Product products;
-  final ctg.Category category;
+  final ctg.Category? category;
+  final bool isCompleted;
 
-  SearchSuccess(this.products, this.category);
+  SearchSuccess(this.products, {this.isCompleted=false,this.category, });
 
   @override
-  List<Object?> get props => [products];
+  List<Object?> get props => [products, category];
 }
 
 class FetchCategoryProductLoading extends SearchState {

@@ -36,9 +36,9 @@ class _SearchbarState extends State<Searchbar> {
     focus1.dispose();
     super.dispose();
   }
-  Future<void> saveToMem()async{
-    await SearchHistoryManager.saveSearchedProduct(
-        widget.controller.text);
+
+  Future<void> saveToMem() async {
+    await SearchHistoryManager.saveSearchedProduct(widget.controller.text);
   }
 
   @override
@@ -77,10 +77,14 @@ class _SearchbarState extends State<Searchbar> {
                     if (focus1.hasFocus) {
                       return;
                     }
-                    context.read<SearchBloc>().add(SearchQueryChangedEvent(null));
+                    context
+                        .read<SearchBloc>()
+                        .add(SearchQueryChangedEvent(null));
                   },
                   onChanged: (query) {
-                    context.read<SearchBloc>().add(SearchQueryChangedEvent(query));
+                    context
+                        .read<SearchBloc>()
+                        .add(SearchQueryChangedEvent(query));
                   },
                   decoration: InputDecoration(
                     hintText: "Поиск товаров и категорий",
@@ -112,12 +116,12 @@ class _SearchbarState extends State<Searchbar> {
                     color: Colors.black,
                   ),
                   keyboardType: TextInputType.text,
-                  onSubmitted: (s)  {
+                  onSubmitted: (s) {
                     focus1.unfocus();
                     if (s.isNotEmpty) {
                       saveToMem();
-                      context.read<SearchBloc>().add(SearchQueryChangedEvent(s));
-
+                      context.read<SearchBloc>().add(
+                          SearchQueryChangedEvent(s, isSearchCompleted: true));
                     }
                   }),
             ),

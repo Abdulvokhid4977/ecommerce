@@ -2,7 +2,6 @@ import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/services/cached_values.dart';
 import 'package:e_commerce/data/models/category_model.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
-import 'package:e_commerce/presentation/pages/search/grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,13 +20,6 @@ class SearchList extends StatefulWidget {
 
 class _SearchListState extends State<SearchList> {
   List<String> _recentSearches = [];
-  List<String> recentQueries=[];
-
-  void _recentContainingQuery(){
-   setState(() {
-     recentQueries= _recentSearches.where((product)=>product.contains(widget.controller.text)).toList();
-   });
-  }
 
   void _loadRecentSearches() async {
     List<String> recentSearches =
@@ -45,7 +37,6 @@ class _SearchListState extends State<SearchList> {
   void initState() {
     super.initState();
     _loadRecentSearches();
-    _recentContainingQuery();
   }
 
   @override
@@ -60,32 +51,31 @@ class _SearchListState extends State<SearchList> {
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: recentQueries.length,
+                  itemCount: _recentSearches.length,
                   itemBuilder: (context, index) {
                     return ListTile(
                       leading: Icon(Icons.access_time_rounded,
                           color: Colours.greyIcon),
-                      title: Text(recentQueries[index]),
+                      title: Text(_recentSearches[index]),
                       trailing: IconButton(
                         onPressed: () async {
-                          // Call _delete and then update the UI
-                          await _delete(recentQueries[index]);
+                          await _delete(_recentSearches[index]);
                           setState(() {
-                            recentQueries.removeAt(index); // Update the list
+                            _recentSearches.removeAt(index);
                           });
                         },
                         icon: Icon(Icons.cancel, color: Colours.greyIcon),
                       ),
                       onTap: () {
                         SearchHistoryManager.saveSearchedProduct(
-                            recentQueries[index]);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                GridViewWidget(widget.product, index),
-                          ),
-                        );
+                            _recentSearches[index]);
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (_) =>
+                        //           GridViewWidget(),
+                        //     ),
+                        //   );
                       },
                     );
                   },
@@ -146,13 +136,13 @@ class _SearchListState extends State<SearchList> {
                       onTap: () {
                         SearchHistoryManager.saveSearchedProduct(
                             _recentSearches[index]);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                GridViewWidget(widget.product, index),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (_) =>
+                        //         GridViewWidget(widget.product, index),
+                        //   ),
+                        // );
                       },
                     );
                   },

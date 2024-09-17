@@ -9,13 +9,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:lottie/lottie.dart';
 
 import 'config/routes/app_routes.dart';
 
+import 'data/models/product_model.dart';
+import 'injection.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(ProductElementAdapter());
+  Hive.registerAdapter(ProductColorAdapter());
+  await setup();
   runApp(
     MultiBlocProvider(
       providers: [
@@ -29,6 +38,10 @@ Future<void> main() async {
     ),
   );
 }
+// void setupGetIt() {
+//   final getIt = GetIt.instance;
+//   getIt.registerSingleton<CartService>(CartService());
+// }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});

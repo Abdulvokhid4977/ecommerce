@@ -1,5 +1,8 @@
+import 'package:e_commerce/core/services/cart_service.dart';
+import 'package:e_commerce/data/models/hive_product_model.dart';
 import 'package:e_commerce/data/models/product_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -7,10 +10,12 @@ import '../../../../core/constants/constants.dart';
 
 class FixedBottom extends StatelessWidget {
   final ProductElement baseState;
-  const FixedBottom(this.baseState,{super.key});
+
+  const FixedBottom(this.baseState, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cartService = GetIt.I<CartService>();
     return Positioned(
       bottom: 0,
       child: Container(
@@ -43,7 +48,12 @@ class FixedBottom extends StatelessWidget {
               ],
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                cartService.addToCart(baseState);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Added to Cart')),
+                );
+              },
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colours.blueCustom,
                   shape: RoundedRectangleBorder(
