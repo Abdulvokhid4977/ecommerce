@@ -3,6 +3,7 @@ import 'package:e_commerce/presentation/bloc/connection/internet_connection_bloc
 import 'package:e_commerce/presentation/bloc/favorite/favorite_bloc.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
+import 'package:e_commerce/presentation/pages/cart/cart_page.dart';
 import 'package:e_commerce/presentation/pages/error/pages/disconnected.dart';
 import 'package:e_commerce/presentation/pages/main_page.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:lottie/lottie.dart';
 
 import 'config/routes/app_routes.dart';
 
+import 'core/wrappers/cart_item_wrapper.dart';
 import 'data/models/product_model.dart';
 import 'injection.dart';
 
@@ -22,6 +24,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
+  Hive.registerAdapter(CartItemWrapperAdapter());
   Hive.registerAdapter(ProductElementAdapter());
   Hive.registerAdapter(ProductColorAdapter());
   await setup();

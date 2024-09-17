@@ -1,5 +1,5 @@
 import 'package:e_commerce/core/services/cart_service.dart';
-import 'package:e_commerce/data/models/hive_product_model.dart';
+import 'package:e_commerce/core/wrappers/cart_item_wrapper.dart';
 import 'package:e_commerce/data/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -49,10 +49,7 @@ class FixedBottom extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                cartService.addToCart(baseState);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Added to Cart')),
-                );
+                cartService.addToCart(CartItemWrapper(product: baseState, quantity: 1));
               },
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colours.blueCustom,

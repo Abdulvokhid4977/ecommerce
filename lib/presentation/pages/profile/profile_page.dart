@@ -15,13 +15,13 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final List<Map> profileSettings = [
     {'asset': 'assets/icons/shopping_bag.svg', 'label': 'Мои заказы'},
-    {'asset': 'assets/icons/feedback_emoji.svg', 'label': 'Мои отзывы'},
-    {'asset': 'assets/icons/card.svg', 'label': 'Рассрочка Ummerce Nasiya'},
+    // {'asset': 'assets/icons/feedback_emoji.svg', 'label': 'Мои отзывы'},
+    // {'asset': 'assets/icons/card.svg', 'label': 'Рассрочка Ummerce Nasiya'},
   ];
 
   final List<Map> profileSettings2 = [
     {'asset': 'assets/icons/percent.svg', 'label': 'Мои промокоды'},
-    {'asset': 'assets/icons/message.svg', 'label': 'Мои чаты'},
+    // {'asset': 'assets/icons/message.svg', 'label': 'Мои чаты'},
     {'asset': 'assets/icons/bell.svg', 'label': 'Уведомления'},
     {'asset': 'assets/icons/user.svg', 'label': 'Мой профиль'},
     {'asset': 'assets/icons/settings.svg', 'label': 'Настройки'},

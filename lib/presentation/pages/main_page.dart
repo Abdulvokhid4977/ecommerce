@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:e_commerce/core/constants/constants.dart';
+import 'package:e_commerce/core/services/cart_service.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:e_commerce/presentation/pages/cart/cart_page.dart';
@@ -34,6 +35,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    // CartService().clearCart();
   }
 
   @override

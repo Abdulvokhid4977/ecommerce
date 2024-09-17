@@ -1,13 +1,15 @@
 import 'package:e_commerce/core/constants/constants.dart';
-import 'package:e_commerce/core/utils/utils.dart';
+import 'package:e_commerce/core/services/cart_service.dart';
 import 'package:e_commerce/data/models/product_model.dart';
 import 'package:e_commerce/presentation/pages/details/product_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/wrappers/cart_item_wrapper.dart';
 import '../bloc/favorite/favorite_bloc.dart';
 
 class GridTileProduct extends StatelessWidget {
@@ -15,14 +17,14 @@ class GridTileProduct extends StatelessWidget {
   final bool isFavorite;
 
   const GridTileProduct(
-     this.isFavorite,
-     this.baseState,
-      {
+    this.isFavorite,
+    this.baseState, {
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final cartService = GetIt.I<CartService>();
     final monthly = (baseState.withDiscount / 6).round();
     final formatter = NumberFormat('#,###', 'en_US');
 
@@ -64,22 +66,28 @@ class GridTileProduct extends StatelessWidget {
                   top: 5,
                   child: BlocBuilder<FavoriteBloc, FavoriteState>(
                     builder: (context, state) {
-                      final currentFavoriteStatus = state is FavoriteToggledState &&
-                          state.productElement.id == baseState.id
-                          ? state.isFavorite
-                          : isFavorite;
+                      final currentFavoriteStatus =
+                          state is FavoriteToggledState &&
+                                  state.productElement.id == baseState.id
+                              ? state.isFavorite
+                              : isFavorite;
 
                       return IconButton(
                         splashColor: Colors.transparent,
                         onPressed: () {
                           final newFavoriteStatus = !currentFavoriteStatus;
                           context.read<FavoriteBloc>().add(
-                            UpdateFavoriteStatusEvent(baseState, newFavoriteStatus),
-                          );
+                                UpdateFavoriteStatusEvent(
+                                    baseState, newFavoriteStatus),
+                              );
                         },
                         icon: Icon(
-                          currentFavoriteStatus ? Icons.favorite : Icons.favorite_border,
-                          color: currentFavoriteStatus ? Colors.red : Colours.greyIcon,
+                          currentFavoriteStatus
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: currentFavoriteStatus
+                              ? Colors.red
+                              : Colours.greyIcon,
                         ),
                       );
                     },
@@ -89,7 +97,8 @@ class GridTileProduct extends StatelessWidget {
                   bottom: 5,
                   left: 5,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6),
                       color: Colours.blueCustom,
@@ -161,7 +170,10 @@ class GridTileProduct extends StatelessWidget {
               ),
               InkWell(
                 splashColor: Colors.transparent,
-                onTap: () {},
+                onTap: () {
+                  cartService.addToCart(
+                      CartItemWrapper(product: baseState, quantity: 1));
+                },
                 child: CircleAvatar(
                   backgroundColor: Colours.backgroundGrey,
                   radius: 25,
