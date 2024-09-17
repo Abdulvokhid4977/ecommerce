@@ -34,11 +34,15 @@ class _SearchbarState extends State<Searchbar> {
         children: [
           Expanded(
             child: TextField(
+              autofocus: false,
               onTap: (){
-                context.read<SearchBloc>().add(SearchQueryChangedEvent(null));},
+                context.read<MainBloc>().add(ChangeTabEvent(1));
+                context.read<SearchBloc>().add(SearchQueryChangedEvent(null));
+                },
+              readOnly: true,
               textCapitalization: TextCapitalization.words,
               onChanged: (query) {
-                // context.read<SearchBloc>().add(SearchQueryChangedEvent(query));
+                context.read<SearchBloc>().add(SearchQueryChangedEvent(query));
               },
               decoration: InputDecoration(
                 hintText: "Поиск товаров и категорий",

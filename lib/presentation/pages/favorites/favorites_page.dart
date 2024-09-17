@@ -1,5 +1,4 @@
 import 'package:e_commerce/core/constants/constants.dart';
-// import 'package:e_commerce/presentation/bloc/favorite/favorite_bloc.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/pages/favorites/wishlist.dart';
 import 'package:flutter/material.dart';

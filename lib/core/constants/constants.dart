@@ -4,7 +4,7 @@ sealed class Constants {
   Constants._();
   static GlobalKey<FormState> bottomNavigatorKey = GlobalKey<FormState>();
   static FocusNode focus=FocusNode();
-  static const baseUrl='https://ulab-project.onrender.com/e_commerce/api/v1';
+  static const baseUrl='https://ulab-project-1-e3lm.onrender.com/e_commerce/api/v1';
 }
 class SizeConfig {
   static double? screenHeight;

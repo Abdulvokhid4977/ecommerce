@@ -1,3 +1,4 @@
+import 'package:e_commerce/data/models/category_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/constants.dart';
@@ -7,9 +8,9 @@ import '../../components/gridtile.dart';
 class GridViewWidget extends StatelessWidget {
   final List<ProductElement> product;
   final int i;
+  final List<CategoryElement>? category;
+  const GridViewWidget(this.product, this.i, {super.key, this.category});
 
-  // final List<CategoryElement> category;
-  const GridViewWidget(this.product, this.i, {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -12,6 +12,7 @@ sealed class Routes {
   static const String profile='/profile';
   static const String cart = '/cart';
   static const String givingOrder = '/givingorder';
+  static const String disconnected = '/disconnected';
 
 
 

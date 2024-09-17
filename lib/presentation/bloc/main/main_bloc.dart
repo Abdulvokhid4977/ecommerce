@@ -13,7 +13,7 @@ part 'main_event.dart';
 part 'main_state.dart';
 
 class MainBloc extends Bloc<MainEvent, MainState> {
-  MainBloc() : super(MainInitial()) {
+  MainBloc() : super(MainLoading()) {
     on<FetchDataEvent>(_fetchData);
     on<UpdateFavoriteEvent>(_updateFavorite);
     on<ChangeTabEvent>((event, emit) {
@@ -24,7 +24,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   Future<void> _fetchData(FetchDataEvent event, Emitter<MainState> emit) async {
     emit(MainLoading());
 
-     if (event.isWishlist == true) {
+    if (event.isWishlist == true) {
       try {
         final response = await http.get(Uri.parse(
             '${Constants.baseUrl}/product?offset=0&favorite=${event.isWishlist}'));
@@ -79,18 +79,17 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
   Future<void> _updateFavorite(
       UpdateFavoriteEvent event, Emitter<MainState> emit) async {
-
     if (state is MainLoaded) {
       final currentState = state as MainLoaded;
-      final updatedProducts = _updateProductsList(
-          currentState.products.product, event.productElement.id, event.isFavorite);
+      final updatedProducts = _updateProductsList(currentState.products.product,
+          event.productElement.id, event.isFavorite);
       emit(currentState.copyWith(
         products: currentState.products.copyWith(product: updatedProducts),
       ));
     } else if (state is FetchWishlistState) {
       final currentState = state as FetchWishlistState;
-      final updatedProducts = _updateProductsList(
-          currentState.product.product, event.productElement.id, event.isFavorite);
+      final updatedProducts = _updateProductsList(currentState.product.product,
+          event.productElement.id, event.isFavorite);
       emit(currentState.copyWith(
         product: currentState.product.copyWith(product: updatedProducts),
       ));
@@ -104,7 +103,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           "description": event.productElement.description,
           "favorite": event.isFavorite,
           "id": event.productElement.id,
-
           "name": event.productElement.name,
           "order_count": event.productElement.orderCount,
           "price": event.productElement.price,
@@ -132,24 +130,25 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }
   }
 
-
-  void _rollbackFavoriteState(UpdateFavoriteEvent event, Emitter<MainState> emit) {
+  void _rollbackFavoriteState(
+      UpdateFavoriteEvent event, Emitter<MainState> emit) {
     if (state is MainLoaded) {
       final currentState = state as MainLoaded;
-      final updatedProducts = _updateProductsList(
-          currentState.products.product, event.productElement.id, !event.isFavorite);
+      final updatedProducts = _updateProductsList(currentState.products.product,
+          event.productElement.id, !event.isFavorite);
       emit(currentState.copyWith(
         products: currentState.products.copyWith(product: updatedProducts),
       ));
     } else if (state is FetchWishlistState) {
       final currentState = state as FetchWishlistState;
-      final updatedProducts = _updateProductsList(
-          currentState.product.product, event.productElement.id, !event.isFavorite);
+      final updatedProducts = _updateProductsList(currentState.product.product,
+          event.productElement.id, !event.isFavorite);
       emit(currentState.copyWith(
         product: currentState.product.copyWith(product: updatedProducts),
       ));
     }
   }
+
   List<ProductElement> _updateProductsList(
       List<ProductElement> products, String productId, bool isFavorite) {
     return products.map((product) {

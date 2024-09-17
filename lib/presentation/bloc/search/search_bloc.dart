@@ -14,14 +14,14 @@ part 'search_state.dart';
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
 
-  SearchBloc() : super(SearchInitial()) {
+  SearchBloc() : super(SearchLoading()) {
     on<FetchSearchDataEvent>(_fetchSearchData);
     on<UpdateFavoriteEvent>(_updateFavorite);
     on<SearchQueryChangedEvent>(_filteredItems);
   }
 
   Future<void> _filteredItems(SearchQueryChangedEvent event, Emitter<SearchState> emit) async{
-    emit(SearchLoading());
+    emit(FetchCategoryProductLoading());
     try{
       final url1='${Constants.baseUrl}/product?name=${event.query}';
       final url2='${Constants.baseUrl}/category?name=${event.query}';
@@ -58,7 +58,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
           }
           emit(CategoryLoaded(result));
         } else {
-          // print(responses[1].body);
+
           emit(SearchError('Failed to fetch data. Do you know why?'));
         }
       } catch (e, s) {
@@ -67,8 +67,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     } else {
       emit(FetchCategoryProductLoading());
       try {
-        final response = await http.get(Uri.parse(
-            '${Constants.baseUrl}/product?category_id=${event.categoryId}'));
+        final response = await http.get(Uri.parse('${Constants.baseUrl}/product?category_id=${event.categoryId}'));
         if (response.statusCode >= 200 && response.statusCode < 300) {
           if (jsonDecode(response.body)[1] == []) {
             final product = Product(count: 0, product: []);
@@ -76,7 +75,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             return;
           }
           final result = Product.fromJson(jsonDecode(response.body));
-          print(result.count);
+          if (kDebugMode) {
+            debugPrint('$result  this is what category contains');
+          }
           emit(FetchCategoryProductState(result, true));
           return;
         } else if (response.statusCode > 299) {

@@ -11,18 +11,17 @@ import '../../search/pages/search_page.dart';
 
 class CategoryWidget extends StatefulWidget {
   final List<CategoryElement> filtered;
-  const CategoryWidget(this.filtered,{super.key});
+  const CategoryWidget(this.filtered, {super.key});
 
   @override
   State<CategoryWidget> createState() => _CategoryWidgetState();
 }
 
 class _CategoryWidgetState extends State<CategoryWidget> {
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: SizeConfig.screenHeight! * 0.15,
+      height: SizeConfig.screenHeight! * 0.18,
       child: ListView.separated(
         physics: const ClampingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 6),

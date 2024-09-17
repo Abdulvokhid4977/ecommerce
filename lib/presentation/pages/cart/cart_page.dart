@@ -1,6 +1,5 @@
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
-import 'package:e_commerce/presentation/components/custom_container.dart';
 import 'package:e_commerce/presentation/components/empty_widget.dart';
 import 'package:e_commerce/presentation/pages/cart/widgets/custom_listview.dart';
 import 'package:e_commerce/presentation/pages/cart/widgets/indicator_container.dart';
@@ -27,12 +26,6 @@ class _CartPageState extends State<CartPage> {
 
   bool isAllSelected() {
     return isSelected.every((item) => item == true);
-  }
-
-  @override
-  void didChangeDependencies() {
-    SizeConfig().init(context);
-    super.didChangeDependencies();
   }
 
   @override

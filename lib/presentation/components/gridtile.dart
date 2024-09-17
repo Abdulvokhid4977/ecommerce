@@ -4,40 +4,38 @@ import 'package:e_commerce/data/models/product_model.dart';
 import 'package:e_commerce/presentation/pages/details/product_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../bloc/favorite/favorite_bloc.dart';
 
-class GridTileProduct extends StatefulWidget {
+class GridTileProduct extends StatelessWidget {
   final ProductElement baseState;
   final bool isFavorite;
 
+  const GridTileProduct(
+     this.isFavorite,
+     this.baseState,
+      {
+    super.key,
+  });
 
-
-  const GridTileProduct(this.isFavorite, this.baseState,
-      {super.key});
-
-  @override
-  State<GridTileProduct> createState() => _GridTileProductState();
-}
-
-class _GridTileProductState extends State<GridTileProduct> {
   @override
   Widget build(BuildContext context) {
-    final monthly = (widget.baseState.withDiscount / 6).round();
-    bool isFavorite = widget.isFavorite;
+    final monthly = (baseState.withDiscount / 6).round();
+    final formatter = NumberFormat('#,###', 'en_US');
 
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ProductDetailsPage(
-                product: widget.baseState,
-              ),
-            ));
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailsPage(
+              product: baseState,
+            ),
+          ),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,42 +54,42 @@ class _GridTileProductState extends State<GridTileProduct> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
-                      widget.baseState.color[0].colorUrl[0],
+                      baseState.color[0].colorUrl[0],
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
                 Positioned(
                   right: 5,
+                  top: 5,
                   child: BlocBuilder<FavoriteBloc, FavoriteState>(
                     builder: (context, state) {
-                      if (state is FavoriteToggledState &&
-                          state.productElement.id == widget.baseState.id) {
-                        isFavorite = state.isFavorite;
-                      }
+                      final currentFavoriteStatus = state is FavoriteToggledState &&
+                          state.productElement.id == baseState.id
+                          ? state.isFavorite
+                          : isFavorite;
 
                       return IconButton(
                         splashColor: Colors.transparent,
                         onPressed: () {
-                          final newFavoriteStatus = !isFavorite;
+                          final newFavoriteStatus = !currentFavoriteStatus;
                           context.read<FavoriteBloc>().add(
-                            UpdateFavoriteStatusEvent(widget.baseState, newFavoriteStatus),
+                            UpdateFavoriteStatusEvent(baseState, newFavoriteStatus),
                           );
                         },
                         icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: isFavorite ? Colors.red : Colours.greyIcon,
+                          currentFavoriteStatus ? Icons.favorite : Icons.favorite_border,
+                          color: currentFavoriteStatus ? Colors.red : Colours.greyIcon,
                         ),
                       );
                     },
                   ),
-
                 ),
                 Positioned(
                   bottom: 5,
                   left: 5,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6),
                       color: Colours.blueCustom,
@@ -109,9 +107,9 @@ class _GridTileProductState extends State<GridTileProduct> {
               ],
             ),
           ),
-          AppUtils.kHeight10,
+          const SizedBox(height: 10),
           Text(
-            widget.baseState.name,
+            baseState.name,
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w600,
@@ -119,7 +117,7 @@ class _GridTileProductState extends State<GridTileProduct> {
             ),
             softWrap: true,
           ),
-          AppUtils.kHeight10,
+          const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(4),
             width: SizeConfig.screenWidth! * 0.37,
@@ -128,7 +126,7 @@ class _GridTileProductState extends State<GridTileProduct> {
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
-              '${NumberFormat('#,###', 'en_US').format(monthly).replaceAll(',', ' ')} сум/мес',
+              '${formatter.format(monthly).replaceAll(',', ' ')} сум/мес',
               style: GoogleFonts.inter(
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
@@ -136,7 +134,7 @@ class _GridTileProductState extends State<GridTileProduct> {
               textAlign: TextAlign.center,
             ),
           ),
-          AppUtils.kHeight16,
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -144,7 +142,7 @@ class _GridTileProductState extends State<GridTileProduct> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${NumberFormat('#,###', 'en_US').format(widget.baseState.price).replaceAll(',', ' ')} сум',
+                    '${formatter.format(baseState.price).replaceAll(',', ' ')} сум',
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
@@ -153,7 +151,7 @@ class _GridTileProductState extends State<GridTileProduct> {
                     ),
                   ),
                   Text(
-                    '${NumberFormat('#,###', 'en_US').format(widget.baseState.withDiscount).replaceAll(',', ' ')} сум',
+                    '${formatter.format(baseState.withDiscount).replaceAll(',', ' ')} сум',
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:e_commerce/presentation/pages/error/pages/disconnected.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +12,8 @@ import 'package:e_commerce/presentation/pages/home/home_page.dart';
 import 'package:e_commerce/presentation/pages/profile/profile_page.dart';
 import 'package:e_commerce/presentation/pages/search/pages/search_page.dart';
 
+import '../../core/services/connectivity_service.dart';
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -17,6 +22,9 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  // late ConnectivityService connectivityService;
+  // late StreamSubscription<bool> connectionSubscription;
+  // bool isConnected = true;
   int currentIndex = 0;
   DateTime? lastPressed;
 
@@ -26,6 +34,25 @@ class _MainPageState extends State<MainPage> {
     const CartPage(),
     const ProfilePage(),
   ];
+  @override
+  void initState() {
+    // connectivityService = ConnectivityService();
+    // // Listen to the connection stream
+    // connectionSubscription =
+    //     connectivityService.connectionStream.listen((hasConnection) {
+    //       setState(() {
+    //         isConnected = hasConnection;
+    //       });
+    //     });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // connectionSubscription.cancel();
+    // connectivityService.dispose();
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
@@ -34,6 +61,9 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _onTabTapped(int index) {
+    if(currentIndex==0 && index==0){
+     return;
+    }
     setState(() {
       currentIndex = index;
     });

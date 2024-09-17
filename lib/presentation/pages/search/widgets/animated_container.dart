@@ -61,7 +61,7 @@ class CategoryAnimation extends StatelessWidget {
               if (subcategory.id.isNotEmpty) {
                 context.read<SearchBloc>().add(
                     FetchSearchDataEvent(
-                        subcategory.parentId,
+                        subcategory.id,
                         false));
               }
             },
