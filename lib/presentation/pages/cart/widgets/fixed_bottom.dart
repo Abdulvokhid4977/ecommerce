@@ -1,3 +1,4 @@
+import 'package:e_commerce/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -5,7 +6,9 @@ import '../../../../config/routes/app_routes.dart';
 import '../../../../core/constants/constants.dart';
 
 class FixedBottom extends StatelessWidget {
-  const FixedBottom({super.key});
+  final double total;
+  final int quantity;
+  const FixedBottom(this.total, this.quantity,{super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +27,14 @@ class FixedBottom extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '899 000 сум',
+                  '${AppUtils.numberFormatter(total)} сум',
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
                   ),
                 ),
                 Text(
-                  '1 товар',
+                  '$quantity товар',
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,

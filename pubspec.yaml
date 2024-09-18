@@ -60,6 +60,7 @@ dependencies:
   hive_flutter: ^1.1.0
   hive:
   get_it: ^7.7.0
+  panara_dialogs:
 
 dev_dependencies:
   flutter_test:

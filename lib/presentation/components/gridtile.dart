@@ -9,7 +9,6 @@ import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-import '../../core/wrappers/cart_item_wrapper.dart';
 import '../bloc/favorite/favorite_bloc.dart';
 
 class GridTileProduct extends StatelessWidget {
@@ -171,8 +170,7 @@ class GridTileProduct extends StatelessWidget {
               InkWell(
                 splashColor: Colors.transparent,
                 onTap: () {
-                  cartService.addToCart(
-                      CartItemWrapper(product: baseState, quantity: 1));
+                  cartService.addToCart(baseState);
                 },
                 child: CircleAvatar(
                   backgroundColor: Colours.backgroundGrey,

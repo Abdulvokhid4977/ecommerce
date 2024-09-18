@@ -58,6 +58,7 @@ class _HomePageState extends State<HomePage> {
                 if (state is MainLoading) {
                   return const HomeShimmer();
                 } else if (state is MainLoaded) {
+                  Constants.products=state.products;
                   List<CategoryElement> filtered = state.category.category
                       .where((val) => val.parentId == '')
                       .toList();

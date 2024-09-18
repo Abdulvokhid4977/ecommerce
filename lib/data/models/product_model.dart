@@ -35,17 +35,10 @@ class Product {
           : [], // Return an empty list if product is null
     );
   }
-
-  // factory Product.fromJson(Map<String, dynamic> json) => Product(
-  //   count: json["count"],
-  //   product: List<ProductElement>.from(json["product"].map((x) => ProductElement.fromJson(x))),
-  // );
-  //
   Map<String, dynamic> toJson() => {
     "count": count,
     "product": List<dynamic>.from(product.map((x) => x.toJson())),
   };
-
 }
 
 @HiveType(typeId: 0)
@@ -129,16 +122,16 @@ class ProductElement extends HiveObject {
     id: json["id"],
     categoryId: json["category_id"],
     favorite: json["favorite"],
-
     name: json["name"],
-    price: json["price"],
-    withDiscount: json["with_discount"],
-    rating: json["rating"],
+    price: (json["price"] is double) ? (json["price"] as double).toInt() : json["price"],
+    withDiscount: (json["with_discount"] is double) ? (json["with_discount"] as double).toInt() : json["with_discount"],
+    rating: (json["rating"] is double) ? (json["rating"] as double).toInt() : json["rating"],
     description: json["description"],
-    orderCount: json["order_count"],
-    color: List<ProductColor>.from(json["color"].map((x) => ProductColor.fromJson(x))),
+    orderCount: (json["order_count"] is double) ? (json["order_count"] as double).toInt() : json["order_count"],
+    color: json["color"] != null ? List<ProductColor>.from(json["color"].map((x) => ProductColor.fromJson(x))) : [],
     createdAt: json["created_at"],
   );
+
 
   Map<String, dynamic> toJson() => {
     "id": id,

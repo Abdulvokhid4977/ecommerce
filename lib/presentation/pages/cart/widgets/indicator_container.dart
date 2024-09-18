@@ -6,19 +6,19 @@ import '../../../../core/constants/constants.dart';
 import '../../../../core/utils/utils.dart';
 
 class IndicatorContainer extends StatelessWidget {
-  const IndicatorContainer({super.key});
+  final double total;
+  const IndicatorContainer(this.total,{super.key});
 
   @override
   Widget build(BuildContext context) {
-    int? total = 90000;
     return Container(
-      padding: const EdgeInsets.only(left: 16),
+      padding: const EdgeInsets.only(left: 16, right: 2),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Colours.textFieldGrey,
       ),
       width: SizeConfig.screenWidth,
-      height: SizeConfig.screenHeight! * 0.18,
+      height: SizeConfig.screenHeight! * 0.186,
       child: Column(
         children: [
           Row(
@@ -48,18 +48,20 @@ class IndicatorContainer extends StatelessWidget {
               ),
             ],
           ),
-          Text(
-            'Осталось 360 000 сум до бесплатной доставки курьером',
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-              color: Colours.greyIcon,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(total>=1000000? 'Бесплатная доставка до дома' : 'Осталось ${AppUtils.numberFormatter(1000000-total)} сум до бесплатной доставки курьером',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                color: total>=1000000? Colours.greenIndicator : Colours.greyIcon,
+              ),
             ),
           ),
           AppUtils.kHeight16,
           LinearPercentIndicator(
             barRadius: const Radius.circular(8),
-            percent: total! * 0.000001,
+            percent: (total >= 1000000) ? 1.0 : total / 1000000,
             width: SizeConfig.screenWidth! - 64,
             backgroundColor: Colors.white,
             progressColor: Colours.greenIndicator,
@@ -70,18 +72,18 @@ class IndicatorContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  '1000000 сум',
+                  '1 000 000 сум',
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w500,
                     fontSize: 12,
-                    color: Colours.greyIcon,
+                    color: total>=1000000? Colours.greenIndicator : Colours.greyIcon,
                   ),
                 ),
                 AppUtils.kWidth12,
                 Icon(
                   Icons.home,
-                  color: Colours.greyIcon,
-                  size: 16,
+                  color:total>=1000000? Colours.greenIndicator : Colours.greyIcon,
+                  size: 24,
                 ),
               ],
             ),

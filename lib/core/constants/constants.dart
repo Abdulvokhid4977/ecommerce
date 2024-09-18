@@ -1,8 +1,9 @@
+import 'package:e_commerce/data/models/product_model.dart';
 import 'package:flutter/cupertino.dart';
 
 sealed class Constants {
   Constants._();
-
+  static Product products=Product(count: 0, product: []);
   static FocusNode focus=FocusNode();
   static const baseUrl='https://ulab-project-1-e3lm.onrender.com/e_commerce/api/v1';
 }

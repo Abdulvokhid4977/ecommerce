@@ -1,44 +1,55 @@
 import 'package:e_commerce/core/wrappers/cart_item_wrapper.dart';
 import 'package:e_commerce/injection.dart';
 import 'package:hive/hive.dart';
-
 import '../../data/models/product_model.dart';
 
 class CartService {
-  static const String cartBoxName = 'cart';
-  static final box = getIt<Box<CartItemWrapper>>();
-  Future<void> addToCart(CartItemWrapper product) async {
-    await box.put(product.product.id, product);
+  static final Box<CartItemWrapper> _box = getIt<Box<CartItemWrapper>>();
 
-
+  Future<void> addToCart(ProductElement product, {int quantity = 1}) async {
+    final existingItem = _box.get(product.id);
+    if (existingItem != null) {
+      await updateProductQuantity(product, existingItem.quantity + quantity);
+    } else {
+      await _box.put(product.id, CartItemWrapper(product: product, quantity: quantity));
+    }
   }
 
   Future<List<CartItemWrapper>> getCartProducts() async {
-    final box = getIt<Box<CartItemWrapper>>();
-    return box.values.toList();
+    return _box.values.toList();
   }
+
   Future<void> updateProductQuantity(ProductElement product, int newQuantity) async {
-    final cartItem = box.get(product.id);
-    if (cartItem != null) {
-
-      cartItem.quantity = newQuantity;
-      await cartItem.save();
+    if (newQuantity > 0) {
+      await _box.put(product.id, CartItemWrapper(product: product, quantity: newQuantity));
     } else {
-
-      await addToCart(CartItemWrapper(product: product, quantity: newQuantity));
+      await removeFromCart([product.id]);
     }
   }
 
   Future<void> removeFromCart(List<String> productIds) async {
-
-
-    for (String productId in productIds) {
-      await box.delete(productId);
-    }
+    await _box.deleteAll(productIds);
   }
 
   Future<void> clearCart() async {
-    await box.clear();
-    print('Cleared');
+    await _box.clear();
+  }
+
+  CartItemWrapper? getCartItem(String productId) {
+    return _box.get(productId);
+  }
+
+  Future<void> increaseQuantity(String productId) async {
+    final item = _box.get(productId);
+    if (item != null) {
+      await updateProductQuantity(item.product, item.quantity + 1);
+    }
+  }
+
+  Future<void> decreaseQuantity(String productId) async {
+    final item = _box.get(productId);
+    if (item != null) {
+      await updateProductQuantity(item.product, item.quantity - 1);
+    }
   }
 }

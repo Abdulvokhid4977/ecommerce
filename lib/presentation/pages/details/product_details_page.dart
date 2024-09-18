@@ -12,9 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 class ProductDetailsPage<T extends Bloc> extends StatefulWidget {
   final ProductElement product;
 
-
-  const ProductDetailsPage(
-      {super.key, required this.product});
+  const ProductDetailsPage({super.key, required this.product});
 
   @override
   State<ProductDetailsPage<T>> createState() => _ProductDetailsPageState<T>();
@@ -69,7 +67,8 @@ class _ProductDetailsPageState<T extends Bloc>
                                 ),
                                 Text(
                                   _selectedColorIndex != null
-                                      ? baseState.color[_selectedColorIndex!].colorName
+                                      ? baseState
+                                          .color[_selectedColorIndex!].colorName
                                       : 'Выберите ',
                                   style: GoogleFonts.inter(
                                     fontWeight: FontWeight.w600,

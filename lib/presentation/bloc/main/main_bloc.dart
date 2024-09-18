@@ -72,6 +72,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           emit(MainError('Failed to fetch data. Do you know why?'));
         }
       } catch (e, s) {
+        print('$e,$s');
         emit(MainError('Failed to fetch data: $e, $s'));
       }
     }

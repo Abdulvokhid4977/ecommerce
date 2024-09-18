@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 sealed class AppUtils {
   static const kWidth12 = SizedBox(
@@ -37,5 +38,8 @@ sealed class AppUtils {
   static const kPaddingBottom2 = EdgeInsets.fromLTRB(0, 0, 0, 2);
   static BorderRadius kBorderRadius12 = BorderRadius.circular(12);
   static const kPaddingAll4=EdgeInsets.all(4);
+  static numberFormatter(var number){
+    return NumberFormat('#,###', 'en_US').format(number).replaceAll(',', ' ');
+  }
 
 }
