@@ -61,6 +61,9 @@ dependencies:
   hive:
   get_it: ^7.7.0
   panara_dialogs:
+  url_launcher:
+  yandex_mapkit: ^4.1.0
+  geolocator:
 
 dev_dependencies:
   flutter_test:

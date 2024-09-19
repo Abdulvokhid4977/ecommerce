@@ -6,7 +6,7 @@ import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
 import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
 import 'package:e_commerce/presentation/pages/cart/cart_page.dart';
 import 'package:e_commerce/presentation/pages/home/home_page.dart';
-import 'package:e_commerce/presentation/pages/profile/profile_page.dart';
+import 'package:e_commerce/presentation/pages/profile/widgets/pages/profile_page.dart';
 import 'package:e_commerce/presentation/pages/search/pages/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

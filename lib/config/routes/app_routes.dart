@@ -11,7 +11,7 @@ import 'package:e_commerce/presentation/pages/order/pages/giving_order.dart';
 import 'package:e_commerce/presentation/pages/main_page.dart';
 import 'package:e_commerce/presentation/pages/onboarding_page/onboarding_page.dart';
 import 'package:e_commerce/presentation/pages/order/pages/order_page.dart';
-import 'package:e_commerce/presentation/pages/profile/profile_page.dart';
+import 'package:e_commerce/presentation/pages/profile/widgets/pages/profile_page.dart';
 import 'package:e_commerce/presentation/pages/auth/pages/register_page.dart';
 import 'package:e_commerce/presentation/pages/search/pages/search_page.dart';
 import 'package:flutter/foundation.dart';

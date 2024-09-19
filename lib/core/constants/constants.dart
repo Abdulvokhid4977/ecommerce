@@ -5,6 +5,7 @@ sealed class Constants {
   Constants._();
   static Product products=Product(count: 0, product: []);
   static FocusNode focus=FocusNode();
+  static const yandexMapKey= '129df637-72e2-4d7b-82a6-54dd1be08fae';
   static const baseUrl='https://ulab-project-1-e3lm.onrender.com/e_commerce/api/v1';
 }
 class SizeConfig {

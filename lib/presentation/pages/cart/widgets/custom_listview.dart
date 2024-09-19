@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../details/product_details_page.dart';
 
-
 class CustomListview extends StatelessWidget {
   final List<CartItemWrapper> products;
   final List<bool> selectedItems;
@@ -30,7 +29,7 @@ class CustomListview extends StatelessWidget {
       itemBuilder: (ctx, i) {
         final product = products[i];
         return GestureDetector(
-          onTap: (){
+          onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -44,10 +43,23 @@ class CustomListview extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Image.network(
-                    product.product.color[0].colorUrl.first,
-                    height: 110,
-                    width: 80,
+                  Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(8),
+                      ),
+                      child: Image.network(
+                        product.product.color[0].colorUrl.first,
+                        height: 100,
+                        width: 100,
+                      ),
+                    ),
                   ),
                   Expanded(
                     child: Padding(
@@ -82,7 +94,8 @@ class CustomListview extends StatelessWidget {
                           ),
                           QuantitySelector(
                             quantity: product.quantity,
-                            onChanged: (newQuantity) => onQuantityChanged(i, newQuantity),
+                            onChanged: (newQuantity) =>
+                                onQuantityChanged(i, newQuantity),
                           ),
                         ],
                       ),
@@ -97,6 +110,7 @@ class CustomListview extends StatelessWidget {
     );
   }
 }
+
 class QuantitySelector extends StatelessWidget {
   final int quantity;
   final Function(int) onChanged;
@@ -112,7 +126,10 @@ class QuantitySelector extends StatelessWidget {
     return Row(
       children: [
         IconButton(
-          icon: const Icon(Icons.remove, size: 24,),
+          icon: const Icon(
+            Icons.remove,
+            size: 24,
+          ),
           onPressed: quantity > 1 ? () => onChanged(quantity - 1) : null,
         ),
         Text(
@@ -123,7 +140,10 @@ class QuantitySelector extends StatelessWidget {
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.add, size: 24,),
+          icon: const Icon(
+            Icons.add,
+            size: 24,
+          ),
           onPressed: () => onChanged(quantity + 1),
         ),
       ],
