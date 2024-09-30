@@ -6,9 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../core/constants/constants.dart';
-import '../../../data/models/product_model.dart';
-import '../../components/gridtile.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../data/models/product_model.dart';
+import '../../../components/gridtile.dart';
 
 class GridViewWidget extends StatelessWidget {
   final Product product;

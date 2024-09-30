@@ -23,16 +23,18 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
       final response = await http.put(
         Uri.parse('${Constants.baseUrl}/product/${event.productElement.id}'),
         body: jsonEncode({
-          "description": event.productElement.description,
-          "favorite": event.isFavorite,
-          "brand_id": '',
-          "id": event.productElement.id,
-          "name": event.productElement.name,
-          "order_count": event.productElement.orderCount,
-          "price": event.productElement.price,
-          "with_discount": event.productElement.withDiscount,
           "category_id": event.productElement.categoryId,
+          "description": event.productElement.description,
+          "discount_end_time": event.productElement.discountEndTime,
+          "discount_percent": event.productElement.discountPercent,
+          "favorite": event.isFavorite,
+          "id": event.productElement.id,
+          "item_count": event.productElement.itemCount,
+          "name": event.productElement.name,
+          "price": event.productElement.price,
           "rating": event.productElement.rating,
+          "status": event.productElement.status,
+          "with_discount": event.productElement.withDiscount,
         }),
       );
 

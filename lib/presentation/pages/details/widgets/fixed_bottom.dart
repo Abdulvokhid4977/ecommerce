@@ -1,6 +1,7 @@
 import 'package:e_commerce/core/services/cart_service.dart';
 import 'package:e_commerce/data/models/product_model.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -9,8 +10,9 @@ import '../../../../core/constants/constants.dart';
 
 class FixedBottom extends StatefulWidget {
   final ProductElement baseState;
+  final String? colorId;
 
-  const FixedBottom(this.baseState, {Key? key}) : super(key: key);
+  const FixedBottom(this.baseState, this.colorId, {super.key});
 
   @override
   State<FixedBottom> createState() => _FixedBottomState();
@@ -47,24 +49,32 @@ class _FixedBottomState extends State<FixedBottom> {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   '${NumberFormat('#,###', 'en_US').format(widget.baseState.price).replaceAll(',', ' ')} сум',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: Colours.greyIcon,
-                    decorationColor: Colours.greyIcon,
-                    decoration: TextDecoration.lineThrough,
-                  ),
+                  style: widget.baseState.withDiscount == 0
+                      ? GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        )
+                      : GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: Colours.greyIcon,
+                          decorationColor: Colours.greyIcon,
+                          decoration: TextDecoration.lineThrough,
+                        ),
                 ),
-                Text(
-                  '${NumberFormat('#,###', 'en_US').format(widget.baseState.withDiscount).replaceAll(',', ' ')} сум',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                  ),
-                ),
+                widget.baseState.withDiscount == 0
+                    ? const SizedBox()
+                    : Text(
+                        '${NumberFormat('#,###', 'en_US').format(widget.baseState.withDiscount).replaceAll(',', ' ')} сум',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
+                      ),
               ],
             ),
             quantity > 0 ? _buildQuantityControls() : _buildAddToCartButton(),
@@ -112,6 +122,12 @@ class _FixedBottomState extends State<FixedBottom> {
   Widget _buildAddToCartButton() {
     return ElevatedButton(
       onPressed: () async {
+        if (widget.colorId == null) {
+          Fluttertoast.showToast(
+              msg: 'Сначала выберите цвет',
+              backgroundColor: Colours.blueCustom);
+          return;
+        }
         await cartService.addToCart(widget.baseState);
         _updateQuantity();
       },

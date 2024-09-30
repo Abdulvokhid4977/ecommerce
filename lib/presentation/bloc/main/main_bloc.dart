@@ -59,6 +59,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           final result1 = BannerData.fromJson(jsonDecode(responses[0].body));
           final result2 = Product.fromJson(jsonDecode(responses[1].body));
           final result3 = ctg.Category.fromJson(jsonDecode(responses[2].body));
+
           if (kDebugMode) {
             print('It is emitting MainLoaded');
           }
@@ -68,11 +69,12 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             result3,
           ));
         } else {
-          // print(responses[1].body);
           emit(MainError('Failed to fetch data. Do you know why?'));
         }
       } catch (e, s) {
-        print('$e,$s');
+        if (kDebugMode) {
+          print('$e,$s');
+        }
         emit(MainError('Failed to fetch data: $e, $s'));
       }
     }
@@ -105,7 +107,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           "favorite": event.isFavorite,
           "id": event.productElement.id,
           "name": event.productElement.name,
-          "order_count": event.productElement.orderCount,
+          "order_count": event.productElement.itemCount,
           "price": event.productElement.price,
           "with_discount": event.productElement.withDiscount,
           "category_id": event.productElement.categoryId,

@@ -2,15 +2,22 @@ import 'dart:async';
 
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/services/cart_service.dart';
+import 'package:e_commerce/core/services/location_service.dart';
+import 'package:e_commerce/data/models/register_model.dart';
+import 'package:e_commerce/presentation/bloc/connection/internet_connection_bloc.dart';
 import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
-import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
+import 'package:e_commerce/presentation/pages/order/bloc/order_bloc.dart';
+import 'package:e_commerce/presentation/pages/search/bloc/search_bloc.dart';
 import 'package:e_commerce/presentation/pages/cart/cart_page.dart';
 import 'package:e_commerce/presentation/pages/home/home_page.dart';
-import 'package:e_commerce/presentation/pages/profile/widgets/pages/profile_page.dart';
+import 'package:e_commerce/presentation/pages/profile/pages/profile_page.dart';
 import 'package:e_commerce/presentation/pages/search/pages/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../bloc/location/location_bloc.dart';
+import 'error/pages/disconnected.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -36,11 +43,6 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     // CartService().clearCart();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -94,74 +96,82 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
-      child: BlocBuilder<MainBloc, MainState>(
-        builder: (context, state) {
-          if (state is TabChangedState) {
-            currentIndex = state.currentIndex;
+      child: BlocBuilder<InternetConnectionBloc, InternetConnectionState>(
+        builder: (context, internetState) {
+          if (internetState is InternetDisconnected) {
+            return const Disconnected();
           }
 
-          return Scaffold(
-            body: tabs[currentIndex],
-            bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: Colours.backgroundGrey,
-              type: BottomNavigationBarType.fixed,
-              showUnselectedLabels: true,
-              selectedItemColor: Colours.blueCustom,
-              unselectedItemColor: Colours.greyCustom,
-              key: bottomNavigatorKey,
-              onTap: _onTabTapped,
-              currentIndex: currentIndex,
-              items: [
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    'assets/icons/home.svg',
-                    colorFilter: ColorFilter.mode(
-                        currentIndex == 0
-                            ? Colours.blueCustom
-                            : Colours.greyCustom,
-                        BlendMode.srcIn),
-                  ),
-                  label: 'Главная',
-                  tooltip: 'Главная',
+          return BlocBuilder<MainBloc, MainState>(
+            builder: (context, state) {
+              if (state is TabChangedState) {
+                currentIndex = state.currentIndex;
+              }
+
+              return Scaffold(
+                body: tabs[currentIndex],
+                bottomNavigationBar: BottomNavigationBar(
+                  backgroundColor: Colours.backgroundGrey,
+                  type: BottomNavigationBarType.fixed,
+                  showUnselectedLabels: true,
+                  selectedItemColor: Colours.blueCustom,
+                  unselectedItemColor: Colours.greyCustom,
+                  key: bottomNavigatorKey,
+                  onTap: _onTabTapped,
+                  currentIndex: currentIndex,
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset(
+                        'assets/icons/home.svg',
+                        colorFilter: ColorFilter.mode(
+                            currentIndex == 0
+                                ? Colours.blueCustom
+                                : Colours.greyCustom,
+                            BlendMode.srcIn),
+                      ),
+                      label: 'Главная',
+                      tooltip: 'Главная',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset(
+                        'assets/icons/search.svg',
+                        colorFilter: ColorFilter.mode(
+                            currentIndex == 1
+                                ? Colours.blueCustom
+                                : Colours.greyCustom,
+                            BlendMode.srcIn),
+                      ),
+                      label: 'Поиск',
+                      tooltip: 'Поиск',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset(
+                        'assets/icons/cart.svg',
+                        colorFilter: ColorFilter.mode(
+                            currentIndex == 2
+                                ? Colours.blueCustom
+                                : Colours.greyCustom,
+                            BlendMode.srcIn),
+                      ),
+                      label: 'Корзина',
+                      tooltip: 'Корзина',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset(
+                        'assets/icons/profile.svg',
+                        colorFilter: ColorFilter.mode(
+                            currentIndex == 3
+                                ? Colours.blueCustom
+                                : Colours.greyCustom,
+                            BlendMode.srcIn),
+                      ),
+                      label: 'Кабинет',
+                      tooltip: 'Кабинет',
+                    ),
+                  ],
                 ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    'assets/icons/search.svg',
-                    colorFilter: ColorFilter.mode(
-                        currentIndex == 1
-                            ? Colours.blueCustom
-                            : Colours.greyCustom,
-                        BlendMode.srcIn),
-                  ),
-                  label: 'Поиск',
-                  tooltip: 'Поиск',
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    'assets/icons/cart.svg',
-                    colorFilter: ColorFilter.mode(
-                        currentIndex == 2
-                            ? Colours.blueCustom
-                            : Colours.greyCustom,
-                        BlendMode.srcIn),
-                  ),
-                  label: 'Корзина',
-                  tooltip: 'Корзина',
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    'assets/icons/profile.svg',
-                    colorFilter: ColorFilter.mode(
-                        currentIndex == 3
-                            ? Colours.blueCustom
-                            : Colours.greyCustom,
-                        BlendMode.srcIn),
-                  ),
-                  label: 'Кабинет',
-                  tooltip: 'Кабинет',
-                ),
-              ],
-            ),
+              );
+            },
           );
         },
       ),

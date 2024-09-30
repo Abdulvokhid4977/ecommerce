@@ -1,7 +1,7 @@
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/services/cached_values.dart';
 import 'package:e_commerce/data/models/category_model.dart';
-import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
+import 'package:e_commerce/presentation/pages/search/bloc/search_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -64,7 +64,7 @@ class _SearchListState extends State<SearchList> {
                             _recentSearches.removeAt(index);
                           });
                         },
-                        icon: Icon(Icons.cancel, color: Colours.greyIcon),
+                        icon: Icon(Icons.cancel, color: Colours.greyIcon, size: 24,),
                       ),
                       onTap: () {
                         SearchHistoryManager.saveSearchedProduct(

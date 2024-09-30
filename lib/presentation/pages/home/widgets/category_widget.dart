@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/utils/utils.dart';
 import '../../../bloc/main/main_bloc.dart';
-import '../../../bloc/search/search_bloc.dart' as search;
+import '../../search/bloc/search_bloc.dart' as search;
 import '../../search/pages/search_page.dart';
 
 class CategoryWidget extends StatefulWidget {

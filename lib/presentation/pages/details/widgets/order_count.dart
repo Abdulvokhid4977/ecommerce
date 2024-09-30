@@ -49,7 +49,7 @@ class OrderCount extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      '+${roundDownToNearestTen(baseState.orderCount)}',
+                      '+${roundDownToNearestTen(baseState.itemCount)}',
                       style: GoogleFonts.inter(
                         fontWeight: FontWeight.w600,
                         fontSize: 18,

@@ -3,9 +3,14 @@ import 'dart:async';
 import 'package:e_commerce/config/routes/app_routes.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
+import 'package:e_commerce/presentation/bloc/main/main_bloc.dart';
+import 'package:e_commerce/presentation/pages/auth/bloc/opt/otp_bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_verification_code/flutter_verification_code.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pinput/pinput.dart';
 
 class ConfirmCode extends StatefulWidget {
   final String phoneNumber;
@@ -17,13 +22,12 @@ class ConfirmCode extends StatefulWidget {
 }
 
 class _ConfirmCodeState extends State<ConfirmCode> {
-  bool isCodeFilled = false;
-  bool _onEditing = false;
+  final controller = TextEditingController();
+  bool isCodeFilled = true;
+  bool isCodeCorrect = true;
   bool isTimerExpired = false;
-  bool _codeCorrect = true;
-  final String _code = '1234';
   late Timer _timer;
-  int _start = 5;
+  int _start = 120;
 
   void startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -46,6 +50,11 @@ class _ConfirmCodeState extends State<ConfirmCode> {
     return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
   }
 
+  String formatPhoneNumber(String phoneNumber) {
+    String cleanedNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
+    return '+998$cleanedNumber';
+  }
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +69,28 @@ class _ConfirmCodeState extends State<ConfirmCode> {
 
   @override
   Widget build(BuildContext context) {
+    final defaultPinTheme = PinTheme(
+      width: 46,
+      height: 46,
+      textStyle: const TextStyle(
+          fontSize: 20,
+          color: Color.fromRGBO(30, 60, 87, 1),
+          fontWeight: FontWeight.w600),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colours.greyIcon),
+        borderRadius: BorderRadius.circular(8),
+      ),
+    );
+    final focusedPinTheme = defaultPinTheme.copyDecorationWith(
+      border: Border.all(color: Colours.blueCustom),
+      borderRadius: BorderRadius.circular(12),
+    );
+
+    final submittedPinTheme = defaultPinTheme.copyWith(
+      decoration: defaultPinTheme.decoration?.copyWith(
+        color: const Color.fromRGBO(234, 239, 243, 1),
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -90,7 +121,16 @@ class _ConfirmCodeState extends State<ConfirmCode> {
                   ),
                   AppUtils.kHeight10,
                   Text(
-                    'Отправили код  на номер  +998 ${widget.phoneNumber}',
+                    'Отправили код на номер:  ',
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: Colours.greyIcon,
+                    ),
+                  ),
+                  AppUtils.kHeight10,
+                  Text(
+                    '+998 ${widget.phoneNumber} ',
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
@@ -111,67 +151,34 @@ class _ConfirmCodeState extends State<ConfirmCode> {
                       ),
                     ),
                   ),
-                  AppUtils.kHeight10,
+                  AppUtils.kHeight32,
                   Center(
-                    child: Text(formattedTime),
-                  ),
-                  AppUtils.kHeight10,
-                  Center(
-                    child: VerificationCode(
-                      textStyle: GoogleFonts.inter(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
-                      ),
-                      keyboardType: TextInputType.number,
-                      underlineColor: Colours.blueCustom,
-                      underlineUnfocusedColor: _codeCorrect
-                          ? Colours.greenIndicator
-                          : Colours.redCustom,
-                      length: 4,
-                      itemSize: 50,
-                      fillColor: Colours.textFieldGrey,
-                      fullBorder: true,
-                      digitsOnly: true,
-                      margin: const EdgeInsets.all(10),
-                      cursorColor: Colours.blueCustom,
-                      onCompleted: (String value) {
-                        if (value.compareTo(_code) == 0) {
+                    child: Pinput(
+                      controller: controller,
+                      length: 6,
+                      defaultPinTheme: defaultPinTheme,
+                      focusedPinTheme: focusedPinTheme,
+                      submittedPinTheme: submittedPinTheme,
+                      validator: (s) {
+                        if (s == '222222') {
                           setState(() {
-                            _codeCorrect = true;
-                            isCodeFilled = true;
-                          });
-                        } else {
-                          setState(() {
-                            _codeCorrect = false;
-                            isCodeFilled = false;
+                            isCodeCorrect = true;
                           });
                         }
-                      },
-                      onEditing: (bool value) {
-                        setState(() {
-                          _onEditing = value;
-                        });
-                        if (!_onEditing) FocusScope.of(context).unfocus();
+                        return;
                       },
                     ),
                   ),
-                  AppUtils.kHeight10,
-                  _codeCorrect
-                      ? const SizedBox()
-                      : Center(
-                          child: Text(
-                            'Неверный код',
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: Colours.redCustom,
-                            ),
-                          ),
-                        ),
+                  AppUtils.kHeight16,
                   isTimerExpired
                       ? Center(
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              context.read<OtpBloc>().add(OtpCodeEvent(
+                                  formatPhoneNumber(widget.phoneNumber)));
+                              _timer.cancel();
+                              startTimer();
+                            },
                             child: Text(
                               'Отправить еще раз',
                               style: GoogleFonts.inter(
@@ -182,30 +189,91 @@ class _ConfirmCodeState extends State<ConfirmCode> {
                             ),
                           ),
                         )
-                      : const SizedBox(),
+                      : Center(
+                          child:
+                              Text('Повторно отправить через: $formattedTime'),
+                        ),
                 ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () {Navigator.of(context).pushNamed(Routes.register);},
-              style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor:
-                      isCodeFilled ? Colours.blueCustom : Colours.textFieldGrey,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  fixedSize: Size(SizeConfig.screenWidth!, 56)),
-              child: Text(
-                'Продолжить',
-                style: GoogleFonts.inter(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
-                  color: isCodeFilled ? Colors.white : Colours.greyIcon,
-                ),
-              ),
+            BlocConsumer<OtpBloc, OtpState>(
+              listener: (context, state) {
+                if (kDebugMode) {
+                  print(state.runtimeType);
+                }
+                if (state is VerifySuccess) {
+                  Navigator.pushReplacementNamed(context, Routes.main);
+                  context.read<MainBloc>().add(ChangeTabEvent(2));
+                }
+                if (state is OtpError) {
+                  Navigator.pushReplacementNamed(context, Routes.register);
+                }
+                if (state is VerifyUnsuccessful) {
+                  Fluttertoast.showToast(msg: 'Заново отправьте код');
+                }
+              },
+              builder: (context, state) {
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                    return ScaleTransition(scale: animation, child: child);
+                  },
+                  child: state is VerifyLoading
+                      ? _buildLoadingIndicator()
+                      : _buildButton(context),
+                );
+              },
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingIndicator() {
+    return Center(
+      child: Container(
+        key: const ValueKey<String>('loading'),
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          color: Colours.textFieldGrey,
+          borderRadius: BorderRadius.circular(56),
+        ),
+        child: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colours.blueCustom),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(BuildContext context) {
+    return ElevatedButton(
+      key: const ValueKey<String>('button'),
+      onPressed: isCodeFilled
+          ? () {
+              context.read<OtpBloc>().add(VerifyCodeEvent(
+                  formatPhoneNumber(widget.phoneNumber), controller.text));
+            }
+          : null,
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        backgroundColor:
+            isCodeFilled ? Colours.blueCustom : Colours.textFieldGrey,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        fixedSize: Size(SizeConfig.screenWidth!, 56),
+      ),
+      child: Text(
+        'Продолжить',
+        style: GoogleFonts.inter(
+          fontWeight: FontWeight.w500,
+          fontSize: 18,
+          color: isCodeFilled ? Colors.white : Colours.greyIcon,
         ),
       ),
     );

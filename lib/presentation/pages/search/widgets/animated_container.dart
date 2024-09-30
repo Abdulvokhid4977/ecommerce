@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../data/models/category_model.dart';
-import '../../../bloc/search/search_bloc.dart';
+import '../bloc/search_bloc.dart';
 
 class CategoryAnimation extends StatelessWidget {
 

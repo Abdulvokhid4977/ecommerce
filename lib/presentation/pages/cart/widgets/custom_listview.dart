@@ -20,6 +20,15 @@ class CustomListview extends StatelessWidget {
     required this.onQuantityChanged,
   });
 
+  String? findUrlByColorId(CartItemWrapper cartItems, String colorId) {
+    for (var color in cartItems.product.color) {
+      if (color.id == colorId) {
+        return color.colorUrl[0];
+      }
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(

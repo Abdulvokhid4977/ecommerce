@@ -68,13 +68,20 @@ class ProductElement extends HiveObject {
   String description;
 
   @HiveField(8)
-  int orderCount;
+  int itemCount;
 
   @HiveField(9)
   List<ProductColor> color;
 
   @HiveField(10)
   String createdAt;
+
+  @HiveField(11)
+  String? status;
+  @HiveField(12)
+  int? discountPercent;
+  @HiveField(13)
+  DateTime? discountEndTime;
 
 
   ProductElement({
@@ -86,9 +93,12 @@ class ProductElement extends HiveObject {
     required this.withDiscount,
     required this.rating,
     required this.description,
-    required this.orderCount,
+    required this.itemCount,
     required this.color,
     required this.createdAt,
+    required this.status,
+    required this.discountPercent,
+    required this.discountEndTime,
   });
 
   ProductElement copyWith({
@@ -103,6 +113,9 @@ class ProductElement extends HiveObject {
     int? orderCount,
     List<ProductColor>? color,
     String? createdAt,
+    String? status,
+    int? discountPercent,
+    DateTime? discountEndTime,
   }) =>
       ProductElement(
         id: id ?? this.id,
@@ -113,9 +126,12 @@ class ProductElement extends HiveObject {
         withDiscount: withDiscount ?? this.withDiscount,
         rating: rating ?? this.rating,
         description: description ?? this.description,
-        orderCount: orderCount ?? this.orderCount,
+        itemCount: orderCount ?? this.itemCount,
         color: color ?? this.color,
         createdAt: createdAt ?? this.createdAt,
+        status: status??this.status,
+        discountPercent:  discountPercent?? this.discountPercent,
+        discountEndTime: discountEndTime ?? this.discountEndTime,
       );
 
   factory ProductElement.fromJson(Map<String, dynamic> json) => ProductElement(
@@ -127,9 +143,12 @@ class ProductElement extends HiveObject {
     withDiscount: (json["with_discount"] is double) ? (json["with_discount"] as double).toInt() : json["with_discount"],
     rating: (json["rating"] is double) ? (json["rating"] as double).toInt() : json["rating"],
     description: json["description"],
-    orderCount: (json["order_count"] is double) ? (json["order_count"] as double).toInt() : json["order_count"],
+    itemCount: (json["item_count"] is double) ? (json["item_count"] as double).toInt() : json["item_count"],
     color: json["color"] != null ? List<ProductColor>.from(json["color"].map((x) => ProductColor.fromJson(x))) : [],
     createdAt: json["created_at"],
+    status: json['status'],
+    discountPercent: json['discount_percent'],
+    discountEndTime: json['"discount_end_time"']
   );
 
 
@@ -142,14 +161,18 @@ class ProductElement extends HiveObject {
     "with_discount": withDiscount,
     "rating": rating,
     "description": description,
-    "order_count": orderCount,
+    "item_count": itemCount,
     "color": List<dynamic>.from(color.map((x) => x.toJson())),
     "created_at": createdAt,
+    "status": status,
+    "discount_percent": discountPercent,
+    "discount_end_time": discountEndTime
   };
   List<String> getAllColorUrls() {
     return color.expand((element) => element.colorUrl).toList();
   }
 }
+
 @HiveType(typeId: 1)
 class ProductColor {
   @HiveField(0)

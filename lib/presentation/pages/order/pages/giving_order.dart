@@ -1,20 +1,38 @@
 import 'package:e_commerce/core/constants/constants.dart';
+import 'package:e_commerce/core/services/cart_service.dart';
+import 'package:e_commerce/core/services/location_service.dart';
 import 'package:e_commerce/core/utils/utils.dart';
+import 'package:e_commerce/core/wrappers/cart_item_wrapper.dart';
+import 'package:e_commerce/presentation/pages/order/bloc/order_bloc.dart';
 import 'package:e_commerce/presentation/components/empty_widget.dart';
-import 'package:e_commerce/presentation/components/modalsheet.dart';
+import 'package:e_commerce/presentation/pages/order/widgets/address.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class GivingOrder extends StatefulWidget {
-  const GivingOrder({super.key});
+  final double total;
+  final int quantity;
+  final double discount;
+  final List<CartItemWrapper> products;
+
+  const GivingOrder(
+      {super.key,
+      required this.total,
+      required this.quantity,
+      required this.discount,
+      required this.products});
 
   @override
   State<GivingOrder> createState() => _GivingOrderState();
 }
 
 class _GivingOrderState extends State<GivingOrder> {
-  bool itemOne = true;
+  bool itemOne = false;
   bool itemTwo = false;
   final formKey = GlobalKey<FormState>();
   Icon checkIcon = Icon(
@@ -40,9 +58,11 @@ class _GivingOrderState extends State<GivingOrder> {
         centerTitle: true,
         elevation: 0,
         leading: IconButton(
+          splashRadius: 24,
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
             color: Colours.blueCustom,
+            size: 24,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -69,12 +89,14 @@ class _GivingOrderState extends State<GivingOrder> {
                   ),
                   child: ListTile(
                     onTap: () {
-                      modalBottomSheet(context);
+                      Fluttertoast.showToast(
+                          msg: "Скоро",
+                          backgroundColor: Colours.greenIndicator);
                     },
                     trailing: const Icon(Icons.keyboard_arrow_down_rounded),
                     leading: const Icon(Icons.location_on_outlined),
                     title: Text(
-                      'Город*',
+                      'Город',
                       style: GoogleFonts.inter(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -100,6 +122,14 @@ class _GivingOrderState extends State<GivingOrder> {
                         setState(() {
                           itemOne = !itemOne;
                           itemTwo = !itemTwo;
+                        });
+                      } else if (itemOne) {
+                        setState(() {
+                          itemOne = !itemOne;
+                        });
+                      } else if (!itemOne && !itemTwo) {
+                        setState(() {
+                          itemOne = true;
                         });
                       }
                     });
@@ -170,6 +200,14 @@ class _GivingOrderState extends State<GivingOrder> {
                         itemOne = !itemOne;
                         itemTwo = !itemTwo;
                       });
+                    } else if (itemTwo) {
+                      setState(() {
+                        itemTwo = !itemTwo;
+                      });
+                    } else if (!itemOne && !itemTwo) {
+                      setState(() {
+                        itemTwo = true;
+                      });
                     }
                   },
                   child: Container(
@@ -197,7 +235,7 @@ class _GivingOrderState extends State<GivingOrder> {
                               ),
                             ),
                             Text(
-                              ' бесплатно',
+                              ' 20 000 сум',
                               style: GoogleFonts.inter(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w300,
@@ -211,21 +249,30 @@ class _GivingOrderState extends State<GivingOrder> {
                   ),
                 ),
                 AppUtils.kHeight32,
-                customText('Адрес доставки'),
-                AppUtils.kHeight16,
-                customRow(
-                  'Пункт выдачи UCommerce',
-                  icon: const Icon(Icons.location_on_outlined),
-                ),
-                AppUtils.kHeight10,
-                customRow(
-                    'г.Ташкент, Мирзо Улугбекский район, улица Мирзо Улугбек, 87 дом',
-                    hasIcon: false),
-                AppUtils.kHeight10,
-                customRow('10:00-20:00, без выходных', hasIcon: false),
-                AppUtils.kHeight16,
-                elevatedButton(
-                    'Изменить', Colours.textFieldGrey, Colors.black, false),
+                itemOne || itemTwo
+                    ? FutureBuilder<LocationWithDetails?>(
+                        future: LocationService().findNearestLocation(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                                child: Lottie.asset(
+                                    'assets/lottie/loading.json',
+                                    height: 100,
+                                    width: 100));
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (snapshot.hasData &&
+                              snapshot.data != null) {
+                            print(snapshot.data);
+                            return Address(
+                                itemTwo ? true : false, snapshot.data!);
+                          } else {
+                            return const Text('No location found');
+                          }
+                        },
+                      )
+                    : const SizedBox(),
                 AppUtils.kHeight32,
                 customText('Получатель заказа'),
                 AppUtils.kHeight16,
@@ -254,48 +301,54 @@ class _GivingOrderState extends State<GivingOrder> {
                 AppUtils.kHeight32,
                 customText('Способ оплаты'),
                 AppUtils.kHeight16,
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colours.textFieldGrey,
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(8),
+                GestureDetector(
+                  onTap: () {
+                    Fluttertoast.showToast(
+                        msg: "Скоро", backgroundColor: Colours.greenIndicator);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colours.textFieldGrey,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(8),
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    children: [
-                      checked(true, 'Картой онлайн'),
-                      AppUtils.kHeight10,
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 40,
-                          ),
-                          Text(
-                            'UZCARD, Humo, Visa, MasterCard',
-                            style: GoogleFonts.inter(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w300,
+                    child: Column(
+                      children: [
+                        checked(false, 'Картой онлайн'),
+                        AppUtils.kHeight10,
+                        Row(
+                          children: [
+                            const SizedBox(
+                              width: 40,
                             ),
-                          ),
-                        ],
-                      ),
-                      AppUtils.kHeight10,
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 40,
-                          ),
-                          SvgPicture.asset('assets/icons/apple_pay.svg'),
-                          AppUtils.kWidth4,
-                          SvgPicture.asset('assets/icons/mastercard.svg'),
-                          AppUtils.kWidth4,
-                          SvgPicture.asset('assets/icons/visa.svg'),
-                          AppUtils.kWidth4,
-                          SvgPicture.asset('assets/icons/paypal.svg'),
-                        ],
-                      ),
-                    ],
+                            Text(
+                              'UZCARD, Humo, Visa, MasterCard',
+                              style: GoogleFonts.inter(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ],
+                        ),
+                        AppUtils.kHeight10,
+                        Row(
+                          children: [
+                            const SizedBox(
+                              width: 40,
+                            ),
+                            SvgPicture.asset('assets/icons/apple_pay.svg'),
+                            AppUtils.kWidth4,
+                            SvgPicture.asset('assets/icons/mastercard.svg'),
+                            AppUtils.kWidth4,
+                            SvgPicture.asset('assets/icons/visa.svg'),
+                            AppUtils.kWidth4,
+                            SvgPicture.asset('assets/icons/paypal.svg'),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 AppUtils.kHeight16,
@@ -309,7 +362,7 @@ class _GivingOrderState extends State<GivingOrder> {
                   ),
                   child: Column(
                     children: [
-                      checked(false, 'Наличными или картой при получении'),
+                      checked(true, 'Наличными или картой при получении'),
                       AppUtils.kHeight10,
                       Row(
                         children: [
@@ -335,52 +388,42 @@ class _GivingOrderState extends State<GivingOrder> {
                 AppUtils.kHeight32,
                 customText('Ваш заказ:'),
                 AppUtils.kHeight16,
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '1 товар',
+                      '${widget.quantity} товар',
                     ),
-                    Text('1 919 00 сум'),
+                    Text('${AppUtils.numberFormatter(widget.total)} сум'),
                   ],
                 ),
                 AppUtils.kHeight16,
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Итого:*',
+                    const Text(
+                      'Итого с доставкой:',
                     ),
-                    Text('1 919 00 сум'),
+                    Text(
+                        '${AppUtils.numberFormatter(widget.total + 20000)} сум'),
                   ],
                 ),
                 AppUtils.kHeight10,
                 Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    'экономия: 1 078 000 сум',
+                    'экономия: ${AppUtils.numberFormatter(widget.discount)} сум',
                     style: GoogleFonts.inter(color: Colours.greenIndicator),
                   ),
                 ),
                 AppUtils.kHeight16,
-                Container(
-                  padding: const EdgeInsets.only(left: 16),
-                  height: SizeConfig.screenHeight! * 0.07,
-                  width: SizeConfig.screenWidth,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(8),
-                    ),
-                    color: Colours.textFieldGrey,
-                  ),
-                  child: TextField(
-                    cursorColor: Colours.greyIcon,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      labelText: 'Промокод',
-                      labelStyle: TextStyle(color: Colours.greyIcon),
-                    ),
-                  ),
+                ListTile(
+                  title: const Text('Промокод'),
+                  trailing: const Icon(Icons.arrow_drop_down),
+                  onTap: () {
+                    Fluttertoast.showToast(
+                        msg: "Скоро", backgroundColor: Colours.greenIndicator);
+                  },
                 ),
                 AppUtils.kHeight32,
                 Text(
@@ -407,19 +450,51 @@ class _GivingOrderState extends State<GivingOrder> {
                 width: SizeConfig.screenWidth,
                 child: Column(
                   children: [
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           'Итого',
                         ),
-                        Text('1 919 00 сум'),
+                        Text(
+                            '${AppUtils.numberFormatter(widget.total + 20000)} сум'),
                       ],
                     ),
                     AppUtils.kHeight16,
-                    elevatedButton(
-                        'Оформить заказ', Colours.blueCustom, Colors.white,
-                        true),
+                    BlocConsumer<OrderBloc, OrderState>(
+                      listener: (context, state) {
+                        if (state is OrderCreated) {
+                          CartService().clearCart();
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (_) => const EmptyWidget(
+                                'assets/images/success.png',
+                                'Успешно',
+                                'Ваш заказ успешно был сделан. Спасибо за выбор',
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      builder: (context, state) {
+                        if(state is OrderError) {
+                          if (kDebugMode) {
+                            print(state.message);
+                          }
+                        }
+                        if (state is OrderLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return elevatedButton(
+                          'Оформить заказ',
+                          Colours.blueCustom,
+                          Colors.white,
+                          context,
+                        );
+                      },
+                    ),
                   ],
                 ),
               )),
@@ -428,19 +503,19 @@ class _GivingOrderState extends State<GivingOrder> {
     );
   }
 
-  Widget elevatedButton(String text, Color color1, Color color2, bool isDone) {
+  Widget elevatedButton(
+      String text, Color color1, Color color2, BuildContext context,
+      {bool isDelivery = false}) {
     return ElevatedButton(
       onPressed: () {
-        if (isDone) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) =>
-              const EmptyWidget('assets/images/success.png', 'Успешно',
-                'Ваш заказ успешно был сделан. Спасибо за выбор',),
-            ),
-          );
-        }
-        return;
+        context.read<OrderBloc>().add(
+              OrderCreateEvent(
+                  widget.products,
+                  "27ca97c2-185d-43a2-b8b3-9fe3363838de",
+                  'pochta',
+                  'naxt',
+                  'kutilmoqda'),
+            );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: color1,
@@ -449,7 +524,7 @@ class _GivingOrderState extends State<GivingOrder> {
           borderRadius: BorderRadius.circular(8),
         ),
         fixedSize:
-        Size(SizeConfig.screenWidth!, SizeConfig.screenHeight! * 0.06),
+            Size(SizeConfig.screenWidth!, SizeConfig.screenHeight! * 0.06),
       ),
       child: Text(
         text,
@@ -460,113 +535,5 @@ class _GivingOrderState extends State<GivingOrder> {
         ),
       ),
     );
-  }
-
-  Widget textFormField(String text) {
-    return Container(
-      padding: const EdgeInsets.only(left: 16),
-      height: SizeConfig.screenHeight! * 0.07,
-      width: SizeConfig.screenWidth,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(8),
-        ),
-        color: Colours.textFieldGrey,
-      ),
-      child: TextFormField(
-        cursorColor: Colours.greyIcon,
-        decoration: InputDecoration(
-            border: InputBorder.none,
-            label: Text(text),
-            labelStyle: TextStyle(color: Colours.greyIcon)),
-      ),
-    );
-  }
-
-  Widget customRow(String text,
-      {Icon icon = const Icon(Icons.location_on_outlined),
-        bool hasIcon = true}) {
-    return Row(
-      children: [
-        hasIcon
-            ? icon
-            : const SizedBox(
-          width: 24,
-        ),
-        AppUtils.kWidth16,
-        SizedBox(
-          width: SizeConfig.screenWidth! * 0.7,
-          child: Text(
-            text,
-            style: GoogleFonts.inter(
-              fontSize: 15,
-              fontWeight: FontWeight.w300,
-            ),
-            softWrap: true,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget checked(bool isChecked, String text) {
-    return Row(
-      children: [
-        Container(
-          height: 24,
-          width: 24,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-                color: isChecked ? Colours.blueCustom : Colors.black, width: 2),
-          ),
-          child: Center(
-            child: Container(
-              width: 13,
-              height: 13,
-              decoration: isChecked
-                  ? BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colours.blueCustom,
-              )
-                  : null,
-            ),
-          ),
-        ),
-        AppUtils.kWidth16,
-        Text(
-          text,
-          style: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget customText(String text1) {
-    return Text(
-      text1,
-      style: GoogleFonts.inter(
-        fontSize: 20,
-        fontWeight: FontWeight.w400,
-      ),
-    );
-  }
-
-  void modalBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16),
-          ),
-        ),
-        context: context,
-        isDismissible: true,
-        builder: (context) {
-          return const ModalSheet();
-        });
   }
 }

@@ -39,7 +39,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       _currentPage = _currentPage + 1;
     });
     if(_currentPage>2){
-      Navigator.pushReplacementNamed(context, Routes.main );
+      Navigator.pushReplacementNamed(context, Routes.main);
     }
     controller.animateToPage(
       _currentPage,

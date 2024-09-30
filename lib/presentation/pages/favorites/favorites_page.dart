@@ -14,13 +14,13 @@ class FavoritesPage extends StatefulWidget {
   State<FavoritesPage> createState() => _FavoritesPageState();
 }
 
-
 class _FavoritesPageState extends State<FavoritesPage> {
-@override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MainBloc, MainState>(
@@ -34,6 +34,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
               ),
               automaticallyImplyLeading: false,
               leading: IconButton(
+                  splashRadius: 24,
                   onPressed: () {
                     Navigator.of(context).pop();
                     context.read<MainBloc>().add(FetchDataEvent(false));
@@ -41,6 +42,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   icon: Icon(
                     Icons.arrow_back_ios_outlined,
                     color: Colours.blueCustom,
+                    size: 24,
                   )),
               backgroundColor: Colours.backgroundGrey,
               systemOverlayStyle: const SystemUiOverlayStyle(
@@ -60,7 +62,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
               child: Container(
-
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: GridView.builder(
                   shrinkWrap: true,
@@ -85,15 +86,32 @@ class _FavoritesPageState extends State<FavoritesPage> {
               ),
             ),
           );
-        }
-        else if (state is FetchWishlistState) {
+        } else if (state is FetchWishlistState) {
           return Wishlist(state.product);
         } else if (state is MainError) {
-          return Center(child: Text(state.message));
-        }else if(state is FavoriteToggledState){
+          return Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    context.read<MainBloc>().add(FetchDataEvent(false));
+                  },
+                  icon: Icon(
+                    Icons.arrow_back_ios_outlined,
+                    color: Colours.blueCustom,
+                  ),),
+            ),
+            body: Center(child: Text(state.message)),
+          );
+        } else if (state is FavoriteToggledState) {
           return const SizedBox();
         } else {
-          return const Scaffold(body: Center(child: Text('Could not fetch Favorites Page'),),);
+          return const Scaffold(
+            body: Center(
+              child: Text('Could not fetch Favorites Page'),
+            ),
+          );
         }
       },
     );

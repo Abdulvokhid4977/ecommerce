@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../bloc/search/search_bloc.dart';
+import '../bloc/search_bloc.dart';
 
 class Searchbar extends StatefulWidget {
   final TextEditingController controller;

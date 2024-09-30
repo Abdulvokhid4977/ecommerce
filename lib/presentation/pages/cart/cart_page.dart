@@ -1,4 +1,5 @@
 import 'package:e_commerce/core/constants/constants.dart';
+import 'package:e_commerce/core/services/cached_values.dart';
 import 'package:e_commerce/core/services/cart_service.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/core/wrappers/cart_item_wrapper.dart';
@@ -21,6 +22,7 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+
   final cartService = GetIt.I<CartService>();
   List<CartItemWrapper> products = [];
   List<bool> selectedItems = [];
@@ -32,6 +34,8 @@ class _CartPageState extends State<CartPage> {
   }
 
   Future<void> loadProducts() async {
+    final customerId= await getCustomerId();
+    print(customerId);
     final loadedProducts = await cartService.getCartProducts();
     setState(() {
       products = loadedProducts;
@@ -43,7 +47,7 @@ class _CartPageState extends State<CartPage> {
     setState(() {
       products[index].quantity = newQuantity;
     });
-    cartService.updateProductQuantity(products[index].product, newQuantity);
+    cartService.updateProductQuantity(products[index].product,products[index].colorId, newQuantity);
   }
 
   bool get isCartEmpty => products.isEmpty;
@@ -82,7 +86,12 @@ class _CartPageState extends State<CartPage> {
   double discount() {
     double total = 0;
     for (var item in products) {
-      total += (item.product.price - item.product.withDiscount) * item.quantity;
+      if(item.product.withDiscount==0){
+
+      }else{
+        total += (item.product.price - item.product.withDiscount) * item.quantity;
+      }
+
     }
 
     return total;
@@ -226,6 +235,9 @@ class _CartPageState extends State<CartPage> {
                 FixedBottom(
                   calculateTotalPrice() - discount(),
                   amount(),
+                  discount(),
+                  products,
+
                 ),
               ],
             ),

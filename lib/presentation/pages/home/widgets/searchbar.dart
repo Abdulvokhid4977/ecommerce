@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../bloc/main/main_bloc.dart';
-import '../../../bloc/search/search_bloc.dart';
+import '../../search/bloc/search_bloc.dart';
 
 class Searchbar extends StatefulWidget {
   final FocusNode focus;

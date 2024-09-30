@@ -19,17 +19,20 @@ class CartItemWrapperAdapter extends TypeAdapter<CartItemWrapper> {
     return CartItemWrapper(
       product: fields[0] as ProductElement,
       quantity: fields[1] as int,
+      colorId: fields[2] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, CartItemWrapper obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.product)
       ..writeByte(1)
-      ..write(obj.quantity);
+      ..write(obj.quantity)
+      ..writeByte(2)
+      ..write(obj.colorId);
   }
 
   @override

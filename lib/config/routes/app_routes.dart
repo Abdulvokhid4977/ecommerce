@@ -1,7 +1,9 @@
 import 'package:chuck_interceptor/chuck.dart';
-import 'package:e_commerce/presentation/bloc/auth/auth_bloc.dart';
-import 'package:e_commerce/presentation/bloc/search/search_bloc.dart';
-import 'package:e_commerce/presentation/pages/auth/pages/auth_page.dart';
+import 'package:e_commerce/core/wrappers/cart_item_wrapper.dart';
+import 'package:e_commerce/data/models/register_model.dart';
+import 'package:e_commerce/presentation/pages/auth/bloc/opt/otp_bloc.dart';
+import 'package:e_commerce/presentation/pages/search/bloc/search_bloc.dart';
+import 'package:e_commerce/presentation/pages/auth/pages/otp_page.dart';
 import 'package:e_commerce/presentation/pages/cart/cart_page.dart';
 import 'package:e_commerce/presentation/pages/auth/pages/confirm_code.dart';
 import 'package:e_commerce/presentation/pages/error/pages/disconnected.dart';
@@ -11,7 +13,7 @@ import 'package:e_commerce/presentation/pages/order/pages/giving_order.dart';
 import 'package:e_commerce/presentation/pages/main_page.dart';
 import 'package:e_commerce/presentation/pages/onboarding_page/onboarding_page.dart';
 import 'package:e_commerce/presentation/pages/order/pages/order_page.dart';
-import 'package:e_commerce/presentation/pages/profile/widgets/pages/profile_page.dart';
+import 'package:e_commerce/presentation/pages/profile/pages/profile_page.dart';
 import 'package:e_commerce/presentation/pages/auth/pages/register_page.dart';
 import 'package:e_commerce/presentation/pages/search/pages/search_page.dart';
 import 'package:flutter/foundation.dart';
@@ -47,7 +49,7 @@ sealed class AppRoutes {
     case Routes.auth:
     return MaterialPageRoute(
     builder: (_) => BlocProvider(
-    create: (_) => AuthBloc(),
+    create: (_) => OtpBloc(),
     child: const AuthPage(),
     ),
     );
@@ -61,7 +63,15 @@ sealed class AppRoutes {
     );
     case Routes.givingOrder:
     return MaterialPageRoute(
-    builder: (_) => const GivingOrder(),
+      builder: (_) {
+        final args = settings.arguments as List<dynamic>?;
+        return GivingOrder(
+          total: args != null ? args[0] as double : 0.0,
+          quantity: args != null ? args[1] as int : 0,
+          discount: args != null ? args[2] as double : 0.0,
+          products: args!=null ? args[3] as List<CartItemWrapper> : [],
+        );
+      },
     );
     case Routes.disconnected:
     return MaterialPageRoute(
@@ -99,7 +109,7 @@ sealed class AppRoutes {
     );
     case Routes.register:
     return MaterialPageRoute(
-    builder: (_) => const RegisterPage(),
+    builder: (_) => const RegisterPage(true),
     );
 
     default:

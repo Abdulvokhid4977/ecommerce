@@ -129,7 +129,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             "favorite": event.isFavorite,
             "id": event.productElement.id,
             "name": event.productElement.name,
-            "order_count": event.productElement.orderCount,
+            "order_count": event.productElement.itemCount,
             "price": event.productElement.price,
             "with_discount": event.productElement.withDiscount,
             "category_id": event.productElement.categoryId,

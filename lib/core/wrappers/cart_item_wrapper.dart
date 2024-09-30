@@ -11,8 +11,12 @@ class CartItemWrapper extends HiveObject {
   @HiveField(1)
   int quantity;
 
+  @HiveField(2)
+  String colorId;
+
   CartItemWrapper({
     required this.product,
     required this.quantity,
+    required this.colorId,
   });
 }

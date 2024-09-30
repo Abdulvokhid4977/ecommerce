@@ -1,83 +1,176 @@
+import 'package:e_commerce/config/routes/app_routes.dart';
 import 'package:e_commerce/core/constants/constants.dart';
-import 'package:e_commerce/core/utils/utils.dart';
+import 'package:e_commerce/core/services/cached_values.dart';
+import 'package:e_commerce/core/services/register_service.dart';
+import 'package:e_commerce/presentation/pages/auth/bloc/register/register_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  final bool isRegister;
+
+  const RegisterPage(this.isRegister, {Key? key}) : super(key: key);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  bool isFilled = false;
-  int? day = DateTime.now().day;
-  int? month = DateTime.now().month;
-  int? year = DateTime.now().year;
-  final controller1 = TextEditingController();
-  final controller2 = TextEditingController();
-  final controller3 = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final _focusNode1 = FocusNode();
-  final _focusNode2 = FocusNode();
-  final _focusNode3 = FocusNode();
-  var maskFormatter = MaskTextInputFormatter(
+  String? customerId;
+  final List<TextEditingController> _controllers =
+      List.generate(5, (_) => TextEditingController());
+  final List<FocusNode> _focusNodes = List.generate(5, (_) => FocusNode());
+  bool _isFilled = false;
+
+  final Map<String, String?> _formData = {
+    'surname': '',
+    'name': '',
+    'birthday': '',
+    'phone_number': '',
+    'gender': '',
+  };
+
+  final _phoneFormatter = MaskTextInputFormatter(
       mask: '(##) ### ## ##',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
-  var maskFormatter2 = MaskTextInputFormatter(
-      mask: '##/##/####',
+
+  final _dateFormatter = MaskTextInputFormatter(
+      mask: '####/##/##',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
-  final RegExp dateRegExp = RegExp(
-    r'^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/([0-9]{4})$',
-  );
-
-
-
-  final Map<String, Object?> _addingHandler = {
-    'name': '',
-    'birthDate': '',
-    'phoneNumber': '',
-  };
-
-  void _submit() {
-    _formKey.currentState!.validate();
-    _formKey.currentState!.save();
-  }
-  void _isFilled(){
-    if(controller3.text.length==14 && controller2.text.length>10 && controller1.text.isNotEmpty){
-      setState(() {
-        isFilled=true;
-      });
-    } else {
-      setState(() {
-      isFilled=false;
-    });}
-  }
 
   @override
   void initState() {
     super.initState();
-    _focusNode1.addListener(() {
-      setState(() {});
+    for (var i = 0; i < _controllers.length; i++) {
+      _controllers[i].addListener(() => _updateFormData(i));
+      _focusNodes[i].addListener(() => setState(() {}));
+    }
+    if (!widget.isRegister) {
+      _loadExistingData();
+    }
+  }
+
+  void _updateFormData(int index) {
+    final keys = ['surname', 'name', 'birthday', 'phone_number', 'gender'];
+    setState(() {
+      _formData[keys[index]] = _controllers[index].text;
+      _isFilled = _controllers.every((c) => c.text.isNotEmpty);
     });
-    _focusNode2.addListener(() {
-      setState(() {});
+  }
+
+  String formatPhoneNumber(String phoneNumber) {
+    String cleaned = phoneNumber.replaceAll(RegExp(r'\D'), '').substring(3);
+
+    // Split the remaining digits into groups
+    String part1 = cleaned.substring(0, 2);
+    String part2 = cleaned.substring(2, 5);
+    String part3 = cleaned.substring(5, 7);
+    String part4 = cleaned.substring(7);
+
+    // Join the parts with the desired format
+    return '($part1) $part2 $part3 $part4';
+  }
+
+  Future<void> _loadExistingData() async {
+    final customer = await RegisterService().getCartProducts();
+    setState(() {
+      customerId=customer[0].id;
     });
-    _focusNode3.addListener(() {
-      setState(() {});
-    });
+    if (customer.isNotEmpty) {
+      final time = customer[0].birthday;
+      String formattedDate = DateFormat('yyyy/MM/dd').format(time);
+      setState(() {
+        _controllers[0].text = customer[0].surname;
+        _controllers[1].text = customer[0].name;
+        _controllers[2].text = formattedDate;
+        _controllers[3].text = formatPhoneNumber(customer[0].phoneNumber);
+        _controllers[4].text = customer[0].gender;
+      });
+    }
   }
 
   @override
   void dispose() {
-    _focusNode1.dispose();
-    _focusNode2.dispose();
-    _focusNode3.dispose();
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    for (var node in _focusNodes) {
+      node.dispose();
+    }
     super.dispose();
+  }
+
+  void _submit() {
+    if (!_formKey.currentState!.validate() || !context.mounted) return;
+
+    _formKey.currentState!.save();
+    final surname = _formData['surname']!;
+    final name = _formData['name']!;
+    final birthday = _formData['birthday']!;
+    final phoneNumber = _formData['phone_number']!;
+    final gender = _formData['gender']!;
+    final registerBloc = context.read<RegisterBloc>();
+
+
+    if (widget.isRegister) {
+      registerBloc
+          .add(PostUserDataEvent(surname, name, birthday, phoneNumber, gender));
+    } else {
+      if (customerId != null) {
+        registerBloc.add(UpdateUserDataEvent(
+            surname, name, birthday, customerId!, phoneNumber, gender));
+      } else {
+      }
+    }
+  }
+
+  Widget _buildTextFormField({
+    required int index,
+    required String label,
+    required String hint,
+    TextInputType keyboardType = TextInputType.text,
+    List<TextInputFormatter>? inputFormatters,
+    String? Function(String?)? validator,
+    bool readOnly = false,
+    VoidCallback? onTap,
+    bool isNumber = false,
+    bool isDate = false,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label),
+        const SizedBox(height: 10),
+        TextFormField(
+          controller: _controllers[index],
+          focusNode: _focusNodes[index],
+          readOnly: readOnly,
+          onTap: onTap,
+          textCapitalization: TextCapitalization.words,
+          inputFormatters: inputFormatters,
+          keyboardType: keyboardType,
+          decoration: _inputDecoration(_focusNodes[index], hint,
+              isNumber: isNumber, isDate: isDate),
+          validator: validator,
+          onFieldSubmitted: (_) => index < 4
+              ? FocusScope.of(context).requestFocus(_focusNodes[index + 1])
+              : null,
+          onSaved: (value) {
+            if (index == 3) {
+              _formData['phone_number'] = _formatPhoneNumber(value!);
+            }
+          },
+        ),
+        const SizedBox(height: 32),
+      ],
+    );
   }
 
   InputDecoration _inputDecoration(FocusNode focusNode, String hintText,
@@ -87,10 +180,7 @@ class _RegisterPageState extends State<RegisterPage> {
         prefixIcon: isNumber
             ? const Padding(
                 padding: EdgeInsets.all(15),
-                child: Text(
-                  '+998',
-                  style: TextStyle(fontSize: 17),
-                ),
+                child: Text('+998', style: TextStyle(fontSize: 17)),
               )
             : null,
         hintText: hintText,
@@ -98,218 +188,209 @@ class _RegisterPageState extends State<RegisterPage> {
         fillColor:
             focusNode.hasFocus ? Colours.textFieldBlue : Colours.textFieldGrey,
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(10),
-        ),
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(10)),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colours.blueCustom),
-          borderRadius: BorderRadius.circular(10),
-        ),
+            borderSide: BorderSide(color: Colours.blueCustom),
+            borderRadius: BorderRadius.circular(10)),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         suffixIcon: isDate
             ? IconButton(
-                onPressed: () {
-                  showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(1995),
-                    lastDate: DateTime(
-                        2024, DateTime.now().month, DateTime.now().day),
-                  ).then((value) {
-                    if (value != null) {
-                      setState(() {
-                        final day = value.day.toString().padLeft(2, '0');
-                        final month = value.month.toString().padLeft(2, '0');
-                        final year = value.year;
-                        controller1.text = '$day/$month/$year';
-                      });
-                    }
-                  });
-                },
+                onPressed: () => _selectDate(context),
                 icon: const Icon(Icons.date_range_rounded))
             : null);
+  }
+
+  String _formatPhoneNumber(String phoneNumber) {
+    String cleanedNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
+    return '+998$cleanedNumber';
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _controllers[2].text =
+            '${picked.year}/${picked.month.toString().padLeft(2, '0')}/${picked.day.toString().padLeft(2, '0')}';
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
+        centerTitle: true,
+        title: widget.isRegister
+            ? const Text('')
+            : Text('Настройки профиля',
+                style: GoogleFonts.inter(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18,
+                    color: Colors.black)),
         leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.arrow_back_ios_outlined,
-            color: Colours.blueCustom,
-          ),
+          splashRadius: 24,
+          onPressed: () => Navigator.of(context).pop(),
+          icon: Icon(Icons.arrow_back_ios_outlined,
+              color: Colours.blueCustom, size: 24),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Регистрация',
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 24,
-                      ),
+                    if (widget.isRegister) ...[
+                      Text('Регистрация',
+                          style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w700, fontSize: 24)),
+                      const SizedBox(height: 32),
+                    ],
+                    _buildTextFormField(
+                      index: 0,
+                      label: 'Фамилия',
+                      hint: 'Введите Фамилию',
+                      validator: (val) =>
+                          val!.isEmpty ? 'Не должна быть пустым' : null,
                     ),
-                    AppUtils.kHeight32,
-                    const Text('ФИО'),
-                    AppUtils.kHeight10,
-                    TextFormField(
-                      controller: controller2,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _focusNode1,
-                      onTapOutside: (i) {
-                        _focusNode1.unfocus();
-                      },
-                      maxLength: 100,
-                      cursorColor: Colours.blueCustom,
-                      keyboardType: TextInputType.name,
-                      decoration: _inputDecoration(_focusNode1, 'Введите ФИО'),
-                      validator: (val) {
-                        if (val == '') {
-                          return 'Не должна быть пустым';
-                        }
-                        return null;
-                      },
-                      onChanged: (val){
-                        _isFilled();
-                      },
-                      onFieldSubmitted: (_) {
-                        FocusScope.of(context).requestFocus(_focusNode2);
-
-                      },
-                      onSaved: (value) {
-                        _addingHandler['name'] = value;
-                      },
+                    _buildTextFormField(
+                      index: 1,
+                      label: 'Имя',
+                      hint: 'Введите Имя',
+                      validator: (val) =>
+                          val!.isEmpty ? 'Не должна быть пустым' : null,
                     ),
-                    AppUtils.kHeight32,
-                    const Text('Дата рождения'),
-                    AppUtils.kHeight10,
-                    TextFormField(
-                      controller: controller1,
-                      focusNode: _focusNode2,
-                      onTapOutside: (i) {
-                        _focusNode2.unfocus();
-                      },
-                      inputFormatters: [maskFormatter2],
-                      cursorColor: Colours.blueCustom,
+                    _buildTextFormField(
+                      index: 2,
+                      label: 'Дата рождения',
+                      hint: 'Введите дату рождения: гггг/мм/дд',
                       keyboardType: TextInputType.datetime,
-                      decoration: _inputDecoration(
-                          _focusNode2, 'Введите дату рождения: дд/мм/гггг',
-                          isDate: true),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a date';
-                        } else if (!dateRegExp.hasMatch(value)) {
-                          return 'Please enter a valid date in dd/mm/yyyy format';
-                        } else {
-                          // Parse the date
-                          final parts = value.split('/');
-                          final int day = int.parse(parts[0]);
-                          final int month = int.parse(parts[1]);
-                          final int year = int.parse(parts[2]);
-
-                          final DateTime parsedDate = DateTime(year, month, day);
-                          final DateTime currentDate = DateTime.now();
-                          final DateTime minDate = DateTime(1900, 1, 1);
-
-                          if (parsedDate.isBefore(minDate)) {
-                            return 'Date cannot be before 01/01/1900';
-                          } else if (parsedDate.isAfter(currentDate)) {
-                            return 'Date cannot be in the future';
-                          }
-                        }
-                        return null; // The input is valid
-                      },
-                      onFieldSubmitted: (_) {
-                        FocusScope.of(context).requestFocus(_focusNode3);
-
-                      },
-                      onChanged: (val){
-                        _isFilled();
-                      },
-                      onSaved: (value) {
-                        _addingHandler['birthDate'] = value;
-                      },
+                      inputFormatters: [_dateFormatter],
+                      isDate: true,
+                      validator: _validateDate,
                     ),
-                    AppUtils.kHeight32,
-                    const Text('Номер телефона'),
-                    AppUtils.kHeight10,
-                    TextFormField(
-                      controller: controller3,
-                      focusNode: _focusNode3,
-                      onTapOutside: (i) {
-                        _focusNode3.unfocus();
-                      },
-                      inputFormatters: [maskFormatter],
-                      maxLength: 14,
-                      cursorColor: Colours.blueCustom,
+                    _buildTextFormField(
+                      index: 3,
+                      label: 'Номер телефона',
+                      hint: '(_ _) _ _ _ - _ _ - _ _',
                       keyboardType: TextInputType.number,
-                      decoration: _inputDecoration(
-                        _focusNode3,
-                        '(_ _) _ _ _ - _ _ - _ _',
-                        isNumber: true,
-                      ),
-                      validator: (val) {
-                        if (val == null) {
-                          return 'Не должна быть пустым';
-                        } else if (val.length < 14) {
-                          return 'Введите номер телефона полностью';
-                        }
-                        return null;
-                      },
-                      onChanged: (val){
-                        _isFilled();
-                      },
-                      onFieldSubmitted: (_) {
-                       _focusNode3.unfocus();
-                      },
-                      onSaved: (value) {
-                        _addingHandler['phoneNumber'] = value;
-                      },
+                      inputFormatters: [_phoneFormatter],
+                      isNumber: true,
+                      validator: (val) => (val == null || val.length < 14)
+                          ? 'Введите номер телефона полностью'
+                          : null,
+                    ),
+                    _buildTextFormField(
+                      index: 4,
+                      label: 'Пол',
+                      hint: 'Выберите пол',
+                      readOnly: true,
+                      onTap: _showGenderPicker,
+                      validator: (val) =>
+                          val!.isEmpty ? 'Не должна быть пустым' : null,
                     ),
                   ],
                 ),
               ),
             ),
-            ElevatedButton(
-              onPressed: _submit,
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    isFilled ? Colours.blueCustom : Colours.textFieldGrey,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                fixedSize: Size(
-                    SizeConfig.screenWidth!, SizeConfig.screenHeight! * 0.06),
-              ),
-              child: Text(
-                'Продолжить',
-                style: GoogleFonts.inter(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
-                  color: isFilled ? Colors.white : Colors.black,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+          _buildSubmitButton(),
+        ],
       ),
+    );
+  }
+
+  String? _validateDate(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Введите дату рождения';
+    }
+    final dateRegExp = RegExp(r'^\d{4}/\d{2}/\d{2}$');
+    if (!dateRegExp.hasMatch(value)) {
+      return 'Введите дату рождения: гггг/мм/дд';
+    }
+    final parts = value.split('/');
+    final parsedDate =
+        DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+    final currentDate = DateTime.now();
+    final minDate = DateTime(1900, 1, 1);
+
+    if (parsedDate.isBefore(minDate)) {
+      return 'Date cannot be before 01/01/1900';
+    } else if (parsedDate.isAfter(currentDate)) {
+      return 'Date cannot be in the future';
+    }
+    return null;
+  }
+
+  Future<void> _showGenderPicker() async {
+    final selectedGender = await showModalBottomSheet<String>(
+      context: context,
+      builder: (BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: ['Мужской', 'Женский']
+            .map((gender) => ListTile(
+                  title: Text(gender,
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w400, fontSize: 18)),
+                  onTap: () => Navigator.pop(context, gender),
+                ))
+            .toList(),
+      ),
+    );
+    if (selectedGender != null) {
+      setState(() => _controllers[4].text = selectedGender);
+    }
+  }
+
+  Widget _buildSubmitButton() {
+    return BlocConsumer<RegisterBloc, RegisterState>(
+      listener: (context, state) {
+        if (state is RegisterSuccess) {
+          Navigator.pushReplacementNamed(context, Routes.main);
+        } else if (state is RegisterError) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.message)));
+        } else if (state is UpdateProfile) {
+          Navigator.pop(context);
+        }
+      },
+      builder: (context, state) {
+        if (state is RegisterLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return ElevatedButton(
+          onPressed: _isFilled ? _submit : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor:
+                _isFilled ? Colours.blueCustom : Colours.textFieldGrey,
+            elevation: 0,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            minimumSize: Size(MediaQuery.of(context).size.width,
+                MediaQuery.of(context).size.height * 0.06),
+          ),
+          child: Text(
+            widget.isRegister ? 'Зарегистрироваться' : 'Сохранить',
+            style: GoogleFonts.inter(
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
+              color: _isFilled ? Colors.white : Colors.black,
+            ),
+          ),
+        );
+      },
     );
   }
 }

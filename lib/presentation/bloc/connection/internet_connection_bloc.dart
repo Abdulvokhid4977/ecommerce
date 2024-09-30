@@ -16,7 +16,7 @@ class InternetConnectionBloc
       : super(InternetInitial()) {
     _subscription = _internetConnectionChecker.onStatusChange.listen((status) {
       if (status == InternetStatus.connected) {
-        print('I am here');
+        print('I am connected');
         add(ConnectivityEvent()); // Trigger event to check connectivity
       } else {
         print('I am disconnected');
@@ -24,7 +24,6 @@ class InternetConnectionBloc
       }
     });
     on<ConnectivityEvent>((event, emit) async {
-      emit(InternetInitial());
       bool isConnected = await _internetConnectionChecker.hasInternetAccess;
       print(isConnected);
       if (isConnected) {

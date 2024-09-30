@@ -22,6 +22,7 @@ class Wishlist extends StatelessWidget {
         ),
         automaticallyImplyLeading: false,
         leading: IconButton(
+          splashRadius: 24,
             onPressed: () {
               Navigator.of(context).pop();
               context.read<main.MainBloc>().add(main.FetchDataEvent(false));
@@ -29,6 +30,7 @@ class Wishlist extends StatelessWidget {
             icon: Icon(
               Icons.arrow_back_ios_outlined,
               color: Colours.blueCustom,
+              size: 24,
             )),
         backgroundColor: Colours.backgroundGrey,
         systemOverlayStyle: const SystemUiOverlayStyle(

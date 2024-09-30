@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/data/models/product_model.dart';
@@ -21,6 +23,13 @@ class ProductDetailsPage<T extends Bloc> extends StatefulWidget {
 class _ProductDetailsPageState<T extends Bloc>
     extends State<ProductDetailsPage<T>> {
   int? _selectedColorIndex;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +172,7 @@ class _ProductDetailsPageState<T extends Bloc>
               ],
             ),
           ),
-          FixedBottom(baseState),
+          FixedBottom(baseState, _selectedColorIndex!=null? baseState.color[_selectedColorIndex!].id: null),
         ],
       ),
     );

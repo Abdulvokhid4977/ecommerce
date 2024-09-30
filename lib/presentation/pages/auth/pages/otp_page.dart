@@ -1,9 +1,11 @@
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
+import 'package:e_commerce/presentation/pages/auth/bloc/opt/otp_bloc.dart';
 import 'package:e_commerce/presentation/pages/auth/pages/confirm_code.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
@@ -16,6 +18,7 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   String phoneNumber = '';
+
   final focusNode = FocusNode();
   final controller = TextEditingController();
   var maskFormatter = MaskTextInputFormatter(
@@ -29,6 +32,14 @@ class _AuthPageState extends State<AuthPage> {
     SizeConfig().init(context);
     super.didChangeDependencies();
   }
+  String formatPhoneNumber(String phoneNumber) {
+    // Remove spaces and parentheses
+    String cleanedNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
+
+    // Extract the parts and construct the final phone number
+    return '+998$cleanedNumber';
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +47,14 @@ class _AuthPageState extends State<AuthPage> {
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
+            splashRadius: 24,
             onPressed: () {
               Navigator.of(context).pop();
             },
             icon: Icon(
               Icons.arrow_back_ios_outlined,
               color: Colours.blueCustom,
+              size: 24,
             )),
       ),
       body: Padding(
@@ -82,7 +95,7 @@ class _AuthPageState extends State<AuthPage> {
                     focusNode: focusNode,
                     onSubmitted: (val) {},
                     onChanged: (i) {
-                      if (i.length == 12) {
+                      if (i.length == 14) {
                         setState(() {
                           isNumberFilled = true;
                           phoneNumber = i;
@@ -102,7 +115,7 @@ class _AuthPageState extends State<AuthPage> {
                     inputFormatters: [
                       maskFormatter,
                     ],
-                    maxLength: 12,
+                    maxLength: 14,
                     decoration: InputDecoration(
                       counterText: '',
                       hintText: 'XY XYZ XY XY',
@@ -184,35 +197,78 @@ class _AuthPageState extends State<AuthPage> {
               ),
             ),
             AppUtils.kHeight16,
-            ElevatedButton(
-              onPressed: () {
-                if (isNumberFilled) {
-                  focusNode.unfocus();
+            BlocConsumer<OtpBloc, OtpState>(
+              listener: (context, state) {
+                if (state is OtpSuccess) {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (_) => ConfirmCode(phoneNumber)));
                 }
               },
-              style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor: isNumberFilled
-                      ? Colours.blueCustom
-                      : Colours.textFieldGrey,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  fixedSize: Size(SizeConfig.screenWidth!, 56)),
-              child: Text(
-                'Продолжить',
-                style: GoogleFonts.inter(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
-                  color: isNumberFilled ? Colors.white : Colours.greyIcon,
-                ),
-              ),
+              builder: (context, state) {
+                if(state is OtpError){
+                  print(state.message);
+                }
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                    return ScaleTransition(scale: animation, child: child);
+                  },
+                  child: state is OtpLoading
+                      ? _buildLoadingIndicator()
+                      : _buildButton(context),
+                );
+              },
             ),
           ],
+        ),
+      ),
+    );
+  }
+  Widget _buildLoadingIndicator() {
+    return Center(
+      child: Container(
+        key: const ValueKey<String>('loading'),
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          color: Colours.textFieldGrey,
+          borderRadius: BorderRadius.circular(56),
+        ),
+        child: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colours.blueCustom),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(BuildContext context) {
+    return ElevatedButton(
+      key: const ValueKey<String>('button'),
+      onPressed: isNumberFilled
+          ? () {
+        context.read<OtpBloc>().add(OtpCodeEvent(formatPhoneNumber(phoneNumber)));
+      }
+          : null,
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        backgroundColor:
+        isNumberFilled ? Colours.blueCustom : Colours.textFieldGrey,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        fixedSize: Size(SizeConfig.screenWidth!, 56),
+      ),
+      child: Text(
+        'Продолжить',
+        style: GoogleFonts.inter(
+          fontWeight: FontWeight.w500,
+          fontSize: 18,
+          color: isNumberFilled ? Colors.white : Colours.greyIcon,
         ),
       ),
     );

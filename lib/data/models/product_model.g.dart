@@ -25,16 +25,19 @@ class ProductElementAdapter extends TypeAdapter<ProductElement> {
       withDiscount: fields[5] as int,
       rating: fields[6] as int,
       description: fields[7] as String,
-      orderCount: fields[8] as int,
+      itemCount: fields[8] as int,
       color: (fields[9] as List).cast<ProductColor>(),
       createdAt: fields[10] as String,
+      status: fields[11] as String?,
+      discountPercent: fields[12] as int?,
+      discountEndTime: fields[13] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ProductElement obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -52,11 +55,17 @@ class ProductElementAdapter extends TypeAdapter<ProductElement> {
       ..writeByte(7)
       ..write(obj.description)
       ..writeByte(8)
-      ..write(obj.orderCount)
+      ..write(obj.itemCount)
       ..writeByte(9)
       ..write(obj.color)
       ..writeByte(10)
-      ..write(obj.createdAt);
+      ..write(obj.createdAt)
+      ..writeByte(11)
+      ..write(obj.status)
+      ..writeByte(12)
+      ..write(obj.discountPercent)
+      ..writeByte(13)
+      ..write(obj.discountEndTime);
   }
 
   @override
