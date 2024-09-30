@@ -93,14 +93,15 @@ class _FavoritesPageState extends State<FavoritesPage> {
             appBar: AppBar(
               elevation: 0,
               leading: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    context.read<MainBloc>().add(FetchDataEvent(false));
-                  },
-                  icon: Icon(
-                    Icons.arrow_back_ios_outlined,
-                    color: Colours.blueCustom,
-                  ),),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  context.read<MainBloc>().add(FetchDataEvent(false));
+                },
+                icon: Icon(
+                  Icons.arrow_back_ios_outlined,
+                  color: Colours.blueCustom,
+                ),
+              ),
             ),
             body: Center(child: Text(state.message)),
           );

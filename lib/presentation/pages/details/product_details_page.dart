@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/data/models/product_model.dart';
@@ -10,6 +11,7 @@ import 'package:e_commerce/presentation/pages/details/widgets/price_container.da
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class ProductDetailsPage<T extends Bloc> extends StatefulWidget {
   final ProductElement product;
@@ -122,8 +124,15 @@ class _ProductDetailsPageState<T extends Bloc>
                                       ),
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(8),
-                                        child: Image.network(
-                                          baseState.color[i].colorUrl[0],
+                                        child: CachedNetworkImage(
+                                          imageUrl: baseState.color[i].colorUrl[0],
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) => Lottie.asset(
+                                              'assets/lottie/loading.json',
+                                              height: 140,
+                                              width: 140),
+                                          errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
                                         ),
                                       ),
                                     ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/wrappers/cart_item_wrapper.dart';
+import 'package:e_commerce/data/models/order_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +27,12 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         if (kDebugMode) {
           print(response.body);
         }
-        emit(OrderFetched());
+        final result= orderFromJson(response.body);
+        if (kDebugMode) {
+          print(result);
+        }
+
+        emit(OrderFetched(result));
       } else {
         emit(OrderError(response.body));
       }
@@ -58,6 +64,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     final body = jsonEncode({
       "items": cartItemsToJson(event.products),
       "order": {
+        "address_name": event.address,
+        "latitude": event.latitude,
+        "longtitude": event.longitude,
         "customer_id": event.customerId,
         "delivery_cost": 20000,
         "delivery_status": event.deliveryStatus,
@@ -76,7 +85,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         }
         emit(OrderCreated());
       } else {
-        emit(OrderError(response.body));
+        emit(OrderError('${response.body}, ${response.request}'));
       }
     } catch (e, s) {
       if (kDebugMode) {

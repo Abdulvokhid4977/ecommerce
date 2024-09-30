@@ -1,10 +1,12 @@
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/services/cart_service.dart';
 import 'package:e_commerce/core/services/location_service.dart';
+import 'package:e_commerce/core/services/register_service.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/core/wrappers/cart_item_wrapper.dart';
-import 'package:e_commerce/presentation/pages/order/bloc/order_bloc.dart';
+import 'package:e_commerce/data/models/register_model.dart';
 import 'package:e_commerce/presentation/components/empty_widget.dart';
+import 'package:e_commerce/presentation/pages/order/bloc/order_bloc.dart';
 import 'package:e_commerce/presentation/pages/order/widgets/address.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +41,21 @@ class _GivingOrderState extends State<GivingOrder> {
     Icons.check,
     color: Colours.greenIndicator,
   );
+  List<Register>? customer;
+  LocationWithDetails? location;
+
+  Future<void> _getCustomer() async {
+    final result = await RegisterService().getCartProducts();
+    setState(() {
+      customer = result;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getCustomer();
+  }
 
   @override
   void didChangeDependencies() {
@@ -264,7 +281,10 @@ class _GivingOrderState extends State<GivingOrder> {
                             return Text('Error: ${snapshot.error}');
                           } else if (snapshot.hasData &&
                               snapshot.data != null) {
-                            print(snapshot.data);
+                            if (kDebugMode) {
+                              print(snapshot.data);
+                            }
+                            location = snapshot.data;
                             return Address(
                                 itemTwo ? true : false, snapshot.data!);
                           } else {
@@ -280,11 +300,12 @@ class _GivingOrderState extends State<GivingOrder> {
                   key: formKey,
                   child: Column(
                     children: [
-                      textFormField('Фамилия*'),
+                      textFormField('Фамилия*', customer![0].surname),
                       AppUtils.kHeight16,
-                      textFormField('Имя*'),
+                      textFormField('Имя*', customer![0].name),
                       AppUtils.kHeight16,
-                      textFormField('Номер телефона*'),
+                      textFormField(
+                          'Номер телефона*', customer![0].phoneNumber),
                       AppUtils.kHeight16,
                     ],
                   ),
@@ -477,7 +498,7 @@ class _GivingOrderState extends State<GivingOrder> {
                         }
                       },
                       builder: (context, state) {
-                        if(state is OrderError) {
+                        if (state is OrderError) {
                           if (kDebugMode) {
                             print(state.message);
                           }
@@ -510,11 +531,15 @@ class _GivingOrderState extends State<GivingOrder> {
       onPressed: () {
         context.read<OrderBloc>().add(
               OrderCreateEvent(
-                  widget.products,
-                  "27ca97c2-185d-43a2-b8b3-9fe3363838de",
-                  'pochta',
-                  'naxt',
-                  'kutilmoqda'),
+                widget.products,
+                customer![0].id,
+                'pochta',
+                'naxt',
+                'kutilmoqda',
+                location!.address,
+                location!.location.longitude,
+                location!.location.latitude,
+              ),
             );
       },
       style: ElevatedButton.styleFrom(

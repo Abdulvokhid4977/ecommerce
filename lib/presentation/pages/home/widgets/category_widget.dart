@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/data/models/category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/utils/utils.dart';
@@ -11,6 +13,7 @@ import '../../search/pages/search_page.dart';
 
 class CategoryWidget extends StatefulWidget {
   final List<CategoryElement> filtered;
+
   const CategoryWidget(this.filtered, {super.key});
 
   @override
@@ -32,17 +35,13 @@ class _CategoryWidgetState extends State<CategoryWidget> {
         itemBuilder: (_, i) {
           return GestureDetector(
             onTap: () {
-              context
-                  .read<MainBloc>()
-                  .add(ChangeTabEvent(1));
+              context.read<MainBloc>().add(ChangeTabEvent(1));
               context.read<search.SearchBloc>().add(
-                  search.FetchSearchDataEvent(
-                      widget.filtered[i].id, false));
+                  search.FetchSearchDataEvent(widget.filtered[i].id, false));
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      SearchPage(),
+                  builder: (context) => const SearchPage(),
                 ),
               );
             },
@@ -52,12 +51,17 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                   height: 80,
                   width: 80,
                   child: ClipRRect(
-                    borderRadius:
-                    BorderRadius.circular(8),
-                    child: Image.network(
-                      widget.filtered[i].url,
-                      // state.category.category[i].url,
-                      fit: BoxFit.fill,
+                    borderRadius: BorderRadius.circular(8),
+                    child: CachedNetworkImage(
+                      imageUrl: widget.filtered[i].url,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Lottie.asset(
+                        'assets/lottie/loading.json',
+                        height: 140,
+                        width: 140,
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
                   ),
                 ),

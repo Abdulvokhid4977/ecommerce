@@ -23,6 +23,8 @@ class OrderCreated extends OrderState{
 }
 
 class OrderFetched extends OrderState{
+  final List<Order> order;
+  OrderFetched(this.order);
 
   @override
   // TODO: implement props

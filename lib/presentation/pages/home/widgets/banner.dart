@@ -1,11 +1,16 @@
 import 'dart:async';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../bloc/main/main_bloc.dart';
 
 class BannerWidget extends StatefulWidget {
   final MainLoaded state;
   final PageController controller;
+
   const BannerWidget(this.state, this.controller, {super.key});
 
   @override
@@ -58,14 +63,19 @@ class _BannerWidgetState extends State<BannerWidget> {
         },
         children: List.generate(
           widget.state.banners.banner.length,
-              (i) {
+          (i) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  widget.state.banners.banner[i].bannerImage,
-                  fit: BoxFit.fill,
+                child: CachedNetworkImage(
+                  imageUrl: widget.state.banners.banner[0].bannerImage,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Lottie.asset(
+                      'assets/lottie/loading.json',
+                      height: 140,
+                      width: 140),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
             );

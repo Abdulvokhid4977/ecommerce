@@ -13,6 +13,7 @@ import 'package:e_commerce/presentation/pages/profile/widgets/custom_container.d
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -153,7 +154,9 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Column(
         children: [
           _buildProfileItem(
-              'assets/icons/shopping_bag.svg', 'Мои заказы', () {}),
+              'assets/icons/shopping_bag.svg', 'Мои заказы', () {
+            Navigator.pushNamed(context,Routes.order);
+          }),
           _buildProfileItem('assets/icons/percent.svg', 'Мои промокоды',
               _showComingSoonToast),
           _buildProfileItem(

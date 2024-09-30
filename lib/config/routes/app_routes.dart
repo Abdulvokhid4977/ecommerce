@@ -85,8 +85,8 @@ sealed class AppRoutes {
     //   return MaterialPageRoute(builder: (_) => const SelectLang());
     // case Routes.shopping:
     //   return MaterialPageRoute(builder: (_) => const ShoppingCartPage());
-    // case Routes.order:
-    // return MaterialPageRoute(builder: (_) => const OrderPage());
+    case Routes.order:
+    return MaterialPageRoute(builder: (_) => const OrderPage());
     case Routes.cart:
     return MaterialPageRoute(builder: (_) => const CartPage());
     case Routes.profile:

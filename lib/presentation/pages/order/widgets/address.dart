@@ -1,3 +1,4 @@
+import 'package:e_commerce/data/models/register_model.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import 'package:e_commerce/core/constants/constants.dart';
@@ -11,14 +12,13 @@ import '../../profile/pages/map_page.dart';
 class Address extends StatefulWidget {
   final bool isDelivery;
   final LocationWithDetails locationDetails;
-
-  const Address(this.isDelivery, this.locationDetails, {super.key});
+  const Address(this.isDelivery, this.locationDetails,{super.key});
 
   @override
   State<Address> createState() => _AddressState();
 }
 
-Widget textFormField(String text) {
+Widget textFormField(String text1, String text2) {
   return Container(
     padding: const EdgeInsets.only(left: 16),
     height: SizeConfig.screenHeight! * 0.07,
@@ -30,10 +30,12 @@ Widget textFormField(String text) {
       color: Colours.textFieldGrey,
     ),
     child: TextFormField(
+      enabled: false,
+      initialValue: text2,
       cursorColor: Colours.greyIcon,
       decoration: InputDecoration(
           border: InputBorder.none,
-          label: Text(text),
+          label: Text(text1),
           labelStyle: TextStyle(color: Colours.greyIcon)),
     ),
   );

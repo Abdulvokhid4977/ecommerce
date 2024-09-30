@@ -1,14 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/services/cart_service.dart';
 import 'package:e_commerce/core/wrappers/cart_item_wrapper.dart';
 import 'package:e_commerce/data/models/product_model.dart';
 import 'package:e_commerce/presentation/pages/details/product_details_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 import '../bloc/favorite/favorite_bloc.dart';
 import 'custom_modal_sheet.dart';
@@ -36,19 +39,20 @@ class _GridTileProductState extends State<GridTileProduct> {
     setState(() {
       savedProducts = fetchedData;
     });
+    if (kDebugMode) {
+      print(savedProducts);
+    }
   }
 
   @override
   void initState() {
-    savedProductsList();
     super.initState();
+    savedProductsList();
   }
 
   @override
   Widget build(BuildContext context) {
-    final monthly = (widget.baseState.withDiscount / 6).round();
     final formatter = NumberFormat('#,###', 'en_US');
-    String colorId = '';
 
     return GestureDetector(
       onTap: () {
@@ -77,9 +81,15 @@ class _GridTileProductState extends State<GridTileProduct> {
                   alignment: Alignment.center,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      widget.baseState.color[0].colorUrl[0],
+                    child: CachedNetworkImage(
+                      imageUrl: widget.baseState.color[0].colorUrl[0],
                       fit: BoxFit.cover,
+                      placeholder: (context, url) => Lottie.asset(
+                          'assets/lottie/loading.json',
+                          height: 140,
+                          width: 140),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
                   ),
                 ),
@@ -157,22 +167,6 @@ class _GridTileProductState extends State<GridTileProduct> {
             softWrap: true,
           ),
           const SizedBox(height: 10),
-          // Container(
-          //   padding: const EdgeInsets.all(4),
-          //   width: SizeConfig.screenWidth! * 0.37,
-          //   decoration: BoxDecoration(
-          //     color: Colours.yellowCustom2,
-          //     borderRadius: BorderRadius.circular(6),
-          //   ),
-          //   child: Text(
-          //     '${formatter.format(monthly).replaceAll(',', ' ')} сум/мес',
-          //     style: GoogleFonts.inter(
-          //       fontWeight: FontWeight.w500,
-          //       fontSize: 16,
-          //     ),
-          //     textAlign: TextAlign.center,
-          //   ),
-          // ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/presentation/bloc/favorite/favorite_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -14,8 +16,7 @@ class CustomAppBar<T extends Bloc> extends StatefulWidget {
   final ProductElement product;
   final int? _selectedColorIndex;
 
-  const CustomAppBar(this.product, this._selectedColorIndex,
-      {super.key});
+  const CustomAppBar(this.product, this._selectedColorIndex, {super.key});
 
   @override
   State<CustomAppBar<T>> createState() => _CustomAppBarState<T>();
@@ -46,29 +47,30 @@ class _CustomAppBarState<T extends Bloc> extends State<CustomAppBar<T>> {
         },
       ),
       actions: [
-      BlocBuilder<FavoriteBloc, FavoriteState>(
-    builder: (context, state) {
-      if (state is FavoriteToggledState &&
-          state.productElement.id == widget.product.id) {
-        isFavorite = state.isFavorite;
-      }
+        BlocBuilder<FavoriteBloc, FavoriteState>(
+          builder: (context, state) {
+            if (state is FavoriteToggledState &&
+                state.productElement.id == widget.product.id) {
+              isFavorite = state.isFavorite;
+            }
 
-      return IconButton(
-        splashColor: Colors.transparent,
-        onPressed: () {
-          final newFavoriteStatus = !isFavorite;
-          context.read<FavoriteBloc>().add(
-            UpdateFavoriteStatusEvent(widget.product, newFavoriteStatus),
-          );
-        },
-        icon: Icon(
-          isFavorite ? Icons.favorite : Icons.favorite_border,
-          color: isFavorite ? Colors.red : Colours.greyIcon,
+            return IconButton(
+              splashColor: Colors.transparent,
+              onPressed: () {
+                final newFavoriteStatus = !isFavorite;
+                context.read<FavoriteBloc>().add(
+                      UpdateFavoriteStatusEvent(
+                          widget.product, newFavoriteStatus),
+                    );
+              },
+              icon: Icon(
+                isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: isFavorite ? Colors.red : Colours.greyIcon,
+              ),
+            );
+          },
         ),
-      );
-    },
-    ),
-      IconButton(
+        IconButton(
           icon: Icon(
             Icons.share_outlined,
             color: Colours.blueCustom,
@@ -116,11 +118,17 @@ class _CustomAppBarState<T extends Bloc> extends State<CustomAppBar<T>> {
                     },
                     itemCount: displayedImages.length,
                     itemBuilder: (ctx, i) {
-                      return Image.network(
-                        displayedImages[i],
+                      return CachedNetworkImage(
+                        imageUrl: displayedImages[i],
                         height: SizeConfig.screenHeight! * 0.49,
                         width: double.infinity,
                         fit: BoxFit.cover,
+                        placeholder: (context, url) => Lottie.asset(
+                            'assets/lottie/loading.json',
+                            height: 140,
+                            width: 140),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       );
                     },
                   ),
