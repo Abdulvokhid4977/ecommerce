@@ -1,52 +1,55 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../data/models/category_model.dart';
 import '../bloc/search_bloc.dart';
 
 class CategoryAnimation extends StatelessWidget {
-
   final List<CategoryElement> subcategories;
   final String? expandedCategoryId;
   final CategoryElement category;
-  const CategoryAnimation(this.category, this.expandedCategoryId, this.subcategories,{super.key});
 
+  const CategoryAnimation(
+      this.category, this.expandedCategoryId, this.subcategories,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      height: expandedCategoryId == category.id
-          ? subcategories.length * 60.0
-          : 0,
+      height:
+          expandedCategoryId == category.id ? subcategories.length * 60.0 : 0,
       duration: const Duration(milliseconds: 300),
       child: ListView.builder(
         itemCount: subcategories.length,
         shrinkWrap: true,
-        physics:
-        const NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (ctx, subIndex) {
-          CategoryElement subcategory =
-          subcategories[subIndex];
+          CategoryElement subcategory = subcategories[subIndex];
           return ListTile(
             leading: Container(
-              margin:
-              const EdgeInsets.only(left: 32),
+              margin: const EdgeInsets.only(left: 32),
               decoration: BoxDecoration(
-                borderRadius:
-                BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(4),
                 color: Colours.backgroundGrey,
               ),
               height: 24,
               width: 24,
               child: ClipRRect(
-                borderRadius:
-                BorderRadius.circular(4),
-                child: Image.network(
-                  subcategory.url,
+                borderRadius: BorderRadius.circular(4),
+                child: CachedNetworkImage(
+                  imageUrl: subcategory.url,
                   fit: BoxFit.fill,
                   alignment: Alignment.center,
+                  placeholder: (context, url) => Lottie.asset(
+                    'assets/lottie/loading.json',
+                    height: 24,
+                    width: 24,
+                  ),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
             ),
@@ -59,10 +62,9 @@ class CategoryAnimation extends StatelessWidget {
             ),
             onTap: () {
               if (subcategory.id.isNotEmpty) {
-                context.read<SearchBloc>().add(
-                    FetchSearchDataEvent(
-                        subcategory.id,
-                        false));
+                context
+                    .read<SearchBloc>()
+                    .add(FetchSearchDataEvent(subcategory.id, false));
               }
             },
           );

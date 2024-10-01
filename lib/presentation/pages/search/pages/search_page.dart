@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/shimmers/search_shimmer.dart';
 import 'package:e_commerce/core/utils/utils.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../bloc/main/main_bloc.dart';
@@ -93,10 +95,15 @@ class _SearchPageState extends State<SearchPage> {
                                 width: 48,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
-                                  child: Image.network(
-                                    category.url,
+                                  child: CachedNetworkImage(
+                                    imageUrl: category.url,
                                     fit: BoxFit.fill,
-                                    alignment: Alignment.center,
+                                    placeholder: (context, url) => Lottie.asset(
+                                        'assets/lottie/loading.json',
+                                        height: 140,
+                                        width: 140),
+                                    errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
                                   ),
                                 ),
                               ),

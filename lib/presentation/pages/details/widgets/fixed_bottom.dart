@@ -37,49 +37,46 @@ class _FixedBottomState extends State<FixedBottom> {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 0,
-      child: Container(
-        height: SizeConfig.screenHeight! * 0.1,
-        width: SizeConfig.screenWidth,
-        color: Colors.white,
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '${NumberFormat('#,###', 'en_US').format(widget.baseState.price).replaceAll(',', ' ')} сум',
-                  style: widget.baseState.withDiscount == 0
-                      ? GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                        )
-                      : GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Colours.greyIcon,
-                          decorationColor: Colours.greyIcon,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                ),
-                widget.baseState.withDiscount == 0
-                    ? const SizedBox()
-                    : Text(
-                        '${NumberFormat('#,###', 'en_US').format(widget.baseState.withDiscount).replaceAll(',', ' ')} сум',
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                        ),
+    return Container(
+      height: SizeConfig.screenHeight! * 0.1,
+      width: SizeConfig.screenWidth,
+      color: Colors.white,
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '${NumberFormat('#,###', 'en_US').format(widget.baseState.price).replaceAll(',', ' ')} сум',
+                style: widget.baseState.withDiscount == 0
+                    ? GoogleFonts.inter(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                      )
+                    : GoogleFonts.inter(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: Colours.greyIcon,
+                        decorationColor: Colours.greyIcon,
+                        decoration: TextDecoration.lineThrough,
                       ),
-              ],
-            ),
-            quantity > 0 ? _buildQuantityControls() : _buildAddToCartButton(),
-          ],
-        ),
+              ),
+              widget.baseState.withDiscount == 0
+                  ? const SizedBox()
+                  : Text(
+                      '${NumberFormat('#,###', 'en_US').format(widget.baseState.withDiscount).replaceAll(',', ' ')} сум',
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                      ),
+                    ),
+            ],
+          ),
+          quantity > 0 ? _buildQuantityControls() : _buildAddToCartButton(),
+        ],
       ),
     );
   }

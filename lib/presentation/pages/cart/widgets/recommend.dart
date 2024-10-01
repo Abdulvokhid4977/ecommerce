@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/presentation/pages/details/product_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/constants/constants.dart';
@@ -76,10 +78,16 @@ class Recommend extends StatelessWidget {
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(8),
                                 ),
-                                child: Image.network(
-                                  Constants
+                                child: CachedNetworkImage(
+                                  imageUrl: Constants
                                       .products.product[i].color[0].colorUrl[0],
                                   fit: BoxFit.fill,
+                                  placeholder: (context, url) => Lottie.asset(
+                                      'assets/lottie/loading.json',
+                                      height: 140,
+                                      width: 140),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
                                 ),
                               ),
                             ),
@@ -115,7 +123,9 @@ class Recommend extends StatelessWidget {
                       ),
                     );
                   },
-                  itemCount: Constants.products.product.length>4 ?5 : Constants.products.product.length,
+                  itemCount: Constants.products.product.length > 4
+                      ? 5
+                      : Constants.products.product.length,
                 ),
         ),
       ],

@@ -4,6 +4,7 @@ import 'package:e_commerce/presentation/components/custom_container.dart';
 import 'package:e_commerce/presentation/pages/order/bloc/order_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 class OrderPage extends StatefulWidget {
@@ -58,6 +59,12 @@ class _OrderPageState extends State<OrderPage> {
             return ListView.builder(
               padding: const EdgeInsets.all(16),
               itemBuilder: (ctx, i) {
+                final totalQuantity = state.order[i].getTotalQuantity();
+                final DateTime createdAt = state.order[i].order.createdAt;
+                final String formattedDate =
+                    DateFormat('dd/MM/yyyy').format(createdAt);
+                final String formattedTime =
+                    DateFormat('HH:mm').format(createdAt);
                 return Card(
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -70,7 +77,7 @@ class _OrderPageState extends State<OrderPage> {
                           Text(
                               'Заказ N# ${state.order[i].order.id.substring(0, 7)}'),
                           CustomContainer().customBox(
-                            state.order[0].order.status,
+                            state.order[i].order.status,
                             Colours.greenIndicator,
                             Colors.white,
                           ),
@@ -81,19 +88,19 @@ class _OrderPageState extends State<OrderPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Дата заказа '),
-                          Text(
-                              '${state.order[i].order.createdAt.day}/${state.order[i].order.createdAt.month}/${state.order[i].order.createdAt.year}'),
+                          Text('$formattedTime $formattedDate'),
                         ],
                       ),
                       AppUtils.kHeight16,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Товар '),
-                          Text(AppUtils.numberFormatter(
-                              state.order[i].order.totalPrice)),
+                          Text('Товар $totalQuantity'),
+                          Text(
+                              '${AppUtils.numberFormatter(state.order[i].order.totalPrice)} сум'),
                         ],
                       ),
+                      AppUtils.kHeight16,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [

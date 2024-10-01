@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/services/cached_values.dart';
 import 'package:e_commerce/core/services/location_service.dart';
@@ -202,9 +203,15 @@ class _MapPageState extends State<MapPage> {
                   width: SizeConfig.screenWidth,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      location.image,
+                    child: CachedNetworkImage(
+                      imageUrl: location.image,
                       fit: BoxFit.fill,
+                      placeholder: (context, url) => Lottie.asset(
+                          'assets/lottie/loading.json',
+                          height: 140,
+                          width: 140),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
                   ),
                 ),

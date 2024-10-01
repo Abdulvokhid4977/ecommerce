@@ -26,7 +26,6 @@ sealed class Colours {
 
   static Color blueCustom = const Color.fromRGBO(0, 116, 235, 1);
   static Color textFieldBlue = const Color.fromRGBO(0, 116, 235, 0.05);
-
   static Color greyCustom = const Color.fromRGBO(151, 156, 158, 1);
   static Color backgroundGrey= const Color.fromRGBO(246, 246, 246, 1);
   static Color textFieldGrey= const Color.fromRGBO(233, 233, 233, 1);
@@ -38,9 +37,6 @@ sealed class Colours {
   static Color yellowCustom3= const Color.fromRGBO(246, 230, 199, 1);
   static Color greenIndicator = const Color.fromRGBO(48, 158, 58, 1);
 
-  static Color weekDayColor = const Color.fromRGBO(150, 150, 150, 1);
-
-  static Color textFieldColor= const Color.fromRGBO(243, 244, 246, 1);
 
 }
 

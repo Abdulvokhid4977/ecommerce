@@ -26,6 +26,9 @@ class Order {
     "order": order.toJson(),
     "items": List<dynamic>.from(items.map((x) => x.toJson())),
   };
+  int getTotalQuantity() {
+    return items.fold(0, (sum, item) => sum + item.quantity);
+  }
 }
 
 class Item {

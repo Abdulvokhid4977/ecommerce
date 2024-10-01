@@ -32,6 +32,7 @@ class _AuthPageState extends State<AuthPage> {
     SizeConfig().init(context);
     super.didChangeDependencies();
   }
+
   String formatPhoneNumber(String phoneNumber) {
     // Remove spaces and parentheses
     String cleanedNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
@@ -39,7 +40,6 @@ class _AuthPageState extends State<AuthPage> {
     // Extract the parts and construct the final phone number
     return '+998$cleanedNumber';
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +207,7 @@ class _AuthPageState extends State<AuthPage> {
                 }
               },
               builder: (context, state) {
-                if(state is OtpError){
+                if (state is OtpError) {
                   print(state.message);
                 }
                 return AnimatedSwitcher(
@@ -227,6 +227,7 @@ class _AuthPageState extends State<AuthPage> {
       ),
     );
   }
+
   Widget _buildLoadingIndicator() {
     return Center(
       child: Container(
@@ -251,13 +252,15 @@ class _AuthPageState extends State<AuthPage> {
       key: const ValueKey<String>('button'),
       onPressed: isNumberFilled
           ? () {
-        context.read<OtpBloc>().add(OtpCodeEvent(formatPhoneNumber(phoneNumber)));
-      }
+              context
+                  .read<OtpBloc>()
+                  .add(OtpCodeEvent(formatPhoneNumber(phoneNumber)));
+            }
           : null,
       style: ElevatedButton.styleFrom(
         elevation: 0,
         backgroundColor:
-        isNumberFilled ? Colours.blueCustom : Colours.textFieldGrey,
+            isNumberFilled ? Colours.blueCustom : Colours.textFieldGrey,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),

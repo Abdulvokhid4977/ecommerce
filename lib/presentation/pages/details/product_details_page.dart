@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
@@ -31,7 +29,6 @@ class _ProductDetailsPageState<T extends Bloc>
     // TODO: implement initState
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -125,14 +122,16 @@ class _ProductDetailsPageState<T extends Bloc>
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(8),
                                         child: CachedNetworkImage(
-                                          imageUrl: baseState.color[i].colorUrl[0],
+                                          imageUrl:
+                                              baseState.color[i].colorUrl[0],
                                           fit: BoxFit.cover,
-                                          placeholder: (context, url) => Lottie.asset(
-                                              'assets/lottie/loading.json',
-                                              height: 140,
-                                              width: 140),
+                                          placeholder: (context, url) =>
+                                              Lottie.asset(
+                                                  'assets/lottie/loading.json',
+                                                  height: 140,
+                                                  width: 140),
                                           errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
+                                              const Icon(Icons.error),
                                         ),
                                       ),
                                     ),
@@ -181,7 +180,13 @@ class _ProductDetailsPageState<T extends Bloc>
               ],
             ),
           ),
-          FixedBottom(baseState, _selectedColorIndex!=null? baseState.color[_selectedColorIndex!].id: null),
+          Positioned(
+              bottom: 0,
+              child: FixedBottom(
+                  baseState,
+                  _selectedColorIndex != null
+                      ? baseState.color[_selectedColorIndex!].id
+                      : null)),
         ],
       ),
     );

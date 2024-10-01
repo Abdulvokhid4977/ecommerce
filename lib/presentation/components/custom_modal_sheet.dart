@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/services/cart_service.dart';
 import 'package:e_commerce/core/utils/utils.dart';
+import 'package:e_commerce/presentation/pages/details/widgets/fixed_bottom.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../data/models/product_model.dart';
 
@@ -41,10 +44,17 @@ class _CustomModalSheetState extends State<CustomModalSheet> {
                     borderRadius: const BorderRadius.all(
                       Radius.circular(8),
                     ),
-                    child: Image.network(
-                      widget.product.color[0].colorUrl.first,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.product.color[0].colorUrl.first,
+                      fit: BoxFit.cover,
                       height: 100,
                       width: 100,
+                      placeholder: (context, url) => Lottie.asset(
+                          'assets/lottie/loading.json',
+                          height: 100,
+                          width: 100),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
                   ),
                 ),
@@ -155,8 +165,14 @@ class _CustomModalSheetState extends State<CustomModalSheet> {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          widget.product.color[i].colorUrl[0],
+                        child: CachedNetworkImage(
+                          imageUrl: widget.product.color[i].colorUrl[0],
+                          placeholder: (context, url) => Lottie.asset(
+                              'assets/lottie/loading.json',
+                              height: 100,
+                              width: 100),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
                         ),
                       ),
                     ),
@@ -165,38 +181,39 @@ class _CustomModalSheetState extends State<CustomModalSheet> {
               ),
             ),
             AppUtils.kHeight16,
-            Container(
-              width: SizeConfig.screenWidth,
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-              child: ElevatedButton(
-                onPressed: () {
-                  if (selectedColorIndex != null) {
-                    cartService.addToCart(
-                      widget.product,
-                    );
-                    Navigator.pop(
-                      context,
-                      widget.product.color[selectedColorIndex!].id,
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    fixedSize: const Size(double.infinity, 56),
-                    backgroundColor: selectedColorIndex != null
-                        ? Colours.blueCustom
-                        : Colours.textFieldGrey,
-                    elevation: 0,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                child: Text(
-                  'В корзину',
-                  style: GoogleFonts.inter(
-                      fontWeight: FontWeight.w400, fontSize: 20),
-                ),
-              ),
-            ),
+            FixedBottom(widget.product, selectedColorIndex!=null? widget.product.color[selectedColorIndex!].id: null)
+            // Container(
+            //   width: SizeConfig.screenWidth,
+            //   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            //   child: ElevatedButton(
+            //     onPressed: () {
+            //       if (selectedColorIndex != null) {
+            //         cartService.addToCart(
+            //           widget.product,quantity: 1,
+            //         );
+            //         Navigator.pop(
+            //           context,
+            //           widget.product.color[selectedColorIndex!].id,
+            //         );
+            //       }
+            //     },
+            //     style: ElevatedButton.styleFrom(
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(8),
+            //         ),
+            //         fixedSize: const Size(double.infinity, 56),
+            //         backgroundColor: selectedColorIndex != null
+            //             ? Colours.blueCustom
+            //             : Colours.textFieldGrey,
+            //         elevation: 0,
+            //         tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+            //     child: Text(
+            //       'В корзину',
+            //       style: GoogleFonts.inter(
+            //           fontWeight: FontWeight.w400, fontSize: 20),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

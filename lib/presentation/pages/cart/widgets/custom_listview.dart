@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/constants/constants.dart';
 import 'package:e_commerce/core/utils/utils.dart';
 import 'package:e_commerce/core/wrappers/cart_item_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../details/product_details_page.dart';
 
@@ -63,10 +65,16 @@ class CustomListview extends StatelessWidget {
                       borderRadius: const BorderRadius.all(
                         Radius.circular(8),
                       ),
-                      child: Image.network(
-                        product.product.color[0].colorUrl.first,
+                      child:CachedNetworkImage(
+                        imageUrl: product.product.color[0].colorUrl.first,
                         height: 100,
                         width: 100,
+                        placeholder: (context, url) => Lottie.asset(
+                            'assets/lottie/loading.json',
+                            height: 100,
+                            width: 100),
+                        errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                       ),
                     ),
                   ),

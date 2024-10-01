@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:e_commerce/core/constants/constants.dart';
+import 'package:e_commerce/core/services/cached_values.dart';
 import 'package:e_commerce/core/wrappers/cart_item_wrapper.dart';
 import 'package:e_commerce/data/models/order_model.dart';
 import 'package:equatable/equatable.dart';
@@ -20,7 +21,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   Future<void> _fetchOrder(
       FetchOrderEvent event, Emitter<OrderState> emit) async {
     emit(OrderLoading());
-    final url = Uri.parse('${Constants.baseUrl}/order');
+    final customerId= await getCustomerId();
+    final url = Uri.parse('${Constants.baseUrl}/order?customer_id=$customerId');
     try {
       final response = await http.get(url);
       if (response.statusCode >= 200 && response.statusCode < 300) {
